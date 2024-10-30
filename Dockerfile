@@ -10,6 +10,7 @@ COPY src src
 
 RUN ./mvnw package -DskipTests
 FROM openjdk:17-jdk-slim
+EXPOSE 8080
 WORKDIR demo
 COPY --from=build target/*.jar demo.jar
 ENTRYPOINT ["java", "-jar", "demo.jar"]
