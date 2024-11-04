@@ -18,13 +18,19 @@ public class Transferencia {
     @Column(nullable = false)
     private Double valor;
 
-    @ManyToOne
-    @JoinColumn(name = "id_conta_origem", nullable = false)
-    private Conta contaOrigem;
+    @Column(nullable = false)
+    private Long id_conta_origem;
 
-    @ManyToOne
-    @JoinColumn(name = "id_conta_destino", nullable = false)
-    private Conta contaDestino;
+    @Column(nullable = false)
+    private Long id_conta_destino;
+
+//    @ManyToOne
+//    @JoinColumn(name = "id_conta_origem", nullable = false)
+//    private Conta contaOrigem;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "id_conta_destino", nullable = false)
+//    private Conta contaDestino;
 
     // Getters e Setters
     public Long getId() {
@@ -51,19 +57,35 @@ public class Transferencia {
         this.valor = valor;
     }
 
-    public Conta getContaOrigem() {
-        return contaOrigem;
+//    public Conta getContaOrigem() {
+//        return contaOrigem;
+//    }
+//
+//    public void setContaOrigem(Conta contaOrigem) {
+//        this.contaOrigem = contaOrigem;
+//    }
+//
+//    public Conta getContaDestino() {
+//        return contaDestino;
+//    }
+//
+//    public void setContaDestino(Conta contaDestino) {
+//        this.contaDestino = contaDestino;
+//    }
+
+    public Long getId_conta_origem() {
+        return id_conta_origem;
     }
 
-    public void setContaOrigem(Conta contaOrigem) {
-        this.contaOrigem = contaOrigem;
+    public void setId_conta_origem(Long id_conta_origem) {
+        this.id_conta_origem = id_conta_origem;
     }
 
-    public Conta getContaDestino() {
-        return contaDestino;
+    public Long getId_conta_destino() {
+        return id_conta_destino;
     }
 
-    public void setContaDestino(Conta contaDestino) {
-        this.contaDestino = contaDestino;
+    public void setId_conta_destino(Long id_conta_destino) {
+        this.id_conta_destino = id_conta_destino;
     }
 }

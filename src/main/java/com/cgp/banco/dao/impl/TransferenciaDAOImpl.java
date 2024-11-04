@@ -21,8 +21,8 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
         gerenciadorEntidade.createNativeQuery("INSERT INTO Transferencia (data, valor, id_conta_origem, id_conta_destino) VALUES (?, ?, ?, ?)")
                 .setParameter(1, transferencia.getData())
                 .setParameter(2, transferencia.getValor())
-                .setParameter(3, transferencia.getContaOrigem().getId())
-                .setParameter(4, transferencia.getContaDestino().getId())
+                .setParameter(3, transferencia.getId_conta_origem())
+                .setParameter(4, transferencia.getId_conta_destino())
                 .executeUpdate();
     }
 
@@ -32,8 +32,8 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
         gerenciadorEntidade.createNativeQuery("UPDATE Transferencia SET data = ?, valor = ?, id_conta_origem = ?, id_conta_destino = ? WHERE id_transferencia = ?")
                 .setParameter(1, transferencia.getData())
                 .setParameter(2, transferencia.getValor())
-                .setParameter(3, transferencia.getContaOrigem().getId())
-                .setParameter(4, transferencia.getContaDestino().getId())
+                .setParameter(3, transferencia.getId_conta_origem())
+                .setParameter(4, transferencia.getId_conta_destino())
                 .setParameter(5, transferencia.getId())
                 .executeUpdate();
     }

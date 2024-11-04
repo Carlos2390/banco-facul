@@ -24,7 +24,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
                 .setParameter(3, endereco.getCidade())
                 .setParameter(4, endereco.getEstado())
                 .setParameter(5, endereco.getCep())
-                .setParameter(6, endereco.getCliente().getId())
+                .setParameter(6, endereco.getId_cliente())
                 .executeUpdate();
     }
 
@@ -37,7 +37,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
                 .setParameter(3, endereco.getCidade())
                 .setParameter(4, endereco.getEstado())
                 .setParameter(5, endereco.getCep())
-                .setParameter(6, endereco.getCliente().getId())
+                .setParameter(6, endereco.getId_cliente())
                 .setParameter(7, endereco.getId())
                 .executeUpdate();
     }

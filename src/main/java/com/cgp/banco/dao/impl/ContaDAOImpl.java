@@ -22,7 +22,7 @@ public class ContaDAOImpl implements ContaDAO {
                 .setParameter(1, conta.getNumeroConta())
                 .setParameter(2, conta.getSaldo())
                 .setParameter(3, conta.getTipo())
-                .setParameter(4, conta.getCliente().getId())
+                .setParameter(4, conta.getId_cliente())
                 .executeUpdate();
     }
 
@@ -33,7 +33,7 @@ public class ContaDAOImpl implements ContaDAO {
                 .setParameter(1, conta.getNumeroConta())
                 .setParameter(2, conta.getSaldo())
                 .setParameter(3, conta.getTipo())
-                .setParameter(4, conta.getCliente().getId())
+                .setParameter(4, conta.getId_cliente())
                 .setParameter(5, conta.getId())
                 .executeUpdate();
     }

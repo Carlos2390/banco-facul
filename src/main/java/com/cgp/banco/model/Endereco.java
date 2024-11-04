@@ -25,9 +25,12 @@ public class Endereco {
     @Column(nullable = false, length = 8)
     private Integer cep;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
-    private Cliente cliente;
+    @Column(nullable = false)
+    private Long id_cliente;
+
+//    @ManyToOne
+//    @JoinColumn(name = "id_cliente", nullable = false)
+//    private Cliente cliente;
 
     // Getters e Setters
     public Long getId() {
@@ -78,11 +81,20 @@ public class Endereco {
         this.cep = cep;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Long getId_cliente() {
+        return id_cliente;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setId_cliente(Long id_cliente) {
+        this.id_cliente = id_cliente;
     }
+
+
+//    public Cliente getCliente() {
+//        return cliente;
+//    }
+//
+//    public void setCliente(Cliente cliente) {
+//        this.cliente = cliente;
+//    }
 }

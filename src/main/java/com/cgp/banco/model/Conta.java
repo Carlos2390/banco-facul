@@ -21,9 +21,12 @@ public class Conta {
     @Column(nullable = false, length = 20)
     private String tipo;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
-    private Cliente cliente;
+    @Column(nullable = false)
+    private Long id_cliente;
+
+//    @ManyToOne
+//    @JoinColumn(name = "id_cliente", nullable = false)
+//    private Cliente cliente;
 
     @OneToMany(mappedBy = "contaOrigem", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transferencia> transferenciasOrigem;
@@ -64,13 +67,13 @@ public class Conta {
         this.tipo = tipo;
     }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
+//    public Cliente getCliente() {
+//        return cliente;
+//    }
+//
+//    public void setCliente(Cliente cliente) {
+//        this.cliente = cliente;
+//    }
 
     public List<Transferencia> getTransferenciasOrigem() {
         return transferenciasOrigem;
@@ -86,5 +89,13 @@ public class Conta {
 
     public void setTransferenciasDestino(List<Transferencia> transferenciasDestino) {
         this.transferenciasDestino = transferenciasDestino;
+    }
+
+    public Long getId_cliente() {
+        return id_cliente;
+    }
+
+    public void setId_cliente(Long id_cliente) {
+        this.id_cliente = id_cliente;
     }
 }
