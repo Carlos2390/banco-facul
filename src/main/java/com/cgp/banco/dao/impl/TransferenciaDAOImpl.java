@@ -24,6 +24,17 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
                 .setParameter(3, transferencia.getId_conta_origem())
                 .setParameter(4, transferencia.getId_conta_destino())
                 .executeUpdate();
+
+        //Ao salvar a transferência, é necessário atualizar o saldo das contas envolvidas
+        gerenciadorEntidade.createNativeQuery("UPDATE Conta SET saldo = saldo - ? WHERE id_conta = ?")
+                .setParameter(1, transferencia.getValor())
+                .setParameter(2, transferencia.getId_conta_origem())
+                .executeUpdate();
+
+        gerenciadorEntidade.createNativeQuery("UPDATE Conta SET saldo = saldo + ? WHERE id_conta = ?")
+                .setParameter(1, transferencia.getValor())
+                .setParameter(2, transferencia.getId_conta_destino())
+                .executeUpdate();
     }
 
     @Override
@@ -48,6 +59,20 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     @Override
     public List<Transferencia> buscarTodas() {
         return gerenciadorEntidade.createNativeQuery("SELECT * FROM Transferencia", Transferencia.class)
+                .getResultList();
+    }
+
+    @Override
+    public List<Transferencia> buscarTransferenciasPorNumeroContaOrigem(Integer numeroContaOrigem) {
+        return gerenciadorEntidade.createNativeQuery("SELECT * FROM Transferencia WHERE id_conta_origem = ?", Transferencia.class)
+                .setParameter(1, numeroContaOrigem)
+                .getResultList();
+    }
+
+    @Override
+    public List<Transferencia> buscarTransferenciasPorNumeroContaDestino(Integer numeroContaDestino) {
+        return gerenciadorEntidade.createNativeQuery("SELECT * FROM Transferencia WHERE id_conta_destino = ?", Transferencia.class)
+                .setParameter(1, numeroContaDestino)
                 .getResultList();
     }
 }

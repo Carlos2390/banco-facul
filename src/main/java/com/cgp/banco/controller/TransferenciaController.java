@@ -41,6 +41,18 @@ public class TransferenciaController {
         return ResponseEntity.ok(transferencia);
     }
 
+    @GetMapping("/buscarTransferenciasPorNumeroContaOrigem")
+    public ResponseEntity<List<Transferencia>> buscarTransferenciasPorNumeroContaOrigem(@RequestParam Integer numeroContaOrigem) {
+        List<Transferencia> transferencias = transferenciaDAO.buscarTransferenciasPorNumeroContaOrigem(numeroContaOrigem);
+        return ResponseEntity.ok(transferencias);
+    }
+
+    @GetMapping("/buscarTransferenciasPorNumeroContaDestino")
+    public ResponseEntity<List<Transferencia>> buscarTransferenciasPorNumeroContaDestino(@RequestParam Integer numeroContaDestino) {
+        List<Transferencia> transferencias = transferenciaDAO.buscarTransferenciasPorNumeroContaDestino(numeroContaDestino);
+        return ResponseEntity.ok(transferencias);
+    }
+
     @GetMapping
     public ResponseEntity<List<Transferencia>> buscarTodasTransferencias() {
         List<Transferencia> transferencias = transferenciaDAO.buscarTodas();

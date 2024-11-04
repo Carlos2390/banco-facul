@@ -8,4 +8,5 @@ public interface EnderecoDAO {
     void atualizar(Endereco endereco);
     Endereco buscarPorId(Long id);
     List<Endereco> buscarTodos();
+    List<Endereco> buscarEnderecosPorCpfCliente(String cpf);
 }

@@ -41,6 +41,12 @@ public class EnderecoController {
         return ResponseEntity.ok(endereco);
     }
 
+    @GetMapping("/buscarEnderecosPorCpfCliente")
+    public ResponseEntity<List<Endereco>> buscarEnderecosPorCpfCliente(@RequestParam String cpf) {
+        List<Endereco> enderecos = enderecoDAO.buscarEnderecosPorCpfCliente(cpf);
+        return ResponseEntity.ok(enderecos);
+    }
+
     @GetMapping
     public ResponseEntity<List<Endereco>> buscarTodosEnderecos() {
         List<Endereco> enderecos = enderecoDAO.buscarTodos();

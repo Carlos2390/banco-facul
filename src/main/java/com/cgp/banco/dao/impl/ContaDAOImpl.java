@@ -50,4 +50,18 @@ public class ContaDAOImpl implements ContaDAO {
         return gerenciadorEntidade.createNativeQuery("SELECT * FROM Conta", Conta.class)
                 .getResultList();
     }
+
+    @Override
+    public List<Conta> buscarContasPorCpfCliente(String cpf) {
+        return gerenciadorEntidade.createNativeQuery("SELECT * FROM Conta WHERE id_cliente = (SELECT id_cliente FROM Cliente WHERE cpf = ?)", Conta.class)
+                .setParameter(1, cpf)
+                .getResultList();
+    }
+
+    @Override
+    public Conta buscarContaPorNumero(Integer numeroConta) {
+        return (Conta) gerenciadorEntidade.createNativeQuery("SELECT * FROM Conta WHERE numero_conta = ?", Conta.class)
+                .setParameter(1, numeroConta)
+                .getSingleResult();
+    }
 }

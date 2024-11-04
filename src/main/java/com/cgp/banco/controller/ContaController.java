@@ -41,6 +41,21 @@ public class ContaController {
         return ResponseEntity.ok(conta);
     }
 
+    @GetMapping("/buscarContasPorCpfCliente")
+    public ResponseEntity<List<Conta>> buscarContasPorCpfCliente(@RequestParam String cpf) {
+        List<Conta> contas = contaDAO.buscarContasPorCpfCliente(cpf);
+        return ResponseEntity.ok(contas);
+    }
+
+    @GetMapping("/buscarContaPorNumero")
+    public ResponseEntity<Conta> buscarContaPorNumero(@RequestParam Integer numeroConta) {
+        Conta conta = contaDAO.buscarContaPorNumero(numeroConta);
+        if (conta == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(conta);
+    }
+
     @GetMapping
     public ResponseEntity<List<Conta>> buscarTodasContas() {
         List<Conta> contas = contaDAO.buscarTodas();

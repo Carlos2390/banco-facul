@@ -54,4 +54,11 @@ public class EnderecoDAOImpl implements EnderecoDAO {
         return gerenciadorEntidade.createNativeQuery("SELECT * FROM Endereco", Endereco.class)
                 .getResultList();
     }
+
+    @Override
+    public List<Endereco> buscarEnderecosPorCpfCliente(String cpf) {
+        return gerenciadorEntidade.createNativeQuery("SELECT * FROM Endereco WHERE id_cliente = (SELECT id_cliente FROM Cliente WHERE cpf = ?)", Endereco.class)
+                .setParameter(1, cpf)
+                .getResultList();
+    }
 }

@@ -8,4 +8,6 @@ public interface TransferenciaDAO {
     void atualizar(Transferencia transferencia);
     Transferencia buscarPorId(Long id);
     List<Transferencia> buscarTodas();
+    List<Transferencia> buscarTransferenciasPorNumeroContaOrigem(Integer numeroContaOrigem);
+    List<Transferencia> buscarTransferenciasPorNumeroContaDestino(Integer numeroContaDestino);
 }

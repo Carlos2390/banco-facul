@@ -8,4 +8,6 @@ public interface ContaDAO {
     void atualizar(Conta conta);
     Conta buscarPorId(Long id);
     List<Conta> buscarTodas();
+    List<Conta> buscarContasPorCpfCliente(String cpf);
+    Conta buscarContaPorNumero(Integer numeroConta);
 }
