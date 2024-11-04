@@ -1,45 +1,49 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.model.Cliente;
-import com.cgp.banco.service.ContaService;
+import com.cgp.banco.dao.ContaDAO;
+import com.cgp.banco.model.Conta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/contas")
 public class ContaController {
 
     @Autowired
-    private ContaService contaService;
+    private ContaDAO contaDAO;
 
-    @PostMapping("/{numeroConta}/depositar")
-    public ResponseEntity<String> depositar(@PathVariable String numeroConta, @RequestParam double valor) {
-        contaService.depositar(numeroConta, valor);
-        return ResponseEntity.ok("Depósito realizado com sucesso.");
+    @PostMapping
+    public ResponseEntity<String> criarConta(@RequestBody Conta conta) {
+        contaDAO.salvar(conta);
+        return ResponseEntity.ok("Conta criada com sucesso.");
     }
 
-    @PostMapping("/{numeroConta}/sacar")
-    public ResponseEntity<String> sacar(@PathVariable String numeroConta, @RequestParam double valor) {
-        contaService.sacar(numeroConta, valor);
-        return ResponseEntity.ok("Saque realizado com sucesso.");
+    @PutMapping("/{id}")
+    public ResponseEntity<String> atualizarConta(@PathVariable Long id, @RequestBody Conta conta) {
+        Conta contaExistente = contaDAO.buscarPorId(id);
+        if (contaExistente == null) {
+            return ResponseEntity.notFound().build();
+        }
+        conta.setId(id);
+        contaDAO.atualizar(conta);
+        return ResponseEntity.ok("Conta atualizada com sucesso.");
     }
 
-    @PostMapping("/transferir")
-    public ResponseEntity<String> transferir(@RequestParam String contaOrigem, @RequestParam String contaDestino, @RequestParam double valor) {
-        contaService.transferir(contaOrigem, contaDestino, valor);
-        return ResponseEntity.ok("Transferência realizada com sucesso.");
+    @GetMapping("/{id}")
+    public ResponseEntity<Conta> buscarContaPorId(@PathVariable Long id) {
+        Conta conta = contaDAO.buscarPorId(id);
+        if (conta == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(conta);
     }
 
-    @PostMapping("/{numeroConta}/encerrar")
-    public ResponseEntity<String> encerrarConta(@PathVariable String numeroConta) {
-        contaService.encerrarConta(numeroConta);
-        return ResponseEntity.ok("Conta encerrada com sucesso.");
-    }
-
-    @GetMapping("/{numeroConta}/saldo")
-    public ResponseEntity<Double> verificarSaldo(@PathVariable String numeroConta) {
-        double saldo = contaService.verificarSaldo(numeroConta);
-        return ResponseEntity.ok(saldo);
+    @GetMapping
+    public ResponseEntity<List<Conta>> buscarTodasContas() {
+        List<Conta> contas = contaDAO.buscarTodas();
+        return ResponseEntity.ok(contas);
     }
 }

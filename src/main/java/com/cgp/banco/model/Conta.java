@@ -2,58 +2,36 @@ package com.cgp.banco.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "Conta")
 public class Conta {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "numero_conta", nullable = false, unique = true)
+    @Column(name = "numero_conta", unique = true, nullable = false, length = 20)
     private String numeroConta;
 
-    @Column(name = "agencia", nullable = false)
-    private String agencia;
+    @Column(nullable = false)
+    private Double saldo;
 
-    @Column(name = "titular", nullable = false)
-    private String titular;
+    @Column(nullable = false, length = 20)
+    private String tipo;
 
-    @Column(name = "cpf_cnpj", nullable = false, unique = true)
-    private String cpfCnpj;
+    @ManyToOne
+    @JoinColumn(name = "id_cliente", nullable = false)
+    private Cliente cliente;
 
-    @Column(name = "saldo", nullable = false)
-    private double saldo;
+    @OneToMany(mappedBy = "contaOrigem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transferencia> transferenciasOrigem;
 
-    @Column(name = "data_criacao", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataCriacao;
+    @OneToMany(mappedBy = "contaDestino", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transferencia> transferenciasDestino;
 
-    @Column(name = "status_conta", nullable = false)
-    private String statusConta;
-
-    @Column(name = "tipo_conta", nullable = false)
-    private String tipoConta;
-
-    @Column(name = "limite_credito")
-    private double limiteCredito;
-
-    public Conta() {
-    }
-
-    public Conta(String numeroConta, String agencia, String titular, String cpfCnpj, double saldo, Date dataCriacao, String statusConta, String tipoConta, double limiteCredito) {
-        this.numeroConta = numeroConta;
-        this.agencia = agencia;
-        this.titular = titular;
-        this.cpfCnpj = cpfCnpj;
-        this.saldo = saldo;
-        this.dataCriacao = dataCriacao;
-        this.statusConta = statusConta;
-        this.tipoConta = tipoConta;
-        this.limiteCredito = limiteCredito;
-    }
-
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -70,94 +48,43 @@ public class Conta {
         this.numeroConta = numeroConta;
     }
 
-    public String getAgencia() {
-        return agencia;
-    }
-
-    public void setAgencia(String agencia) {
-        this.agencia = agencia;
-    }
-
-    public String getTitular() {
-        return titular;
-    }
-
-    public void setTitular(String titular) {
-        this.titular = titular;
-    }
-
-    public String getCpfCnpj() {
-        return cpfCnpj;
-    }
-
-    public void setCpfCnpj(String cpfCnpj) {
-        this.cpfCnpj = cpfCnpj;
-    }
-
-    public double getSaldo() {
+    public Double getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(double saldo) {
+    public void setSaldo(Double saldo) {
         this.saldo = saldo;
     }
 
-    public Date getDataCriacao() {
-        return dataCriacao;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setDataCriacao(Date dataCriacao) {
-        this.dataCriacao = dataCriacao;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
-    public String getStatusConta() {
-        return statusConta;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setStatusConta(String statusConta) {
-        this.statusConta = statusConta;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
-    public String getTipoConta() {
-        return tipoConta;
+    public List<Transferencia> getTransferenciasOrigem() {
+        return transferenciasOrigem;
     }
 
-    public void setTipoConta(String tipoConta) {
-        this.tipoConta = tipoConta;
+    public void setTransferenciasOrigem(List<Transferencia> transferenciasOrigem) {
+        this.transferenciasOrigem = transferenciasOrigem;
     }
 
-    public double getLimiteCredito() {
-        return limiteCredito;
+    public List<Transferencia> getTransferenciasDestino() {
+        return transferenciasDestino;
     }
 
-    public void setLimiteCredito(double limiteCredito) {
-        this.limiteCredito = limiteCredito;
-    }
-
-    public void depositar(double valor) {
-        if (valor > 0) {
-            this.saldo += valor;
-        }
-    }
-
-    public void sacar(double valor) {
-        if (valor > 0 && valor <= this.saldo) {
-            this.saldo -= valor;
-        }
-    }
-
-    public void transferir(Conta destino, double valor) {
-        if (valor > 0 && valor <= this.saldo) {
-            this.saldo -= valor;
-            destino.depositar(valor);
-        }
-    }
-
-    public void encerrarConta() {
-        this.statusConta = "Encerrada";
-    }
-
-    public double verificarSaldo() {
-        return this.saldo;
+    public void setTransferenciasDestino(List<Transferencia> transferenciasDestino) {
+        this.transferenciasDestino = transferenciasDestino;
     }
 }

@@ -5,58 +5,45 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "Endereco")
 public class Endereco {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_endereco;
+    private Long id;
 
-    @Column(nullable = false)
-    private String logradouro;
+    @Column(nullable = false, length = 100)
+    private String rua;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String numero;
 
-    @Column
-    private String complemento;
-
-    @Column(nullable = false)
-    private String bairro;
-
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String cidade;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2)
     private String estado;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 8)
     private String cep;
 
-    public Endereco() {
+    @ManyToOne
+    @JoinColumn(name = "id_cliente", nullable = false)
+    private Cliente cliente;
+
+    // Getters e Setters
+    public Long getId() {
+        return id;
     }
 
-    public Endereco(String logradouro, String numero, String complemento, String bairro, String cidade, String estado, String cep) {
-        this.logradouro = logradouro;
-        this.numero = numero;
-        this.complemento = complemento;
-        this.bairro = bairro;
-        this.cidade = cidade;
-        this.estado = estado;
-        this.cep = cep;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getId_endereco() {
-        return id_endereco;
+    public String getRua() {
+        return rua;
     }
 
-    public void setId_endereco(Long id_endereco) {
-        this.id_endereco = id_endereco;
-    }
-
-    public String getLogradouro() {
-        return logradouro;
-    }
-
-    public void setLogradouro(String logradouro) {
-        this.logradouro = logradouro;
+    public void setRua(String rua) {
+        this.rua = rua;
     }
 
     public String getNumero() {
@@ -65,22 +52,6 @@ public class Endereco {
 
     public void setNumero(String numero) {
         this.numero = numero;
-    }
-
-    public String getComplemento() {
-        return complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
     }
 
     public String getCidade() {
@@ -105,5 +76,13 @@ public class Endereco {
 
     public void setCep(String cep) {
         this.cep = cep;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 }

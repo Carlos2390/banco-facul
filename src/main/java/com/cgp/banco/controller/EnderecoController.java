@@ -1,34 +1,49 @@
 package com.cgp.banco.controller;
 
+import com.cgp.banco.dao.EnderecoDAO;
 import com.cgp.banco.model.Endereco;
-import com.cgp.banco.service.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/enderecos")
 public class EnderecoController {
 
     @Autowired
-    private EnderecoService enderecoService;
+    private EnderecoDAO enderecoDAO;
 
     @PostMapping
-    public ResponseEntity<Endereco> cadastrarEndereco(@RequestBody Endereco endereco) {
-        Endereco novoEndereco = enderecoService.cadastrarEndereco(endereco);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoEndereco);
+    public ResponseEntity<String> criarEndereco(@RequestBody Endereco endereco) {
+        enderecoDAO.salvar(endereco);
+        return ResponseEntity.ok("Endereço criado com sucesso.");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Endereco> atualizarEndereco(@PathVariable Long id, @RequestBody Endereco enderecoAtualizado) {
-        Endereco endereco = enderecoService.atualizarEndereco(id, enderecoAtualizado);
-        return ResponseEntity.ok(endereco);
+    public ResponseEntity<String> atualizarEndereco(@PathVariable Long id, @RequestBody Endereco endereco) {
+        Endereco enderecoExistente = enderecoDAO.buscarPorId(id);
+        if (enderecoExistente == null) {
+            return ResponseEntity.notFound().build();
+        }
+        endereco.setId(id);
+        enderecoDAO.atualizar(endereco);
+        return ResponseEntity.ok("Endereço atualizado com sucesso.");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Endereco> visualizarEndereco(@PathVariable Long id) {
-        Endereco endereco = enderecoService.visualizarEndereco(id);
+    public ResponseEntity<Endereco> buscarEnderecoPorId(@PathVariable Long id) {
+        Endereco endereco = enderecoDAO.buscarPorId(id);
+        if (endereco == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(endereco);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Endereco>> buscarTodosEnderecos() {
+        List<Endereco> enderecos = enderecoDAO.buscarTodos();
+        return ResponseEntity.ok(enderecos);
     }
 }
