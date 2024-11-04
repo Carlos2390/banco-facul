@@ -13,7 +13,7 @@ public class Conta {
     private Long id_conta;
 
     @Column(name = "numero_conta", unique = true, nullable = false, length = 20)
-    private String numeroConta;
+    private Integer numeroConta;
 
     @Column(nullable = false)
     private Double saldo;
@@ -40,11 +40,11 @@ public class Conta {
         this.id_conta = id;
     }
 
-    public String getNumeroConta() {
+    public Integer getNumeroConta() {
         return numeroConta;
     }
 
-    public void setNumeroConta(String numeroConta) {
+    public void setNumeroConta(Integer numeroConta) {
         this.numeroConta = numeroConta;
     }
 

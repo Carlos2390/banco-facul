@@ -14,7 +14,7 @@ public class Endereco {
     private String rua;
 
     @Column(nullable = false, length = 10)
-    private String numero;
+    private Integer numero;
 
     @Column(nullable = false, length = 50)
     private String cidade;
@@ -23,7 +23,7 @@ public class Endereco {
     private String estado;
 
     @Column(nullable = false, length = 8)
-    private String cep;
+    private Integer cep;
 
     @ManyToOne
     @JoinColumn(name = "id_cliente", nullable = false)
@@ -46,11 +46,11 @@ public class Endereco {
         this.rua = rua;
     }
 
-    public String getNumero() {
+    public Integer getNumero() {
         return numero;
     }
 
-    public void setNumero(String numero) {
+    public void setNumero(Integer numero) {
         this.numero = numero;
     }
 
@@ -70,11 +70,11 @@ public class Endereco {
         this.estado = estado;
     }
 
-    public String getCep() {
+    public Integer getCep() {
         return cep;
     }
 
-    public void setCep(String cep) {
+    public void setCep(Integer cep) {
         this.cep = cep;
     }
 
