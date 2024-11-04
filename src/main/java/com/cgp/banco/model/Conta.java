@@ -10,7 +10,7 @@ public class Conta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id_conta;
 
     @Column(name = "numero_conta", unique = true, nullable = false, length = 20)
     private String numeroConta;
@@ -33,11 +33,11 @@ public class Conta {
 
     // Getters e Setters
     public Long getId() {
-        return id;
+        return id_conta;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.id_conta = id;
     }
 
     public String getNumeroConta() {

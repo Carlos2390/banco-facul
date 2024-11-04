@@ -26,7 +26,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 
     @Transactional
     public void atualizar(Cliente cliente) {
-        gerenciadorEntidade.createNativeQuery("UPDATE Cliente SET nome = ?, cpf = ?, data_nascimento = ? WHERE id = ?")
+        gerenciadorEntidade.createNativeQuery("UPDATE Cliente SET nome = ?, cpf = ?, data_nascimento = ? WHERE id_cliente = ?")
                 .setParameter(1, cliente.getNome())
                 .setParameter(2, cliente.getCpf())
                 .setParameter(3, cliente.getDataNascimento())
@@ -35,8 +35,14 @@ public class ClienteDAOImpl implements ClienteDAO {
     }
 
     public Cliente buscarPorId(Long id) {
-        return (Cliente) gerenciadorEntidade.createNativeQuery("SELECT * FROM Cliente WHERE id = ?", Cliente.class)
+        return (Cliente) gerenciadorEntidade.createNativeQuery("SELECT * FROM Cliente WHERE id_cliente = ?", Cliente.class)
                 .setParameter(1, id)
+                .getSingleResult();
+    }
+
+    public Cliente buscarPorCpf(String cpf) {
+        return (Cliente) gerenciadorEntidade.createNativeQuery("SELECT * FROM Cliente WHERE cpf = ?", Cliente.class)
+                .setParameter(1, cpf)
                 .getSingleResult();
     }
 

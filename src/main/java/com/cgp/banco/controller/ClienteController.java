@@ -41,6 +41,15 @@ public class ClienteController {
         return ResponseEntity.ok(cliente);
     }
 
+    @GetMapping("/{cpf}")
+    public ResponseEntity<Cliente> buscarClientePorCpf(@PathVariable String cpf) {
+        Cliente cliente = clienteDAO.buscarPorCpf(cpf);
+        if (cliente == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(cliente);
+    }
+
     @GetMapping
     public ResponseEntity<List<Cliente>> buscarTodosClientes() {
         List<Cliente> clientes = clienteDAO.buscarTodos();

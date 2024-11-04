@@ -11,6 +11,8 @@ public interface ClienteDAO {
 
     public Cliente buscarPorId(Long id);
 
+    public Cliente buscarPorCpf(String cpf);
+
     public List<Cliente> buscarTodos();
 }
 

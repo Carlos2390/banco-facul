@@ -11,7 +11,7 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id_cliente;
 
     @Column(nullable = false, length = 100)
     private String nome;
@@ -30,11 +30,11 @@ public class Cliente {
 
     // Getters e Setters
     public Long getId() {
-        return id;
+        return id_cliente;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.id_cliente = id;
     }
 
     public String getNome() {

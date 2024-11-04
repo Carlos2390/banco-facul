@@ -10,7 +10,7 @@ public class Transferencia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id_transferencia;
 
     @Column(nullable = false)
     private LocalDateTime data;
@@ -28,11 +28,11 @@ public class Transferencia {
 
     // Getters e Setters
     public Long getId() {
-        return id;
+        return id_transferencia;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.id_transferencia = id;
     }
 
     public LocalDateTime getData() {

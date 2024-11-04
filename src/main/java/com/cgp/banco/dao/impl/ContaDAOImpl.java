@@ -29,7 +29,7 @@ public class ContaDAOImpl implements ContaDAO {
     @Override
     @Transactional
     public void atualizar(Conta conta) {
-        gerenciadorEntidade.createNativeQuery("UPDATE Conta SET numero_conta = ?, saldo = ?, tipo = ?, id_cliente = ? WHERE id = ?")
+        gerenciadorEntidade.createNativeQuery("UPDATE Conta SET numero_conta = ?, saldo = ?, tipo = ?, id_cliente = ? WHERE id_conta = ?")
                 .setParameter(1, conta.getNumeroConta())
                 .setParameter(2, conta.getSaldo())
                 .setParameter(3, conta.getTipo())
@@ -40,7 +40,7 @@ public class ContaDAOImpl implements ContaDAO {
 
     @Override
     public Conta buscarPorId(Long id) {
-        return (Conta) gerenciadorEntidade.createNativeQuery("SELECT * FROM Conta WHERE id = ?", Conta.class)
+        return (Conta) gerenciadorEntidade.createNativeQuery("SELECT * FROM Conta WHERE id_conta = ?", Conta.class)
                 .setParameter(1, id)
                 .getSingleResult();
     }

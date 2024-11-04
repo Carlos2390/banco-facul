@@ -31,7 +31,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
     @Override
     @Transactional
     public void atualizar(Endereco endereco) {
-        gerenciadorEntidade.createNativeQuery("UPDATE Endereco SET rua = ?, numero = ?, cidade = ?, estado = ?, cep = ?, id_cliente = ? WHERE id = ?")
+        gerenciadorEntidade.createNativeQuery("UPDATE Endereco SET rua = ?, numero = ?, cidade = ?, estado = ?, cep = ?, id_cliente = ? WHERE id_endereco = ?")
                 .setParameter(1, endereco.getRua())
                 .setParameter(2, endereco.getNumero())
                 .setParameter(3, endereco.getCidade())
@@ -44,7 +44,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 
     @Override
     public Endereco buscarPorId(Long id) {
-        return (Endereco) gerenciadorEntidade.createNativeQuery("SELECT * FROM Endereco WHERE id = ?", Endereco.class)
+        return (Endereco) gerenciadorEntidade.createNativeQuery("SELECT * FROM Endereco WHERE id_endereco = ?", Endereco.class)
                 .setParameter(1, id)
                 .getSingleResult();
     }

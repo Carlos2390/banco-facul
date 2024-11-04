@@ -29,7 +29,7 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     @Override
     @Transactional
     public void atualizar(Transferencia transferencia) {
-        gerenciadorEntidade.createNativeQuery("UPDATE Transferencia SET data = ?, valor = ?, id_conta_origem = ?, id_conta_destino = ? WHERE id = ?")
+        gerenciadorEntidade.createNativeQuery("UPDATE Transferencia SET data = ?, valor = ?, id_conta_origem = ?, id_conta_destino = ? WHERE id_transferencia = ?")
                 .setParameter(1, transferencia.getData())
                 .setParameter(2, transferencia.getValor())
                 .setParameter(3, transferencia.getContaOrigem().getId())
@@ -40,7 +40,7 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
 
     @Override
     public Transferencia buscarPorId(Long id) {
-        return (Transferencia) gerenciadorEntidade.createNativeQuery("SELECT * FROM Transferencia WHERE id = ?", Transferencia.class)
+        return (Transferencia) gerenciadorEntidade.createNativeQuery("SELECT * FROM Transferencia WHERE id_transferencia = ?", Transferencia.class)
                 .setParameter(1, id)
                 .getSingleResult();
     }
