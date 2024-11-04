@@ -18,6 +18,13 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     @Override
     @Transactional
     public void salvar(Transferencia transferencia) {
+        //verificar se ha saldo na conta de origem
+        Long saldo = (Long) gerenciadorEntidade.createNativeQuery("SELECT saldo FROM Conta WHERE id_conta = ?")
+                .setParameter(1, transferencia.getId_conta_origem())
+                .getSingleResult();
+        if (saldo < transferencia.getValor()) {
+            throw new RuntimeException("Saldo insuficiente.");
+        }
         gerenciadorEntidade.createNativeQuery("INSERT INTO Transferencia (data, valor, id_conta_origem, id_conta_destino) VALUES (?, ?, ?, ?)")
                 .setParameter(1, transferencia.getData())
                 .setParameter(2, transferencia.getValor())
