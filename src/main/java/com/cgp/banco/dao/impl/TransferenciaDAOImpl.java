@@ -19,7 +19,7 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     @Transactional
     public void salvar(Transferencia transferencia) {
         //verificar se ha saldo na conta de origem
-        Long saldo = (Long) gerenciadorEntidade.createNativeQuery("SELECT saldo FROM Conta WHERE id_conta = ?")
+        Double saldo = (Double) gerenciadorEntidade.createNativeQuery("SELECT saldo FROM Conta WHERE id_conta = ?")
                 .setParameter(1, transferencia.getId_conta_origem())
                 .getSingleResult();
         if (saldo < transferencia.getValor()) {
