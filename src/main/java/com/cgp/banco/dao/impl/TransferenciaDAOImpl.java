@@ -64,6 +64,45 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     }
 
     @Override
+    public void deletar(Transferencia transferencia) {
+        gerenciadorEntidade.createNativeQuery("DELETE FROM Transferencia WHERE id_transferencia = ?")
+                .setParameter(1, transferencia.getId())
+                .executeUpdate();
+    }
+
+    @Override
+    public void deletarTransferenciasPorIdConta(Long idConta) {
+        gerenciadorEntidade.createNativeQuery("DELETE FROM Transferencia WHERE id_conta_origem = ? OR id_conta_destino = ?")
+                .setParameter(1, idConta)
+                .setParameter(2, idConta)
+                .executeUpdate();
+    }
+
+    @Override
+    public void deletarTransferenciasPorNumeroConta(Integer numeroConta) {
+        gerenciadorEntidade.createNativeQuery("DELETE FROM Transferencia WHERE id_conta_origem IN (SELECT id_conta FROM Conta WHERE numero_conta = ?) OR id_conta_destino IN (SELECT id_conta FROM Conta WHERE numero_conta = ?)")
+                .setParameter(1, numeroConta)
+                .setParameter(2, numeroConta)
+                .executeUpdate();
+    }
+
+    @Override
+    public void deletarTransferenciasPorCpfCliente(String cpf) {
+        gerenciadorEntidade.createNativeQuery("DELETE FROM Transferencia WHERE id_conta_origem IN (SELECT id_conta FROM Conta WHERE id_cliente = (SELECT id_cliente FROM Cliente WHERE cpf = ?)) OR id_conta_destino IN (SELECT id_conta FROM Conta WHERE id_cliente = (SELECT id_cliente FROM Cliente WHERE cpf = ?))")
+                .setParameter(1, cpf)
+                .setParameter(2, cpf)
+                .executeUpdate();
+    }
+
+    @Override
+    public void deletarTransferenciasPorIdCliente(Long id) {
+        gerenciadorEntidade.createNativeQuery("DELETE FROM Transferencia WHERE id_conta_origem IN (SELECT id_conta FROM Conta WHERE id_cliente = ?) OR id_conta_destino IN (SELECT id_conta FROM Conta WHERE id_cliente = ?)")
+                .setParameter(1, id)
+                .setParameter(2, id)
+                .executeUpdate();
+    }
+
+    @Override
     public List<Transferencia> buscarTodas() {
         return gerenciadorEntidade.createNativeQuery("SELECT * FROM Transferencia", Transferencia.class)
                 .getResultList();

@@ -6,13 +6,11 @@ import java.util.List;
 
 public interface ClienteDAO {
     public void salvar(Cliente cliente);
-
     public void atualizar(Cliente cliente);
-
     public Cliente buscarPorId(Long id);
-
     public Cliente buscarPorCpf(String cpf);
-
+    public void deletar(Long id);
+    public void deletarClientePorCpf(String cpf);
     public List<Cliente> buscarTodos();
 }
 

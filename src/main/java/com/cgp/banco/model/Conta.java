@@ -24,16 +24,6 @@ public class Conta {
     @Column(nullable = false)
     private Long id_cliente;
 
-//    @ManyToOne
-//    @JoinColumn(name = "id_cliente", nullable = false)
-//    private Cliente cliente;
-//
-//    @OneToMany(mappedBy = "contaOrigem", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Transferencia> transferenciasOrigem;
-//
-//    @OneToMany(mappedBy = "contaDestino", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Transferencia> transferenciasDestino;
-
     // Getters e Setters
     public Long getId() {
         return id_conta;
@@ -67,29 +57,6 @@ public class Conta {
         this.tipo = tipo;
     }
 
-//    public Cliente getCliente() {
-//        return cliente;
-//    }
-//
-//    public void setCliente(Cliente cliente) {
-//        this.cliente = cliente;
-//    }
-
-//    public List<Transferencia> getTransferenciasOrigem() {
-//        return transferenciasOrigem;
-//    }
-//
-//    public void setTransferenciasOrigem(List<Transferencia> transferenciasOrigem) {
-//        this.transferenciasOrigem = transferenciasOrigem;
-//    }
-//
-//    public List<Transferencia> getTransferenciasDestino() {
-//        return transferenciasDestino;
-//    }
-
-//    public void setTransferenciasDestino(List<Transferencia> transferenciasDestino) {
-//        this.transferenciasDestino = transferenciasDestino;
-//    }
 
     public Long getId_cliente() {
         return id_cliente;

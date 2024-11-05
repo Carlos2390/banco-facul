@@ -47,6 +47,22 @@ public class EnderecoController {
         return ResponseEntity.ok(enderecos);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarEndereco(@PathVariable Long id) {
+        Endereco endereco = enderecoDAO.buscarPorId(id);
+        if (endereco == null) {
+            return ResponseEntity.notFound().build();
+        }
+        enderecoDAO.deletar(endereco);
+        return ResponseEntity.ok("Endereço deletado com sucesso.");
+    }
+
+    @DeleteMapping("/deletarEnderecosPorCpfCliente")
+    public ResponseEntity<String> deletarEnderecosPorCpfCliente(@RequestParam String cpf) {
+        enderecoDAO.deletarEnderecosPorCpfCliente(cpf);
+        return ResponseEntity.ok("Endereços deletados com sucesso.");
+    }
+
     @GetMapping
     public ResponseEntity<List<Endereco>> buscarTodosEnderecos() {
         List<Endereco> enderecos = enderecoDAO.buscarTodos();

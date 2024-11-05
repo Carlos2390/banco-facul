@@ -56,6 +56,22 @@ public class ContaController {
         return ResponseEntity.ok(conta);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarConta(@PathVariable Long id) {
+        Conta conta = contaDAO.buscarPorId(id);
+        if (conta == null) {
+            return ResponseEntity.notFound().build();
+        }
+        contaDAO.deletar(id);
+        return ResponseEntity.ok("Conta deletada com sucesso.");
+    }
+
+    @DeleteMapping("/deletarContaPorNumero")
+    public ResponseEntity<String> deletarContaPorNumero(@RequestParam Integer numeroConta) {
+        contaDAO.deletarContaPorNumero(numeroConta);
+        return ResponseEntity.ok("Conta deletada com sucesso.");
+    }
+
     @GetMapping
     public ResponseEntity<List<Conta>> buscarTodasContas() {
         List<Conta> contas = contaDAO.buscarTodas();

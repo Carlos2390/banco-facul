@@ -1,10 +1,13 @@
 package com.cgp.banco.dao.impl;
 
 import com.cgp.banco.dao.ClienteDAO;
+import com.cgp.banco.dao.ContaDAO;
+import com.cgp.banco.dao.EnderecoDAO;
 import com.cgp.banco.model.Cliente;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,6 +17,12 @@ public class ClienteDAOImpl implements ClienteDAO {
 
     @PersistenceContext
     private EntityManager gerenciadorEntidade;
+
+    @Autowired
+    private EnderecoDAO enderecoDAO;
+
+    @Autowired
+    private ContaDAO contaDAO;
 
     @Override
     @Transactional
@@ -48,6 +57,26 @@ public class ClienteDAOImpl implements ClienteDAO {
         return (Cliente) gerenciadorEntidade.createNativeQuery("SELECT * FROM Cliente WHERE cpf = ?", Cliente.class)
                 .setParameter(1, cpf)
                 .getSingleResult();
+    }
+
+    @Override
+    public void deletar(Long id) {
+        gerenciadorEntidade.createNativeQuery("DELETE FROM Cliente WHERE id_cliente = ?")
+                .setParameter(1, id)
+                .executeUpdate();
+
+        contaDAO.deletarContasPorIdCliente(id);
+        enderecoDAO.deletarEnderecosPorIdCliente(id);
+    }
+
+    @Override
+    public void deletarClientePorCpf(String cpf) {
+        gerenciadorEntidade.createNativeQuery("DELETE FROM Cliente WHERE cpf = ?")
+                .setParameter(1, cpf)
+                .executeUpdate();
+
+        contaDAO.deletarContasPorCpfCliente(cpf);
+        enderecoDAO.deletarEnderecosPorCpfCliente(cpf);
     }
 
     @Override

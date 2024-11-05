@@ -9,5 +9,9 @@ public interface ContaDAO {
     Conta buscarPorId(Long id);
     List<Conta> buscarTodas();
     List<Conta> buscarContasPorCpfCliente(String cpf);
+    void deletar(Long id);
+    void deletarContaPorNumero(Integer numeroConta);
+    void deletarContasPorCpfCliente(String cpf);
+    void deletarContasPorIdCliente(Long id);
     Conta buscarContaPorNumero(Integer numeroConta);
 }

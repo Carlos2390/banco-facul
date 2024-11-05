@@ -50,6 +50,27 @@ public class EnderecoDAOImpl implements EnderecoDAO {
     }
 
     @Override
+    public void deletar(Endereco endereco) {
+        gerenciadorEntidade.createNativeQuery("DELETE FROM Endereco WHERE id_endereco = ?")
+                .setParameter(1, endereco.getId())
+                .executeUpdate();
+    }
+
+    @Override
+    public void deletarEnderecosPorCpfCliente(String cpf) {
+        gerenciadorEntidade.createNativeQuery("DELETE FROM Endereco WHERE id_cliente = (SELECT id_cliente FROM Cliente WHERE cpf = ?)")
+                .setParameter(1, cpf)
+                .executeUpdate();
+    }
+
+    @Override
+    public void deletarEnderecosPorIdCliente(Long id) {
+        gerenciadorEntidade.createNativeQuery("DELETE FROM Endereco WHERE id_cliente = ?")
+                .setParameter(1, id)
+                .executeUpdate();
+    }
+
+    @Override
     public List<Endereco> buscarTodos() {
         return gerenciadorEntidade.createNativeQuery("SELECT * FROM Endereco", Endereco.class)
                 .getResultList();

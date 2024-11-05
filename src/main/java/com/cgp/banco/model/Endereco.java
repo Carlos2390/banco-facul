@@ -28,10 +28,6 @@ public class Endereco {
     @Column(nullable = false)
     private Long id_cliente;
 
-//    @ManyToOne
-//    @JoinColumn(name = "id_cliente", nullable = false)
-//    private Cliente cliente;
-
     // Getters e Setters
     public Long getId() {
         return id_endereco;

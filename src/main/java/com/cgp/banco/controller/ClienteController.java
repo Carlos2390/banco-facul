@@ -50,6 +50,22 @@ public class ClienteController {
         return ResponseEntity.ok(cliente);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarCliente(@PathVariable Long id) {
+        Cliente cliente = clienteDAO.buscarPorId(id);
+        if (cliente == null) {
+            return ResponseEntity.notFound().build();
+        }
+        clienteDAO.deletar(id);
+        return ResponseEntity.ok("Cliente deletado com sucesso.");
+    }
+
+    @DeleteMapping("/deletarClientePorCpf")
+    public ResponseEntity<String> deletarClientePorCpf(@RequestParam String cpf) {
+        clienteDAO.deletarClientePorCpf(cpf);
+        return ResponseEntity.ok("Cliente deletado com sucesso.");
+    }
+
     @GetMapping
     public ResponseEntity<List<Cliente>> buscarTodosClientes() {
         List<Cliente> clientes = clienteDAO.buscarTodos();

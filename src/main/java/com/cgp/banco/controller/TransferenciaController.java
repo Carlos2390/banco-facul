@@ -53,6 +53,16 @@ public class TransferenciaController {
         return ResponseEntity.ok(transferencias);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarTransferencia(@PathVariable Long id) {
+        Transferencia transferencia = transferenciaDAO.buscarPorId(id);
+        if (transferencia == null) {
+            return ResponseEntity.notFound().build();
+        }
+        transferenciaDAO.deletar(transferencia);
+        return ResponseEntity.ok("Transferência deletada com sucesso.");
+    }
+
     @GetMapping
     public ResponseEntity<List<Transferencia>> buscarTodasTransferencias() {
         List<Transferencia> transferencias = transferenciaDAO.buscarTodas();
