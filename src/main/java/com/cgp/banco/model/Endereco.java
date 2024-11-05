@@ -84,13 +84,4 @@ public class Endereco {
     public void setId_cliente(Long id_cliente) {
         this.id_cliente = id_cliente;
     }
-
-
-//    public Cliente getCliente() {
-//        return cliente;
-//    }
-//
-//    public void setCliente(Cliente cliente) {
-//        this.cliente = cliente;
-//    }
 }

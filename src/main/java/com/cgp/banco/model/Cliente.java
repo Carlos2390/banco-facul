@@ -22,12 +22,6 @@ public class Cliente {
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
-//    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Endereco> enderecos;
-//
-//    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Conta> contas;
-
     // Getters e Setters
     public Long getId() {
         return id_cliente;
@@ -60,20 +54,4 @@ public class Cliente {
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
-
-//    public List<Endereco> getEnderecos() {
-//        return enderecos;
-//    }
-//
-//    public void setEnderecos(List<Endereco> enderecos) {
-//        this.enderecos = enderecos;
-//    }
-//
-//    public List<Conta> getContas() {
-//        return contas;
-//    }
-//
-//    public void setContas(List<Conta> contas) {
-//        this.contas = contas;
-//    }
 }
