@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -19,10 +20,10 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     @Transactional
     public void salvar(Transferencia transferencia) {
         //verificar se ha saldo na conta de origem
-        Double saldo = (Double) gerenciadorEntidade.createNativeQuery("SELECT saldo FROM Conta WHERE id_conta = ?")
+        BigDecimal saldo = (BigDecimal) gerenciadorEntidade.createNativeQuery("SELECT saldo FROM Conta WHERE id_conta = ?")
                 .setParameter(1, transferencia.getId_conta_origem())
                 .getSingleResult();
-        if (saldo < transferencia.getValor()) {
+        if (saldo.doubleValue() < transferencia.getValor()) {
             throw new RuntimeException("Saldo insuficiente.");
         }
         gerenciadorEntidade.createNativeQuery("INSERT INTO Transferencia (data, valor, id_conta_origem, id_conta_destino) VALUES (?, ?, ?, ?)")
