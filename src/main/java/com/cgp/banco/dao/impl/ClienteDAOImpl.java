@@ -60,6 +60,7 @@ public class ClienteDAOImpl implements ClienteDAO {
     }
 
     @Override
+    @Transactional
     public void deletar(Long id) {
         gerenciadorEntidade.createNativeQuery("DELETE FROM Cliente WHERE id_cliente = ?")
                 .setParameter(1, id)
@@ -70,6 +71,7 @@ public class ClienteDAOImpl implements ClienteDAO {
     }
 
     @Override
+    @Transactional
     public void deletarClientePorCpf(String cpf) {
         gerenciadorEntidade.createNativeQuery("DELETE FROM Cliente WHERE cpf = ?")
                 .setParameter(1, cpf)

@@ -64,6 +64,7 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     }
 
     @Override
+    @Transactional
     public void deletar(Transferencia transferencia) {
         gerenciadorEntidade.createNativeQuery("DELETE FROM Transferencia WHERE id_transferencia = ?")
                 .setParameter(1, transferencia.getId())
@@ -71,6 +72,7 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     }
 
     @Override
+    @Transactional
     public void deletarTransferenciasPorIdConta(Long idConta) {
         gerenciadorEntidade.createNativeQuery("DELETE FROM Transferencia WHERE id_conta_origem = ? OR id_conta_destino = ?")
                 .setParameter(1, idConta)
@@ -79,6 +81,7 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     }
 
     @Override
+    @Transactional
     public void deletarTransferenciasPorNumeroConta(Integer numeroConta) {
         gerenciadorEntidade.createNativeQuery("DELETE FROM Transferencia WHERE id_conta_origem IN (SELECT id_conta FROM Conta WHERE numero_conta = ?) OR id_conta_destino IN (SELECT id_conta FROM Conta WHERE numero_conta = ?)")
                 .setParameter(1, numeroConta)
@@ -87,6 +90,7 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     }
 
     @Override
+    @Transactional
     public void deletarTransferenciasPorCpfCliente(String cpf) {
         gerenciadorEntidade.createNativeQuery("DELETE FROM Transferencia WHERE id_conta_origem IN (SELECT id_conta FROM Conta WHERE id_cliente = (SELECT id_cliente FROM Cliente WHERE cpf = ?)) OR id_conta_destino IN (SELECT id_conta FROM Conta WHERE id_cliente = (SELECT id_cliente FROM Cliente WHERE cpf = ?))")
                 .setParameter(1, cpf)
@@ -95,6 +99,7 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     }
 
     @Override
+    @Transactional
     public void deletarTransferenciasPorIdCliente(Long id) {
         gerenciadorEntidade.createNativeQuery("DELETE FROM Transferencia WHERE id_conta_origem IN (SELECT id_conta FROM Conta WHERE id_cliente = ?) OR id_conta_destino IN (SELECT id_conta FROM Conta WHERE id_cliente = ?)")
                 .setParameter(1, id)

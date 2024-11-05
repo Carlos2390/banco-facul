@@ -64,6 +64,7 @@ public class ContaDAOImpl implements ContaDAO {
     }
 
     @Override
+    @Transactional
     public void deletar(Long id) {
         gerenciadorEntidade.createNativeQuery("DELETE FROM Conta WHERE id_conta = ?")
                 .setParameter(1, id)
@@ -72,6 +73,7 @@ public class ContaDAOImpl implements ContaDAO {
     }
 
     @Override
+    @Transactional
     public void deletarContaPorNumero(Integer numeroConta) {
         gerenciadorEntidade.createNativeQuery("DELETE FROM Conta WHERE numero_conta = ?")
                 .setParameter(1, numeroConta)
@@ -80,6 +82,7 @@ public class ContaDAOImpl implements ContaDAO {
     }
 
     @Override
+    @Transactional
     public void deletarContasPorCpfCliente(String cpf) {
         gerenciadorEntidade.createNativeQuery("DELETE FROM Conta WHERE id_cliente = (SELECT id_cliente FROM Cliente WHERE cpf = ?)")
                 .setParameter(1, cpf)
@@ -88,6 +91,7 @@ public class ContaDAOImpl implements ContaDAO {
     }
 
     @Override
+    @Transactional
     public void deletarContasPorIdCliente(Long id) {
         gerenciadorEntidade.createNativeQuery("DELETE FROM Conta WHERE id_cliente = ?")
                 .setParameter(1, id)
