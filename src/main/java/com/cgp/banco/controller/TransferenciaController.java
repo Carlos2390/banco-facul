@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -33,6 +34,8 @@ public class TransferenciaController {
         transferencia.setId_conta_destino(contaDesitino.getId());
         // Define o valor da transferência
         transferencia.setValor(valor);
+
+        transferencia.setData(LocalDateTime.now());
         // Salva a transferência no banco de dados
         transferenciaDAO.salvar(transferencia);
         // Retorna uma resposta de sucesso
@@ -42,6 +45,7 @@ public class TransferenciaController {
     @PostMapping
     public ResponseEntity<String> criarTransferencia(@RequestBody Transferencia transferencia) {
         // Salva a transferência no banco de dados
+        transferencia.setData(LocalDateTime.now());
         transferenciaDAO.salvar(transferencia);
         // Retorna uma resposta de sucesso
         return ResponseEntity.ok("Transferência criada com sucesso.");
