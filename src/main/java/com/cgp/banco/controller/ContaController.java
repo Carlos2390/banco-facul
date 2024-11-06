@@ -101,7 +101,7 @@ public class ContaController {
     @GetMapping
     public ResponseEntity<List<Conta>> buscarTodasContas() {
         // Busca todas as contas
-        List<Conta> contas = contaDAO.buscarTodas();
+        List<Conta> contas = contaDAO.buscarTodos();
         // Retorna a lista de contas
         return ResponseEntity.ok(contas);
     }

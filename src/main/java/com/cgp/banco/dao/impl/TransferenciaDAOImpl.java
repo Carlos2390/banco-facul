@@ -69,10 +69,10 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
 
     @Override
     @Transactional
-    public void deletar(Transferencia transferencia) {
+    public void deletar(Long id_transferencia) {
         // Deleta uma transferência pelo ID no banco de dados
         gerenciadorEntidade.createNativeQuery("DELETE FROM Transferencia WHERE id_transferencia = ?")
-                .setParameter(1, transferencia.getId()) // Define o primeiro parâmetro como o ID da transferência
+                .setParameter(1, id_transferencia) // Define o primeiro parâmetro como o ID da transferência
                 .executeUpdate();
     }
 
@@ -117,7 +117,7 @@ public class TransferenciaDAOImpl implements TransferenciaDAO {
     }
 
     @Override
-    public List<Transferencia> buscarTodas() {
+    public List<Transferencia> buscarTodos() {
         // Busca todas as transferências no banco de dados
         return gerenciadorEntidade.createNativeQuery("SELECT * FROM Transferencia", Transferencia.class)
                 .getResultList();

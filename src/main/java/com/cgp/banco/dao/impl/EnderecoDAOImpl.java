@@ -54,10 +54,10 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 
     @Override
     @Transactional
-    public void deletar(Endereco endereco) {
+    public void deletar(Long id_endereco) {
         // Cria uma consulta nativa para deletar um endereço pelo ID no banco de dados
         gerenciadorEntidade.createNativeQuery("DELETE FROM Endereco WHERE id_endereco = ?")
-                .setParameter(1, endereco.getId()) // Define o primeiro parâmetro como o ID do endereço
+                .setParameter(1, id_endereco) // Define o primeiro parâmetro como o ID do endereço
                 .executeUpdate(); // Executa a consulta de deleção
     }
 

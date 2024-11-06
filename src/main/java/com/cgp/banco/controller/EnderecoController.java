@@ -72,7 +72,7 @@ public class EnderecoController {
             return ResponseEntity.notFound().build();
         }
         // Deleta o endereço do banco de dados
-        enderecoDAO.deletar(endereco);
+        enderecoDAO.deletar(id);
         // Retorna uma resposta de sucesso
         return ResponseEntity.ok("Endereço deletado com sucesso.");
     }

@@ -54,7 +54,7 @@ public class ContaDAOImpl implements ContaDAO {
     }
 
     @Override
-    public List<Conta> buscarTodas() {
+    public List<Conta> buscarTodos() {
         // Cria uma consulta nativa para buscar todas as contas no banco de dados
         return gerenciadorEntidade.createNativeQuery("SELECT * FROM Conta", Conta.class)
                 .getResultList(); // Executa a consulta e retorna uma lista de resultados
