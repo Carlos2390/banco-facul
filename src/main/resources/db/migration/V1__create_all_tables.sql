@@ -41,7 +41,7 @@ CREATE TABLE transferencia (
 );
 
 CREATE TABLE usuario (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );
@@ -55,7 +55,7 @@ ALTER TABLE conta
 ADD COLUMN usuario_id INT REFERENCES usuario(id);
 
 CREATE TABLE log (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     data_hora TIMESTAMP NOT NULL,
     descricao TEXT NOT NULL,
     usuario_id INT,
