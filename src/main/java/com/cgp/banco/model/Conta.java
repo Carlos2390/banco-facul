@@ -24,6 +24,9 @@ public class Conta {
     @Column(nullable = false)
     private Long id_cliente;
 
+    @Column(name = "id_usuario", nullable = false)
+    private Long idUsuario;
+
     // Getters e Setters
     public Long getId() {
         return id_conta;
@@ -64,5 +67,13 @@ public class Conta {
 
     public void setId_cliente(Long id_cliente) {
         this.id_cliente = id_cliente;
+    }
+
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 }

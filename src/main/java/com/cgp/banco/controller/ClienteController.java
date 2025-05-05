@@ -1,12 +1,16 @@
 package com.cgp.banco.controller;
 
 import com.cgp.banco.dao.ClienteDAO;
+import com.cgp.banco.dao.LogDAO;
 import com.cgp.banco.model.Cliente;
+import com.cgp.banco.model.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Objects;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -16,12 +20,26 @@ public class ClienteController {
     @Autowired
     private ClienteDAO clienteDAO;
 
+    @Autowired
+    private LogDAO logDAO;
+
     @PostMapping
-    public ResponseEntity<String> criarCliente(@RequestBody Cliente cliente) {
-        // Salva o cliente no banco de dados
-        clienteDAO.salvar(cliente);
-        // Retorna uma resposta de sucesso
-        return ResponseEntity.ok("Cliente criado com sucesso.");
+    public ResponseEntity<String> criarCliente(@RequestBody Cliente cliente, HttpSession session) {
+        try {
+            // Obtenha o ID do usuário da sessão
+            Integer userId = (Integer) session.getAttribute("currentUserId");
+            clienteDAO.setUserId(userId);
+            // Salva o cliente no banco de dados
+            clienteDAO.salvar(cliente);
+            // Retorna uma resposta de sucesso
+            return ResponseEntity.ok("Cliente criado com sucesso.");
+        } catch (Exception e) {
+            Log log = new Log(null, null, session.getAttribute("currentUserId") != null ? (Integer) session.getAttribute("currentUserId") : null, "Erro ao criar cliente", "Cliente", null, e.getMessage(), null, null);
+            logDAO.salvar(log);
+            // Retorna uma resposta de erro
+            return ResponseEntity.badRequest().body("Erro ao criar cliente: " + e.getMessage());
+        }
+
     }
 
     @PutMapping("/{id}")
@@ -35,10 +53,21 @@ public class ClienteController {
         }
         // Define o ID do cliente
         cliente.setId(id);
-        // Atualiza o cliente no banco de dados
-        clienteDAO.atualizar(cliente);
-        // Retorna uma resposta de sucesso
-        return ResponseEntity.ok("Cliente atualizado com sucesso.");
+        try {
+            // Obtenha o ID do usuário da sessão
+            Integer userId = (Integer) session.getAttribute("currentUserId");
+            clienteDAO.setUserId(userId);
+            // Atualiza o cliente no banco de dados
+            clienteDAO.atualizar(cliente);
+            // Retorna uma resposta de sucesso
+            return ResponseEntity.ok("Cliente atualizado com sucesso.");
+        } catch (Exception e) {
+            Log log = new Log(null, null, session.getAttribute("currentUserId") != null ? (Integer) session.getAttribute("currentUserId") : null, "Erro ao atualizar cliente", "Cliente", cliente.getId().intValue(), e.getMessage(), null, null);
+            logDAO.salvar(log);
+            // Retorna uma resposta de erro
+            return ResponseEntity.badRequest().body("Erro ao atualizar cliente: " + e.getMessage());
+        }
+
     }
 
     @GetMapping("/{id}")
