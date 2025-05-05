@@ -1,6 +1,6 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.dao.ClienteDAO;
+import com.cgp.banco.dao.ClienteRepository;
 import com.cgp.banco.dao.LogDAO;
 import com.cgp.banco.model.Cliente;
 import com.cgp.banco.model.Log;
@@ -16,8 +16,8 @@ import java.util.List;
 @RequestMapping("/clientes")
 public class ClienteController {
 
-    @Autowired
-    private ClienteDAO clienteDAO;
+    @Autowired 
+    private ClienteRepository clienteRepository;
 
     @Autowired
     private LogDAO logDAO;
@@ -26,10 +26,8 @@ public class ClienteController {
     public ResponseEntity<String> criarCliente(@RequestBody Cliente cliente, HttpSession session) {
         try {
             // Obtenha o ID do usuário da sessão
-            Integer userId = (Integer) session.getAttribute("currentUserId");
-            clienteDAO.setUserId(userId);
             // Salva o cliente no banco de dados
-            clienteDAO.salvar(cliente);
+            clienteRepository.save(cliente);
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Cliente criado com sucesso.");
         } catch (Exception e) {
@@ -44,20 +42,18 @@ public class ClienteController {
     @PutMapping("/{id}")
     public ResponseEntity<String> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente, HttpSession session) {
         // Busca o cliente existente pelo ID
-        Cliente clienteExistente = clienteDAO.buscarPorId(id);
+        Cliente clienteExistente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
         if (clienteExistente == null) {
             // Retorna uma resposta de não encontrado
             return ResponseEntity.notFound().build();
         }
-        // Define o ID do cliente
-        cliente.setId(id);
+
         try {
             // Obtenha o ID do usuário da sessão
-            Integer userId = (Integer) session.getAttribute("currentUserId");
-            clienteDAO.setUserId(userId);
+            cliente.setId(id);
             // Atualiza o cliente no banco de dados
-            clienteDAO.atualizar(cliente);
+            clienteRepository.save(cliente);
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Cliente atualizado com sucesso.");
         } catch (Exception e) {
@@ -72,7 +68,7 @@ public class ClienteController {
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
         // Busca o cliente pelo ID
-        Cliente cliente = clienteDAO.buscarPorId(id);
+        Cliente cliente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
         if (cliente == null) {
             // Retorna uma resposta de não encontrado
@@ -85,7 +81,7 @@ public class ClienteController {
     @GetMapping("/buscarClientePorCpf")
     public ResponseEntity<Cliente> buscarClientePorCpf(@RequestParam String cpf) {
         // Busca o cliente pelo CPF
-        Cliente cliente = clienteDAO.buscarPorCpf(cpf);
+        Cliente cliente = clienteRepository.findByCpf(cpf);
         // Verifica se o cliente existe
         if (cliente == null) {
             // Retorna uma resposta de não encontrado
@@ -98,14 +94,14 @@ public class ClienteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarCliente(@PathVariable Long id) {
         // Busca o cliente pelo ID
-        Cliente cliente = clienteDAO.buscarPorId(id);
+        Cliente cliente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
         if (cliente == null) {
             // Retorna uma resposta de não encontrado
             return ResponseEntity.notFound().build();
         }
         // Deleta o cliente do banco de dados
-        clienteDAO.deletar(id);
+        clienteRepository.deleteById(id);
         // Retorna uma resposta de sucesso
         return ResponseEntity.ok("Cliente deletado com sucesso.");
     }
@@ -113,7 +109,7 @@ public class ClienteController {
     @DeleteMapping("/deletarClientePorCpf")
     public ResponseEntity<String> deletarClientePorCpf(@RequestParam String cpf) {
         // Deleta o cliente pelo CPF
-        clienteDAO.deletarClientePorCpf(cpf);
+        clienteRepository.deleteByCpf(cpf);
         // Retorna uma resposta de sucesso
         return ResponseEntity.ok("Cliente deletado com sucesso.");
     }
@@ -121,7 +117,7 @@ public class ClienteController {
     @GetMapping
     public ResponseEntity<List<Cliente>> buscarTodosClientes() {
         // Busca todos os clientes
-        List<Cliente> clientes = clienteDAO.buscarTodos();
+        List<Cliente> clientes = clienteRepository.findAll();
         // Retorna a lista de clientes
         return ResponseEntity.ok(clientes);
     }

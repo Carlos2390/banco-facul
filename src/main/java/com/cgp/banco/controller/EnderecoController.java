@@ -1,6 +1,6 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.dao.EnderecoDAO;
+import com.cgp.banco.dao.EnderecoRepository;
 import com.cgp.banco.model.Endereco;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*")
@@ -16,8 +16,8 @@ import java.util.Optional;
 @RequestMapping("/enderecos")
 public class EnderecoController {
 
-    @Autowired
-    private EnderecoDAO enderecoDAO;
+    @Autowired // Injeta o repositório de Endereço
+    private EnderecoRepository enderecoRepository;
 
     @Autowired
     private HttpSession session;
@@ -25,9 +25,10 @@ public class EnderecoController {
     @PostMapping
     public ResponseEntity<String> criarEndereco(@RequestBody Endereco endereco) {
         try {
-            setUserIdInDAO();
-            // Salva o endereço no banco de dados
-            enderecoDAO.salvar(endereco);
+
+            // Usa o método save do EnderecoRepository para salvar o endereço
+            enderecoRepository.save(endereco);
+
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Endereço criado com sucesso.");
         } catch (Exception e){
@@ -38,19 +39,21 @@ public class EnderecoController {
     @PutMapping("/{id}")
     public ResponseEntity<String> atualizarEndereco(@PathVariable Long id, @RequestBody Endereco endereco) {
         try {
-            setUserIdInDAO();
-            // Busca o endereço existente pelo ID
-            Endereco enderecoExistente = enderecoDAO.buscarPorId(id);
+            // Busca o endereço existente pelo ID utilizando o método findById
+            Optional<Endereco> enderecoExistenteOptional = enderecoRepository.findById(id);
             // Verifica se o endereço existe
-            if (enderecoExistente == null) {
+            if (enderecoExistenteOptional.isEmpty()) {
                 // Retorna uma resposta de não encontrado
                 return ResponseEntity.notFound().build();
             }
+            Endereco enderecoExistente = enderecoExistenteOptional.get();
             // Define o ID do endereço
             endereco.setId(id);
-            // Atualiza o endereço no banco de dados
-            enderecoDAO.atualizar(endereco);
-            // Retorna uma resposta de sucesso
+
+            // Salva a entidade atualizada no banco de dados
+            enderecoRepository.save(endereco);
+
+
             return ResponseEntity.ok("Endereço atualizado com sucesso.");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar o endereço: " + e.getMessage());
@@ -59,11 +62,12 @@ public class EnderecoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Endereco> buscarEnderecoPorId(@PathVariable Long id) {
-        try{
-            setUserIdInDAO();
-            // Busca o endereço pelo ID
-            Endereco endereco = enderecoDAO.buscarPorId(id);
-            // Verifica se o endereço existe
+        try {
+            // Utiliza o método findById do EnderecoRepository para buscar o endereço pelo ID
+            Optional<Endereco> enderecoOptional = enderecoRepository.findById(id);
+
+            // Extrai o endereço do Optional ou retorna not found
+            Endereco endereco = enderecoOptional.orElse(null);
             if (endereco == null) {
                 // Retorna uma resposta de não encontrado
                 return ResponseEntity.notFound().build();
@@ -76,11 +80,16 @@ public class EnderecoController {
     }
 
     @GetMapping("/buscarEnderecosPorCpfCliente")
-    public ResponseEntity<List<Endereco>> buscarEnderecosPorCpfCliente(@RequestParam String cpf) {
+    public ResponseEntity buscarEnderecosPorCpfCliente(@RequestParam String cpf) {
         try{
-            setUserIdInDAO();
-            // Busca os endereços pelo CPF do cliente
-            List<Endereco> enderecos = enderecoDAO.buscarEnderecosPorCpfCliente(cpf);
+            java.util.List<Endereco> enderecos = new ArrayList<>();
+
+            enderecoRepository.findAll().forEach(endereco -> {
+               if(endereco.getCliente() != null && endereco.getCliente().getCpf().equals(cpf)){
+                   enderecos.add(endereco);
+               }
+            });
+
             // Retorna a lista de endereços encontrados
             return ResponseEntity.ok(enderecos);
         }catch (Exception e){
@@ -90,17 +99,19 @@ public class EnderecoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarEndereco(@PathVariable Long id) {
-        try{
-            setUserIdInDAO();
-            // Busca o endereço pelo ID
-            Endereco endereco = enderecoDAO.buscarPorId(id);
-            // Verifica se o endereço existe
-            if (endereco == null) {
+        try {
+            // Utiliza o método findById do EnderecoRepository para buscar o endereço pelo ID
+            Optional<Endereco> enderecoOptional = enderecoRepository.findById(id);
+
+            // Verifica se o endereço foi encontrado
+            if (enderecoOptional.isEmpty()) {
                 // Retorna uma resposta de não encontrado
                 return ResponseEntity.notFound().build();
             }
+
+
             // Deleta o endereço do banco de dados
-            enderecoDAO.deletar(id);
+            enderecoRepository.deleteById(id);
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Endereço deletado com sucesso.");
         } catch (Exception e){
@@ -110,11 +121,16 @@ public class EnderecoController {
 
     @DeleteMapping("/deletarEnderecosPorCpfCliente")
     public ResponseEntity<String> deletarEnderecosPorCpfCliente(@RequestParam String cpf) {
-        try{
-            setUserIdInDAO();
-            // Deleta os endereços pelo CPF do cliente
-            enderecoDAO.deletarEnderecosPorCpfCliente(cpf);
+        try {
+            enderecoRepository.findAll().forEach(endereco -> {
+                if(endereco.getCliente() != null && endereco.getCliente().getCpf().equals(cpf)){
+                    enderecoRepository.delete(endereco);
+                }
+            });
+
             // Retorna uma resposta de sucesso
+
+
             return ResponseEntity.ok("Endereços deletados com sucesso.");
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar os endereços: " + e.getMessage());
@@ -122,19 +138,17 @@ public class EnderecoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Endereco>> buscarTodosEnderecos() {
-        try{
-            setUserIdInDAO();
-            // Busca todos os endereços
-            List<Endereco> enderecos = enderecoDAO.buscarTodos();
+    public ResponseEntity buscarTodosEnderecos() {
+        try {
+            // Utiliza o método findAll do EnderecoRepository para buscar todos os endereços
+            java.util.List<Endereco> enderecos = enderecoRepository.findAll();
             // Retorna a lista de endereços
             return ResponseEntity.ok(enderecos);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     private void setUserIdInDAO() {
         Integer userId = Optional.ofNullable((Integer) session.getAttribute("currentUserId")).orElse(1);
         enderecoDAO.setUserId(userId);
-    }
-}
+    }}

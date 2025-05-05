@@ -1,11 +1,12 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.dao.ContaDAO;
-//import com.cgp.banco.dao.LogDAO;
+
 import com.cgp.banco.dao.LogDAO;
+import com.cgp.banco.dao.ContaRepository;
 import com.cgp.banco.model.Conta;
 import com.cgp.banco.model.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,8 @@ import java.util.List;
 @RequestMapping("/contas")
 public class ContaController {
 
-    @Autowired
-    private ContaDAO contaDAO;
+    @Autowired    
+    private ContaRepository contaRepository;
     
     @Autowired
     private LogDAO logDAO;
@@ -27,10 +28,10 @@ public class ContaController {
     @PostMapping
     public ResponseEntity<String> criarConta(@RequestBody Conta conta, HttpSession session) {
         try {
-            //set user id on session
-            contaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
+           
+            
             // Salva a conta no banco de dados
-            contaDAO.salvar(conta);
+            contaRepository.save(conta);
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Conta criada com sucesso.");
         } catch (Exception e) {
@@ -47,16 +48,17 @@ public class ContaController {
     @PutMapping("/{id}")
     public ResponseEntity<String> atualizarConta(@PathVariable Long id, @RequestBody Conta conta, HttpSession session) {
         try {
-            //set user id on session
-            contaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
+            
             // Busca a conta existente pelo ID
-            Conta contaExistente = contaDAO.buscarPorId(id);
+            Conta contaExistente = contaRepository.findById(id).orElse(null);
             // Verifica se a conta existe
             if (contaExistente == null) {
                 // Retorna uma resposta de não encontrado
                 return ResponseEntity.notFound().build();
             }
+            conta.setCliente(contaExistente.getCliente());
             // Define o ID da conta
+           
             conta.setId(id);
             // Atualiza a conta no banco de dados
             contaDAO.atualizar(conta);
@@ -77,9 +79,8 @@ public class ContaController {
     @GetMapping("/{id}")
     public ResponseEntity<Conta> buscarContaPorId(@PathVariable Long id, HttpSession session) {
         try {
-            //set user id on session
-            contaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
-            // Busca a conta pelo ID
+           
+            // Busca a conta pelo ID 
             Conta conta = contaDAO.buscarPorId(id);
             // Verifica se a conta existe
             if (conta == null) {
@@ -103,9 +104,9 @@ public class ContaController {
     @GetMapping("/buscarContasPorCpfCliente")
     public ResponseEntity<List<Conta>> buscarContasPorCpfCliente(@RequestParam String cpf, HttpSession session) {
         try {
-            //set user id on session
-            contaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
+            
             // Busca as contas pelo CPF do cliente
+             List<Conta> contas = contaRepository.findByClienteCpf(cpf);
             List<Conta> contas = contaDAO.buscarContasPorCpfCliente(cpf);
             // Retorna a lista de contas encontradas
             return ResponseEntity.ok(contas);
@@ -123,9 +124,9 @@ public class ContaController {
     @GetMapping("/buscarContaPorNumero")
     public ResponseEntity<Conta> buscarContaPorNumero(@RequestParam Integer numeroConta, HttpSession session) {
         try {
-            //set user id on session
-            contaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
+           
             // Busca a conta pelo número da conta
+             Conta conta = contaRepository.findByNumeroConta(numeroConta);
             Conta conta = contaDAO.buscarContaPorNumero(numeroConta);
             // Verifica se a conta existe
             if (conta == null) {
@@ -147,16 +148,19 @@ public class ContaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarConta(@PathVariable Long id) {
-        // Busca a conta pelo ID
-        Conta conta = contaDAO.buscarPorId(id);
-        // Verifica se a conta existe
-        if (conta == null) {
-            // Retorna uma resposta de não encontrado
+        try{
+            contaRepository.deleteById(id);
+            return ResponseEntity.ok("Conta deletada com sucesso.");
+        }catch(EmptyResultDataAccessException e){
             return ResponseEntity.notFound().build();
+        }catch(Exception e){
+            return ResponseEntity.internalServerError().body("Erro ao deletar conta.");
         }
-        // Deleta a conta do banco de dados
-        contaDAO.deletar(id);
-        return ResponseEntity.ok("Conta deletada com sucesso.");        
+       
+        
+        
+        
+        
     }
 
     @DeleteMapping("/deletarContaPorNumero")

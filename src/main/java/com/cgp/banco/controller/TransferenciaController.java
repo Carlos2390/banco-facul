@@ -1,7 +1,8 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.dao.ContaDAO;
-import com.cgp.banco.dao.TransferenciaDAO;
+import com.cgp.banco.dao.ContaRepository;
+import com.cgp.banco.dao.TransferenciaRepository;
+import com.cgp.banco.model.Cliente;
 import com.cgp.banco.model.Conta;
 import com.cgp.banco.model.Transferencia;
 import jakarta.servlet.http.HttpSession;
@@ -10,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -18,16 +21,17 @@ import java.util.List;
 @RequestMapping("/transferencias")
 public class TransferenciaController {
 
-    @Autowired
-    private TransferenciaDAO transferenciaDAO;
+    private final TransferenciaRepository transferenciaRepository;
 
-    @Autowired
-    private ContaDAO contaDAO;
+    private final ContaRepository contaRepository;
+
+    public TransferenciaController(TransferenciaRepository transferenciaRepository, ContaRepository contaRepository) {
+        this.transferenciaRepository = transferenciaRepository;
+        this.contaRepository = contaRepository;
+    }
 
     @PostMapping("/porNumeroContas")
     public ResponseEntity<?> criarTransferenciaPorNumeroContas(@RequestParam Integer numeroContaOrigem, @RequestParam Integer numeroContaDestino, @RequestParam Double valor, HttpSession session) {
-        try {
-            transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
             // Cria uma nova transferência
             Transferencia transferencia = new Transferencia();
             // Define o id da conta de origem
@@ -40,10 +44,12 @@ public class TransferenciaController {
             transferencia.setValor(valor);
 
             transferencia.setData(LocalDateTime.now());
-            // Salva a transferência no banco de dados
-            transferenciaDAO.salvar(transferencia);
+            
+            transferenciaRepository.save(transferencia);
+
+           
             // Retorna uma resposta de sucesso
-            return ResponseEntity.ok("Transferência criada com sucesso.");
+            return ResponseEntity.ok("Transferência realizada com sucesso.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar transferencia: " + e.getMessage());
         }
@@ -51,12 +57,10 @@ public class TransferenciaController {
 
     @PostMapping
     public ResponseEntity<?> criarTransferencia(@RequestBody Transferencia transferencia, HttpSession session) {
-        try {
-            transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
             // Salva a transferência no banco de dados
             transferencia.setData(LocalDateTime.now());
-            transferenciaDAO.salvar(transferencia);
-            // Retorna uma resposta de sucesso
+            transferenciaRepository.save(transferencia);
+         
             return ResponseEntity.ok("Transferência criada com sucesso.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar transferencia: " + e.getMessage());
@@ -65,16 +69,13 @@ public class TransferenciaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarTransferencia(@PathVariable Long id, @RequestBody Transferencia transferencia, HttpSession session) {
-        try {
-            transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
-            // Busca a transferência existente pelo ID
-            Transferencia transferenciaExistente = transferenciaDAO.buscarPorId(id);
+        
+        Transferencia transferenciaExistente = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
             if (transferenciaExistente == null) {
-                // Retorna uma resposta de não encontrado
                 return ResponseEntity.notFound().build();
             }
-            // Define o ID da transferência
+            
             transferencia.setId(id);
             // Atualiza a transferência no banco de dados
             transferenciaDAO.atualizar(transferencia);
@@ -87,13 +88,10 @@ public class TransferenciaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarTransferenciaPorId(@PathVariable Long id, HttpSession session) {
-        try {
-            transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
-            // Busca a transferência pelo ID
-            Transferencia transferencia = transferenciaDAO.buscarPorId(id);
+            Transferencia transferencia = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
             if (transferencia == null) {
-                // Retorna uma resposta de não encontrado
+               
                 return ResponseEntity.notFound().build();
             }
             // Retorna a transferência encontrada
@@ -105,10 +103,10 @@ public class TransferenciaController {
 
     @GetMapping("/buscarTransferenciasPorNumeroContaOrigem")
     public ResponseEntity<?> buscarTransferenciasPorNumeroContaOrigem(@RequestParam Integer numeroContaOrigem, HttpSession session) {
-        try {
-            transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
-            // Busca as transferências pelo número da conta de origem
-            List<Transferencia> transferencias = transferenciaDAO.buscarTransferenciasPorNumeroContaOrigem(numeroContaOrigem);
+       
+            Conta conta = contaRepository.findByNumero(numeroContaOrigem);
+            List<Transferencia> transferencias = transferenciaRepository.findByIdContaOrigem(conta.getId());
+
             // Retorna a lista de transferências encontradas
             return ResponseEntity.ok(transferencias);
         } catch (Exception e) {
@@ -118,10 +116,10 @@ public class TransferenciaController {
 
     @GetMapping("/buscarTransferenciasPorNumeroContaDestino")
     public ResponseEntity<?> buscarTransferenciasPorNumeroContaDestino(@RequestParam Integer numeroContaDestino, HttpSession session) {
-        try {
-            transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
-            // Busca as transferências pelo número da conta de destino
-            List<Transferencia> transferencias = transferenciaDAO.buscarTransferenciasPorNumeroContaDestino(numeroContaDestino);
+       
+            Conta conta = contaRepository.findByNumero(numeroContaDestino);
+
+            List<Transferencia> transferencias = transferenciaRepository.findByIdContaDestino(conta.getId());
             // Retorna a lista de transferências encontradas
             return ResponseEntity.ok(transferencias);
         } catch (Exception e) {
@@ -131,17 +129,13 @@ public class TransferenciaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarTransferencia(@PathVariable Long id, HttpSession session) {
-        try {
-            transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
-            // Busca a transferência pelo ID
-            Transferencia transferencia = transferenciaDAO.buscarPorId(id);
+            Transferencia transferencia = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
             if (transferencia == null) {
-                // Retorna uma resposta de não encontrado
                 return ResponseEntity.notFound().build();
             }
-            // Deleta a transferência do banco de dados
-            transferenciaDAO.deletar(id);
+            
+            transferenciaRepository.deleteById(id);
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Transferência deletada com sucesso.");
         } catch (Exception e) {
@@ -151,10 +145,8 @@ public class TransferenciaController {
 
     @GetMapping
     public ResponseEntity<?> buscarTodasTransferencias(HttpSession session) {
-        try {
-            transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
-            // Busca todas as transferências
-            List<Transferencia> transferencias = transferenciaDAO.buscarTodos();
+       
+            List<Transferencia> transferencias = transferenciaRepository.findAll();
             // Retorna a lista de transferências
             return ResponseEntity.ok(transferencias);
         } catch (Exception e) {

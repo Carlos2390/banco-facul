@@ -1,13 +1,14 @@
 package com.cgp.banco;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 @SpringBootApplication
 public class BancoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BancoApplication.class, args);
+        new SpringApplicationBuilder(BancoApplication.class)
+                .run(args);
     }
 
 }
