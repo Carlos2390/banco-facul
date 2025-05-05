@@ -1,6 +1,6 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.dao.EnderecoRepository;
+import com.cgp.banco.repository.EnderecoRepository;
 import com.cgp.banco.model.Endereco;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -148,7 +148,4 @@ public class EnderecoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    private void setUserIdInDAO() {
-        Integer userId = Optional.ofNullable((Integer) session.getAttribute("currentUserId")).orElse(1);
-        enderecoDAO.setUserId(userId);
-    }}
+}

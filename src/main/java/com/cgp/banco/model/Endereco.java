@@ -9,18 +9,18 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "Endereco")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Table(name = "endereco")
 public class Endereco {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_endereco;
+    private Long id;
 
     @Column(nullable = false, length = 100)
     private String rua;
@@ -37,6 +37,10 @@ public class Endereco {
     @Column(nullable = false, length = 8)
     private Integer cep;
 
-    @Column(nullable = false)
-    private Long id_cliente;
+    @Column(name = "id_cliente", nullable = false)
+    private Long idCliente;
+
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne
+    private Cliente cliente;
 }

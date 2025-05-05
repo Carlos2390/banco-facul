@@ -11,19 +11,19 @@ import lombok.ToString;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
-@Table(name = "Cliente")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Entity
+@Table(name = "cliente")
 public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_cliente;
+    private Long id;
 
     @Column(nullable = false, length = 100)
     private String nome;

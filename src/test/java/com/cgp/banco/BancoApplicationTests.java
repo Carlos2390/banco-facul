@@ -1,7 +1,7 @@
 package com.cgp.banco;
 
 import com.cgp.banco.model.Cliente;
-import com.cgp.banco.dao.ClienteRepository;
+import com.cgp.banco.repository.ClienteRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

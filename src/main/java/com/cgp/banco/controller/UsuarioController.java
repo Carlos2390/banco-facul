@@ -1,10 +1,9 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.dao.LogRepository;
-import com.cgp.banco.dao.UsuarioRepository;
 import com.cgp.banco.model.Log;
-import com.cgp.banco.model.LogAcoes;
 import com.cgp.banco.model.Usuario;
+import com.cgp.banco.repository.LogRepository;
+import com.cgp.banco.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,30 +24,30 @@ public class UsuarioController {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private Integer currentUserId = 1;
+    private Long currentUserId = 1L;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Usuario usuario) {
-            if (usuario == null || usuario.getUsername() == null || usuario.getPassword() == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Credenciais inválidas");
-            }
+        if (usuario == null || usuario.getUsername() == null || usuario.getPassword() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Credenciais inválidas");
+        }
 
-            Usuario user = usuarioDAO.findByUsername(usuario.getUsername());
+        Usuario user = usuarioRepository.findByUsername(usuario.getUsername());
 
-            if (user != null && user.getPassword().equals(usuario.getPassword())) {
+        if (user != null && user.getPassword().equals(usuario.getPassword())) {
 
-                this.currentUserId = user.getId();
+            this.currentUserId = user.getId();
 
-                return ResponseEntity.ok("Login feito com sucesso.");
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
-            }
+            return ResponseEntity.ok("Login feito com sucesso.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
+        }
     }
 
     @PostMapping
-    public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario, @RequestHeader(value = "currentUserId", required = false) Integer currentUserId) {
+    public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario, @RequestHeader(value = "currentUserId", required = false) Long currentUserId) {
         try {
-            this.currentUserId = Optional.ofNullable(currentUserId).orElse(1);
+            this.currentUserId = Optional.ofNullable(currentUserId).orElse(1L);
 
             usuarioRepository.save(usuario);
             return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
@@ -57,14 +56,14 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar o usuário");
         }
     }
-    
+
     private void logError(String message, Object entity, Exception e) {
         try {
             Log log = new Log();
-            log.setIdUsuario(this.currentUserId);
-            log.setAcao(LogAcoes.ERRO.name());
-            log.setTabelaAfetada(entity != null ? entity.getClass().getSimpleName() : null);
-            log.setDescricaoMudanca(message + ": " + e.getMessage());
+            log.setUserId(this.currentUserId);
+            log.setTipoOperacao("INSERIR");
+            log.setTabela(entity != null ? entity.getClass().getSimpleName() : null);
+            log.setDescricao(message + ": " + e.getMessage());
 
 
             if (entity != null) {

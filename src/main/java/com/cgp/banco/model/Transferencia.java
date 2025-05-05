@@ -11,15 +11,13 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "transferencia")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-@Entity
-@Table(name = "Transferencia")
+@Table(name = "transferencia")
 public class Transferencia {
 
     @Id
@@ -33,6 +31,15 @@ public class Transferencia {
     private Double valor;
     @Column(name = "id_conta_origem", nullable = false)
     private Long idContaOrigem;
+
+    @JoinColumn(name = "id_conta_origem", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne
+    private Conta contaOrigem;
+
     @Column(name = "id_conta_destino", nullable = false)
     private Long idContaDestino;
+
+    @JoinColumn(name = "id_conta_destino", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne
+    private Conta contaDestino;
 }

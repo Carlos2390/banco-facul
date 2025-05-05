@@ -1,7 +1,7 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.dao.ClienteRepository;
-import com.cgp.banco.dao.LogDAO;
+import com.cgp.banco.repository.LogRepository;
+import com.cgp.banco.repository.ClienteRepository;
 import com.cgp.banco.model.Cliente;
 import com.cgp.banco.model.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
+
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -16,11 +17,11 @@ import java.util.List;
 @RequestMapping("/clientes")
 public class ClienteController {
 
-    @Autowired 
+    @Autowired
     private ClienteRepository clienteRepository;
 
     @Autowired
-    private LogDAO logDAO;
+    private LogRepository logRepository;
 
     @PostMapping
     public ResponseEntity<String> criarCliente(@RequestBody Cliente cliente, HttpSession session) {
@@ -32,7 +33,7 @@ public class ClienteController {
             return ResponseEntity.ok("Cliente criado com sucesso.");
         } catch (Exception e) {
             Log log = new Log(null, session.getAttribute("currentUserId") != null ? (Long) session.getAttribute("currentUserId") : null, "Erro ao criar cliente", "Cliente", null, e.getMessage(), null, null);
-            logDAO.salvar(log);
+            logRepository.save(log);
             // Retorna uma resposta de erro
             return ResponseEntity.badRequest().body("Erro ao criar cliente: " + e.getMessage());
         }
@@ -58,7 +59,7 @@ public class ClienteController {
             return ResponseEntity.ok("Cliente atualizado com sucesso.");
         } catch (Exception e) {
             Log log = new Log(null, session.getAttribute("currentUserId") != null ? (Long) session.getAttribute("currentUserId") : null, "Erro ao atualizar cliente", "Cliente", cliente.getId(), e.getMessage(), null, null);
-            logDAO.salvar(log);
+            logRepository.save(log);
             // Retorna uma resposta de erro
             return ResponseEntity.badRequest().body("Erro ao atualizar cliente: " + e.getMessage());
         }
