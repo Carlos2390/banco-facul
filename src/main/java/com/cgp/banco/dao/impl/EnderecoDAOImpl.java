@@ -1,6 +1,5 @@
 package com.cgp.banco.dao.impl;
 
-import com.cgp.banco.dao.GenericDAO;
 import com.cgp.banco.dao.LogDAO;
 import com.cgp.banco.dao.EnderecoDAO;
 import com.cgp.banco.model.Endereco;
@@ -10,21 +9,19 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Repository
-public class EnderecoDAOImpl implements EnderecoDAO, GenericDAO {
+public class EnderecoDAOImpl extends GenericDAOImpl<Endereco> implements EnderecoDAO {
 
     @PersistenceContext
     private EntityManager gerenciadorEntidade;
     private LogDAO logDAO;
 
-    private Long currentUserId;
-
     public EnderecoDAOImpl(LogDAO logDAO) {
+        super(Endereco.class);
+        this.gerenciadorEntidade = gerenciadorEntidade;
+        super.setGerenciadorEntidade(gerenciadorEntidade);
         this.logDAO = logDAO;
     }
 
@@ -41,7 +38,7 @@ public class EnderecoDAOImpl implements EnderecoDAO, GenericDAO {
 
     @Override
     @Transactional
-    public void salvar(Endereco endereco) {
+    public void salvar(Endereco endereco){
         try {
             gerenciadorEntidade.createNativeQuery("INSERT INTO Endereco (rua, numero, cidade, estado, cep, id_cliente) VALUES (?, ?, ?, ?, ?, ?)")
                     .setParameter(1, endereco.getRua())

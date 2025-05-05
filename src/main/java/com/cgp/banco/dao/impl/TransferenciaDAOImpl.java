@@ -1,6 +1,5 @@
 package com.cgp.banco.dao.impl;
 
-import com.cgp.banco.dao.GenericDAO;
 import com.cgp.banco.dao.TransferenciaDAO;
 import com.cgp.banco.model.Transferencia;
 import jakarta.persistence.EntityManager;
@@ -17,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class TransferenciaDAOImpl implements TransferenciaDAO, GenericDAO {
+public class TransferenciaDAOImpl extends GenericDAOImpl<Transferencia> implements TransferenciaDAO {
 
     @PersistenceContext
     private EntityManager gerenciadorEntidade;
@@ -268,18 +267,9 @@ public class TransferenciaDAOImpl implements TransferenciaDAO, GenericDAO {
         }
     }
 
-    @Override
-    public void setCurrentUserId(Long userId) {
-        GenericDAO.super.setCurrentUserId(userId);
-    }
-
     public Long getUserId() {
-        Map<String, Object> session = GenericDAO.getSession();
-        Object currentUserId = session.get("currentUserId");
+       return super.getCurrentUserId();
 
-        if(currentUserId != null){
-            return Long.valueOf(currentUserId.toString());
-        }
-        return 0L;
     }
+    public TransferenciaDAOImpl(){super(Transferencia.class);}
 }

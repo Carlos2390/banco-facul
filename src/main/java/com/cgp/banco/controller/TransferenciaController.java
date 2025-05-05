@@ -1,6 +1,5 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.dao.ContaDAO;
 import com.cgp.banco.dao.GenericDAO;
 import com.cgp.banco.dao.TransferenciaDAO;
 import com.cgp.banco.model.Conta;
@@ -28,6 +27,7 @@ public class TransferenciaController {
 
     @Autowired
     private ContaDAO contaDAO;
+    @Autowired
 
     @PostMapping("/porNumeroContas")
     public ResponseEntity<?> criarTransferenciaPorNumeroContas(@RequestParam Integer numeroContaOrigem, @RequestParam Integer numeroContaDestino, @RequestParam Double valor, HttpSession session) {

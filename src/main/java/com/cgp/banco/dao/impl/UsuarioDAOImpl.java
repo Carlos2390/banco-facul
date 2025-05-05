@@ -1,6 +1,5 @@
 package com.cgp.banco.dao.impl;
 
-import com.cgp.banco.dao.GenericDAO;
 import com.cgp.banco.model.Log;
 import com.cgp.banco.dao.UsuarioDAO;
 import com.cgp.banco.model.Usuario;
@@ -16,7 +15,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
-public class UsuarioDAOImpl implements UsuarioDAO, GenericDAO {
+public class UsuarioDAOImpl extends GenericDAOImpl<Usuario> implements UsuarioDAO{
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -25,6 +24,11 @@ public class UsuarioDAOImpl implements UsuarioDAO, GenericDAO {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    public UsuarioDAOImpl() {
+        super(Usuario.class);
+    }
+
+
     @Override
     public void setCurrentUserId(Long currentUserId) {
         this.currentUserId = currentUserId;
@@ -32,7 +36,7 @@ public class UsuarioDAOImpl implements UsuarioDAO, GenericDAO {
 
     @Override
     public Optional<Usuario> findById(Long id) {
-        try {
+         try {
             return Optional.ofNullable(entityManager.find(Usuario.class, id));
         } catch (Exception e) {
             logError("Erro ao buscar Usuario por ID", e);
@@ -42,7 +46,7 @@ public class UsuarioDAOImpl implements UsuarioDAO, GenericDAO {
 
     @Override
     public List<Usuario> findAll() {
-        try {
+         try {
             return entityManager.createQuery("SELECT u FROM Usuario u", Usuario.class).getResultList();
         } catch (Exception e) {
             logError("Erro ao buscar todos os Usuarios", e);
@@ -53,7 +57,7 @@ public class UsuarioDAOImpl implements UsuarioDAO, GenericDAO {
     @Override
     @Transactional
     public Usuario save(Usuario usuario) {
-        try {
+         try {
             entityManager.persist(usuario);
             logAction("INSERT", "Usuario", usuario.getId(), "Inserção de novo Usuario", null, usuario);
             return usuario;
@@ -66,7 +70,7 @@ public class UsuarioDAOImpl implements UsuarioDAO, GenericDAO {
     @Override
     @Transactional
     public Usuario update(Usuario usuario) {
-        try {
+         try {
             Usuario usuarioAntigo = findById(usuario.getId()).orElse(null);
             Usuario usuarioAtualizado = entityManager.merge(usuario);
             logAction("UPDATE", "Usuario", usuario.getId(), "Atualização de Usuario", usuarioAntigo, usuarioAtualizado);
@@ -80,7 +84,7 @@ public class UsuarioDAOImpl implements UsuarioDAO, GenericDAO {
     @Override
     @Transactional
     public void delete(Usuario usuario) {
-        try {
+         try {
             Usuario usuarioToRemove = entityManager.contains(usuario) ? usuario : entityManager.merge(usuario);
             entityManager.remove(usuarioToRemove);
             logAction("DELETE", "Usuario", usuario.getId(), "Exclusão de Usuario", usuario, null);
@@ -93,7 +97,7 @@ public class UsuarioDAOImpl implements UsuarioDAO, GenericDAO {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        try {
+         try {
             findById(id).ifPresent(this::delete);
         } catch (Exception e) {
             logError("Erro ao deletar Usuario por ID", e);
@@ -102,7 +106,7 @@ public class UsuarioDAOImpl implements UsuarioDAO, GenericDAO {
     }
 
     private void logAction(String action, String table, Long recordId, String description, Object oldData, Object newData) {
-        try {
+         try {
             String oldDataJson = oldData != null ? objectMapper.writeValueAsString(oldData) : null;
             String newDataJson = newData != null ? objectMapper.writeValueAsString(newData) : null;
 

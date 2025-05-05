@@ -1,6 +1,5 @@
 package com.cgp.banco.dao.impl;
 
-import com.cgp.banco.dao.GenericDAO;
 import com.cgp.banco.dao.LogDAO;
 import com.cgp.banco.dao.ClienteDAO;
 import com.cgp.banco.dao.ContaDAO;
@@ -15,9 +14,8 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.json.JSONObject;
-
 @Repository
-public class ClienteDAOImpl implements ClienteDAO, GenericDAO {
+public class ClienteDAOImpl extends GenericDAOImpl<Cliente> implements ClienteDAO {
     private static final String TABLE_NAME = "Cliente";
     private Long currentUserId = null;
 
@@ -32,6 +30,10 @@ public class ClienteDAOImpl implements ClienteDAO, GenericDAO {
 
     @Autowired
     private LogDAO logDAO;
+
+    public ClienteDAOImpl(){
+        super(Cliente.class);
+    }
 
     @Override
     public void setCurrentUserId(Long userId) {

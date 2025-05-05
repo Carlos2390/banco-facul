@@ -1,6 +1,5 @@
 package com.cgp.banco.dao.impl;
 
-import com.cgp.banco.dao.GenericDAO;
 import com.cgp.banco.dao.LogDAO;
 import com.cgp.banco.dao.ContaDAO;
 import com.cgp.banco.dao.TransferenciaDAO;
@@ -13,14 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @Repository
-public class ContaDAOImpl implements ContaDAO, GenericDAO {
+public class ContaDAOImpl extends GenericDAOImpl<Conta> implements ContaDAO{
 
     @PersistenceContext
     private EntityManager gerenciadorEntidade;
@@ -31,6 +29,9 @@ public class ContaDAOImpl implements ContaDAO, GenericDAO {
     private LogDAO logDAO;
 
     private Long currentUserId;
+    public ContaDAOImpl() {
+        super(Conta.class);
+    }
 
     @Override
     public void setCurrentUserId(Long userId) {
