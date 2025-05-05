@@ -12,24 +12,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public class EnderecoDAOImpl extends GenericDAOImpl<Endereco> implements EnderecoDAO {
+public class EnderecoDAOImpl implements EnderecoDAO {
 
     @PersistenceContext
     private EntityManager gerenciadorEntidade;
     private LogDAO logDAO;
+    private Long currentUserId = null;
 
-    public EnderecoDAOImpl(LogDAO logDAO) {
-        super(Endereco.class);
-        this.gerenciadorEntidade = gerenciadorEntidade;
-        super.setGerenciadorEntidade(gerenciadorEntidade);
-        this.logDAO = logDAO;
-    }
-
-    public void setCurrentUserId(Long currentUserId) {
+    @Override
+    public void setUserId(Long currentUserId) {
         this.currentUserId = currentUserId;
     }
 
-    private Long getCurrentUserId() {
+    @Override
+    public Long getUserId() {
         if (currentUserId == null) {
             throw new RuntimeException("User ID not set in session.");
         }

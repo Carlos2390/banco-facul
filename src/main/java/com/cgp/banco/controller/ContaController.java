@@ -1,6 +1,7 @@
 package com.cgp.banco.controller;
 
 import com.cgp.banco.dao.ContaDAO;
+//import com.cgp.banco.dao.LogDAO;
 import com.cgp.banco.dao.LogDAO;
 import com.cgp.banco.model.Conta;
 import com.cgp.banco.model.Log;
@@ -9,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -34,10 +35,10 @@ public class ContaController {
             return ResponseEntity.ok("Conta criada com sucesso.");
         } catch (Exception e) {
             Log log = new Log();
-            log.setAcao("CRIAR");
-            log.setTabelaAfetada("Conta");
-            log.setDescricaoMudanca("Erro ao criar Conta: " + e.getMessage());
-            log.setIdUsuario((Integer) session.getAttribute("currentUserId"));
+            log.setTipoOperacao("INSERT");
+            log.setTabela("Conta");
+            log.setDescricao("Erro ao criar Conta: " + e.getMessage());
+            log.setUserId((Long) session.getAttribute("currentUserId"));
             logDAO.salvar(log);
             return ResponseEntity.badRequest().body("Erro ao criar Conta: " + e.getMessage());
         }

@@ -15,7 +15,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
-public class UsuarioDAOImpl extends GenericDAOImpl<Usuario> implements UsuarioDAO{
+public class UsuarioDAOImpl implements UsuarioDAO{
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -24,14 +24,14 @@ public class UsuarioDAOImpl extends GenericDAOImpl<Usuario> implements UsuarioDA
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public UsuarioDAOImpl() {
-        super(Usuario.class);
+    @Override
+    public void setUserId(Long userId) {
+        this.currentUserId = userId;
     }
 
-
     @Override
-    public void setCurrentUserId(Long currentUserId) {
-        this.currentUserId = currentUserId;
+    public Long getUserId() {
+        return this.currentUserId;
     }
 
     @Override

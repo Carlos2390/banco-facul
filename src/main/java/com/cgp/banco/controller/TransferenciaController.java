@@ -1,19 +1,15 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.dao.GenericDAO;
+import com.cgp.banco.dao.ContaDAO;
 import com.cgp.banco.dao.TransferenciaDAO;
 import com.cgp.banco.model.Conta;
 import com.cgp.banco.model.Transferencia;
-import com.cgp.banco.model.Log;
-import com.cgp.banco.dao.LogDAO;
-import org.json.JSONObject;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpSession;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,7 +23,6 @@ public class TransferenciaController {
 
     @Autowired
     private ContaDAO contaDAO;
-    @Autowired
 
     @PostMapping("/porNumeroContas")
     public ResponseEntity<?> criarTransferenciaPorNumeroContas(@RequestParam Integer numeroContaOrigem, @RequestParam Integer numeroContaDestino, @RequestParam Double valor, HttpSession session) {
@@ -49,28 +44,28 @@ public class TransferenciaController {
             transferenciaDAO.salvar(transferencia);
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Transferência criada com sucesso.");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar transferencia: " + e.getMessage());
         }
     }
 
     @PostMapping
     public ResponseEntity<?> criarTransferencia(@RequestBody Transferencia transferencia, HttpSession session) {
-        try{
+        try {
             transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
             // Salva a transferência no banco de dados
             transferencia.setData(LocalDateTime.now());
             transferenciaDAO.salvar(transferencia);
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Transferência criada com sucesso.");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar transferencia: " + e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarTransferencia(@PathVariable Long id, @RequestBody Transferencia transferencia, HttpSession session) {
-        try{
+        try {
             transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
             // Busca a transferência existente pelo ID
             Transferencia transferenciaExistente = transferenciaDAO.buscarPorId(id);
@@ -85,14 +80,14 @@ public class TransferenciaController {
             transferenciaDAO.atualizar(transferencia);
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Transferência atualizada com sucesso.");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar transferencia: " + e.getMessage());
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarTransferenciaPorId(@PathVariable Long id, HttpSession session) {
-        try{
+        try {
             transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
             // Busca a transferência pelo ID
             Transferencia transferencia = transferenciaDAO.buscarPorId(id);
@@ -103,33 +98,33 @@ public class TransferenciaController {
             }
             // Retorna a transferência encontrada
             return ResponseEntity.ok(transferencia);
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar transferencia: " + e.getMessage());
         }
     }
 
     @GetMapping("/buscarTransferenciasPorNumeroContaOrigem")
     public ResponseEntity<?> buscarTransferenciasPorNumeroContaOrigem(@RequestParam Integer numeroContaOrigem, HttpSession session) {
-        try{
+        try {
             transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
             // Busca as transferências pelo número da conta de origem
             List<Transferencia> transferencias = transferenciaDAO.buscarTransferenciasPorNumeroContaOrigem(numeroContaOrigem);
             // Retorna a lista de transferências encontradas
             return ResponseEntity.ok(transferencias);
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar transferencias: " + e.getMessage());
         }
     }
 
     @GetMapping("/buscarTransferenciasPorNumeroContaDestino")
     public ResponseEntity<?> buscarTransferenciasPorNumeroContaDestino(@RequestParam Integer numeroContaDestino, HttpSession session) {
-        try{
+        try {
             transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
             // Busca as transferências pelo número da conta de destino
             List<Transferencia> transferencias = transferenciaDAO.buscarTransferenciasPorNumeroContaDestino(numeroContaDestino);
             // Retorna a lista de transferências encontradas
             return ResponseEntity.ok(transferencias);
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar transferencias: " + e.getMessage());
         }
     }
@@ -149,26 +144,22 @@ public class TransferenciaController {
             transferenciaDAO.deletar(id);
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Transferência deletada com sucesso.");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar transferencia: " + e.getMessage());
         }
     }
 
     @GetMapping
     public ResponseEntity<?> buscarTodasTransferencias(HttpSession session) {
-        try{
+        try {
             transferenciaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
             // Busca todas as transferências
             List<Transferencia> transferencias = transferenciaDAO.buscarTodos();
             // Retorna a lista de transferências
             return ResponseEntity.ok(transferencias);
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar transferencias: " + e.getMessage());
         }
     }
 
-    @Autowired
-    public void setGenericDAO(GenericDAO genericDAO){
-        genericDAO.setUserId(1);
-    }
 }

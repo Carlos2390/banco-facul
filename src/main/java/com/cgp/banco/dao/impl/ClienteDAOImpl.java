@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.json.JSONObject;
 @Repository
-public class ClienteDAOImpl extends GenericDAOImpl<Cliente> implements ClienteDAO {
+public class ClienteDAOImpl implements ClienteDAO {
     private static final String TABLE_NAME = "Cliente";
     private Long currentUserId = null;
 
@@ -31,13 +31,14 @@ public class ClienteDAOImpl extends GenericDAOImpl<Cliente> implements ClienteDA
     @Autowired
     private LogDAO logDAO;
 
-    public ClienteDAOImpl(){
-        super(Cliente.class);
+    @Override
+    public void setUserId(Long userId) {
+        this.currentUserId = userId;
     }
 
     @Override
-    public void setCurrentUserId(Long userId) {
-        this.currentUserId = userId;
+    public Long getUserId() {
+        return this.currentUserId;
     }
 
     private Long getCurrentUserId() {

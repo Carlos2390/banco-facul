@@ -1,11 +1,19 @@
 package com.cgp.banco.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Log {
 
     @Id
@@ -18,71 +26,4 @@ public class Log {
     private String descricao;
     private String dadosAntigos;
     private String dadosNovos;
-
-    public Log() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getTipoOperacao() {
-        return tipoOperacao;
-    }
-
-    public void setTipoOperacao(String tipoOperacao) {
-        this.tipoOperacao = tipoOperacao;
-    }
-
-    public String getTabela() {
-        return tabela;
-    }
-
-    public void setTabela(String tabela) {
-        this.tabela = tabela;
-    }
-
-    public Long getIdTabela() {
-        return idTabela;
-    }
-
-    public void setIdTabela(Long idTabela) {
-        this.idTabela = idTabela;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getDadosAntigos() {
-        return dadosAntigos;
-    }
-
-    public void setDadosAntigos(String dadosAntigos) {
-        this.dadosAntigos = dadosAntigos;
-    }
-
-    public String getDadosNovos() {
-        return dadosNovos;
-    }
-
-    public void setDadosNovos(String dadosNovos) {
-        this.dadosNovos = dadosNovos;
-    }
 }

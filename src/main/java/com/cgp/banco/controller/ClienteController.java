@@ -6,12 +6,10 @@ import com.cgp.banco.model.Cliente;
 import com.cgp.banco.model.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Objects;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -35,7 +33,7 @@ public class ClienteController {
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Cliente criado com sucesso.");
         } catch (Exception e) {
-            Log log = new Log(null, null, session.getAttribute("currentUserId") != null ? (Integer) session.getAttribute("currentUserId") : null, "Erro ao criar cliente", "Cliente", null, e.getMessage(), null, null);
+            Log log = new Log(null, session.getAttribute("currentUserId") != null ? (Long) session.getAttribute("currentUserId") : null, "Erro ao criar cliente", "Cliente", null, e.getMessage(), null, null);
             logDAO.salvar(log);
             // Retorna uma resposta de erro
             return ResponseEntity.badRequest().body("Erro ao criar cliente: " + e.getMessage());
@@ -44,7 +42,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
+    public ResponseEntity<String> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente, HttpSession session) {
         // Busca o cliente existente pelo ID
         Cliente clienteExistente = clienteDAO.buscarPorId(id);
         // Verifica se o cliente existe
@@ -63,7 +61,7 @@ public class ClienteController {
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Cliente atualizado com sucesso.");
         } catch (Exception e) {
-            Log log = new Log(null, null, session.getAttribute("currentUserId") != null ? (Integer) session.getAttribute("currentUserId") : null, "Erro ao atualizar cliente", "Cliente", cliente.getId().intValue(), e.getMessage(), null, null);
+            Log log = new Log(null, session.getAttribute("currentUserId") != null ? (Long) session.getAttribute("currentUserId") : null, "Erro ao atualizar cliente", "Cliente", cliente.getId(), e.getMessage(), null, null);
             logDAO.salvar(log);
             // Retorna uma resposta de erro
             return ResponseEntity.badRequest().body("Erro ao atualizar cliente: " + e.getMessage());

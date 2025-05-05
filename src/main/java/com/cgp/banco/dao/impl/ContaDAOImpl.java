@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Repository
-public class ContaDAOImpl extends GenericDAOImpl<Conta> implements ContaDAO{
+public class ContaDAOImpl implements ContaDAO{
 
     @PersistenceContext
     private EntityManager gerenciadorEntidade;
@@ -29,15 +29,12 @@ public class ContaDAOImpl extends GenericDAOImpl<Conta> implements ContaDAO{
     private LogDAO logDAO;
 
     private Long currentUserId;
-    public ContaDAOImpl() {
-        super(Conta.class);
-    }
 
     @Override
-    public void setCurrentUserId(Long userId) {
+    public void setUserId(Long userId) {
         this.currentUserId = userId;
     }
-    private Long getCurrentUserId() {
+    public Long getUserId() {
         if (Objects.isNull(currentUserId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID do usuario não informado, necessario informar o ID do usuario na sessao do controller");
         }

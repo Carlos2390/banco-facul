@@ -12,11 +12,10 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class TransferenciaDAOImpl extends GenericDAOImpl<Transferencia> implements TransferenciaDAO {
+public class TransferenciaDAOImpl implements TransferenciaDAO {
 
     @PersistenceContext
     private EntityManager gerenciadorEntidade;

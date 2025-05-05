@@ -3,9 +3,9 @@ package com.cgp.banco.dao;
 import java.util.List;
 
 public interface GenericDAO<T, ID> {
-    void setUserId(Integer userId);
+    void setUserId(Long userId);
 
-    Integer getUserId();
+    Long getUserId();
 
     // Salva uma nova entidade no banco de dados
     void salvar(T entity);
