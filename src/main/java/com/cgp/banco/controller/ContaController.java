@@ -115,9 +115,8 @@ public class ContaController {
     }
 
     @GetMapping("/buscarContaPorNumero")
-    public ResponseEntity<Conta> buscarContaPorNumero(@RequestParam Integer numeroConta, HttpSession session) {
+    public ResponseEntity<Conta> buscarContaPorNumero(@RequestParam Integer numeroConta) {
         try {
-           
             // Busca a conta pelo número da conta
              Conta conta = contaRepository.findByNumeroConta(numeroConta);
             // Verifica se a conta existe
