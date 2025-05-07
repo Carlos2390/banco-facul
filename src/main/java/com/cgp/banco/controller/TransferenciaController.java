@@ -74,7 +74,35 @@ public class TransferenciaController {
         try {
             // Salva a transferência no banco de dados
             transferencia.setDataTransferencia(LocalDateTime.now());
+
+            Conta contaOrigem = contaRepository.findById(transferencia.getIdContaOrigem()).orElse(null);
+            if (contaOrigem == null) {
+                return ResponseEntity.badRequest().body("Conta de origem não encontrada.");
+            }
+            Conta contaDestino = contaRepository.findById(transferencia.getIdContaDestino()).orElse(null);
+            if (contaDestino == null) {
+                return ResponseEntity.badRequest().body("Conta de destino não encontrada.");
+            }
+            // Verifica se a conta de origem e a conta de destino são diferentes
+            if (contaOrigem.getId().equals(contaDestino.getId())) {
+                return ResponseEntity.badRequest().body("A conta de origem e a conta de destino não podem ser iguais.");
+            }
+            // Verifica se o valor da transferência é maior que 0
+            if (transferencia.getValor() <= 0) {
+                return ResponseEntity.badRequest().body("O valor da transferência deve ser maior que 0.");
+            }
+            // Verifica se a conta de origem tem saldo suficiente
+            if (contaOrigem.getSaldo() < transferencia.getValor()) {
+                return ResponseEntity.badRequest().body("Saldo insuficiente na conta de origem.");
+            }
+
             transferenciaRepository.save(transferencia);
+            //Atualizar o saldo da conta de origem
+            contaOrigem.setSaldo(contaOrigem.getSaldo() - transferencia.getValor());
+            contaRepository.save(contaOrigem);
+            //Atualizar o saldo da conta de destino
+            contaDestino.setSaldo(contaDestino.getSaldo() + transferencia.getValor());
+            contaRepository.save(contaDestino);
          
             return ResponseEntity.ok("Transferência criada com sucesso.");
         } catch (Exception e) {
