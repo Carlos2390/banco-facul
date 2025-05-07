@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Builder;
 import lombok.Setter;
 
 
@@ -11,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
 @Table(name = "log")
 public class Log {
@@ -30,4 +32,6 @@ public class Log {
     private String dadosAntigos;
     @Column(name = "dados_novos")
     private String dadosNovos;
+    @Column(name = "data")
+    private java.time.LocalDateTime data = java.time.LocalDateTime.now();
 }
