@@ -38,7 +38,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente, HttpSession session) {
+    public ResponseEntity<String> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
         // Busca o cliente existente pelo ID
         Cliente clienteExistente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe

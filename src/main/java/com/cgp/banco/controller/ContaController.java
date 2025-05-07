@@ -26,10 +26,8 @@ public class ContaController {
     private LogRepository logRepository;
 
     @PostMapping
-    public ResponseEntity<String> criarConta(@RequestBody Conta conta, HttpSession session) {
+    public ResponseEntity<String> criarConta(@RequestBody Conta conta) {
         try {
-           
-            
             // Salva a conta no banco de dados
             contaRepository.save(conta);
             // Retorna uma resposta de sucesso
@@ -55,7 +53,7 @@ public class ContaController {
                 // Retorna uma resposta de não encontrado
                 return ResponseEntity.notFound().build();
             }
-            conta.setIdCliente(contaExistente.getIdCliente());
+            conta.setClienteId(contaExistente.getClienteId());
             // Define o ID da conta
            
             conta.setId(id);

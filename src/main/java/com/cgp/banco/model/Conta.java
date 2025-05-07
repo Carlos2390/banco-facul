@@ -31,17 +31,10 @@ public class Conta {
     @Column(nullable = false, length = 20)
     private String tipo;
 
-    @Column(name = "id_cliente", nullable = false)
-    private Long idCliente;
+    @Column(name = "cliente_id", nullable = false)
+    private Long clienteId;
 
-    @JoinColumn(name = "id_cliente", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "cliente_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne
     private Cliente cliente;
-
-    @Column(name = "id_usuario", nullable = false)
-    private Long idUsuario;
-
-    @JoinColumn(name = "id_usuario", referencedColumnName = "id", insertable = false, updatable = false)
-    @ManyToOne
-    private Usuario usuario;
 }
