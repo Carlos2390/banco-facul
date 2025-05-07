@@ -41,13 +41,14 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario) {        try {
+    public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario) {
+        try {
 
             usuarioRepository.save(usuario);
             return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
         } catch (Exception e) {
             logError("Erro ao criar o usuário", null, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar o usuário");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar o usuário, " + e.getMessage());
         }
     }
 
