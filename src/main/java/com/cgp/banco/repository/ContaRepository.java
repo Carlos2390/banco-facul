@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ContaRepository extends JpaRepository<Conta, Long> {
-    Conta findByNumeroConta(Integer numeroConta);
-    void deleteByNumeroConta(Integer numeroConta);
+    Conta findByNumeroConta(String numeroConta);
+    void deleteByNumeroConta(String numeroConta);
     List<Conta> findByClienteCpf(String cpf);
 }

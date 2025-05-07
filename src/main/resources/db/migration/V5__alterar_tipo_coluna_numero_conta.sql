@@ -1,1 +1,0 @@
-ALTER TABLE conta ALTER COLUMN numero_conta TYPE INT;

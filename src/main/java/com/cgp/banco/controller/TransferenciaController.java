@@ -27,7 +27,7 @@ public class TransferenciaController {
     }
 
     @PostMapping("/porNumeroContas")
-    public ResponseEntity<?> criarTransferenciaPorNumeroContas(@RequestParam Integer numeroContaOrigem, @RequestParam Integer numeroContaDestino, @RequestParam Double valor) {
+    public ResponseEntity<?> criarTransferenciaPorNumeroContas(@RequestParam String numeroContaOrigem, @RequestParam String numeroContaDestino, @RequestParam Double valor) {
         try {
             // Cria uma nova transferência
             Transferencia transferencia = new Transferencia();
@@ -107,7 +107,7 @@ public class TransferenciaController {
     }
 
     @GetMapping("/buscarTransferenciasPorNumeroContaOrigem")
-    public ResponseEntity<?> buscarTransferenciasPorNumeroContaOrigem(@RequestParam Integer numeroContaOrigem) {
+    public ResponseEntity<?> buscarTransferenciasPorNumeroContaOrigem(@RequestParam String numeroContaOrigem) {
         try {
             Conta conta = contaRepository.findByNumeroConta(numeroContaOrigem);
             List<Transferencia> transferencias = transferenciaRepository.findByIdContaOrigem(conta.getId());
@@ -120,7 +120,7 @@ public class TransferenciaController {
     }
 
     @GetMapping("/buscarTransferenciasPorNumeroContaDestino")
-    public ResponseEntity<?> buscarTransferenciasPorNumeroContaDestino(@RequestParam Integer numeroContaDestino) {
+    public ResponseEntity<?> buscarTransferenciasPorNumeroContaDestino(@RequestParam String numeroContaDestino) {
         try {
             Conta conta = contaRepository.findByNumeroConta(numeroContaDestino);
 

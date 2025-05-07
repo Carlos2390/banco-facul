@@ -23,7 +23,7 @@ public class Conta {
     private Long id;
 
     @Column(name = "numero_conta", unique = true, nullable = false, length = 20)
-    private Integer numeroConta;
+    private String numeroConta;
 
     @Column(nullable = false)
     private Double saldo;

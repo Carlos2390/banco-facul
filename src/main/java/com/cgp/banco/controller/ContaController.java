@@ -43,7 +43,7 @@ public class ContaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarConta(@PathVariable Long id, @RequestBody Conta conta, HttpSession session) {
+    public ResponseEntity<String> atualizarConta(@PathVariable Long id, @RequestBody Conta conta) {
         try {
             
             // Busca a conta existente pelo ID
@@ -73,7 +73,7 @@ public class ContaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Conta> buscarContaPorId(@PathVariable Long id, HttpSession session) {
+    public ResponseEntity<Conta> buscarContaPorId(@PathVariable Long id) {
         try {
            
             // Busca a conta pelo ID 
@@ -115,7 +115,7 @@ public class ContaController {
     }
 
     @GetMapping("/buscarContaPorNumero")
-    public ResponseEntity<Conta> buscarContaPorNumero(@RequestParam Integer numeroConta) {
+    public ResponseEntity<Conta> buscarContaPorNumero(@RequestParam String numeroConta) {
         try {
             // Busca a conta pelo número da conta
              Conta conta = contaRepository.findByNumeroConta(numeroConta);
@@ -149,7 +149,7 @@ public class ContaController {
     }
 
     @DeleteMapping("/deletarContaPorNumero")
-    public ResponseEntity<String> deletarContaPorNumero(@RequestParam Integer numeroConta, HttpSession session) {
+    public ResponseEntity<String> deletarContaPorNumero(@RequestParam String numeroConta) {
         try{
             // Deleta a conta pelo número da conta
             contaRepository.deleteByNumeroConta(numeroConta);
