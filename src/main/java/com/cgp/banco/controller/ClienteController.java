@@ -31,8 +31,6 @@ public class ClienteController {
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Cliente criado com sucesso.");
         } catch (Exception e) {
-            Log log = new Log(null, session.getAttribute("currentUserId") != null ? (Long) session.getAttribute("currentUserId") : null, "Erro ao criar cliente", "Cliente", null, e.getMessage(), null, null);
-            logRepository.save(log);
             // Retorna uma resposta de erro
             return ResponseEntity.badRequest().body("Erro ao criar cliente: " + e.getMessage());
         }
