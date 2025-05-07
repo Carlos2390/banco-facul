@@ -165,17 +165,15 @@ public class ContaController {
         }
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<Conta>> buscarTodasContasPor(HttpSession session) {
-//        try {
-//            //set user id on session
-//            contaDAO.setUserId((Integer) session.getAttribute("currentUserId"));
-//            // Busca todas as contas
-//            List<Conta> contas = contaDAO.buscarTodos();
-//            // Retorna a lista de contas
-//            return ResponseEntity.ok(contas);
-//        }catch(Exception e){
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//    }
+    @GetMapping
+    public ResponseEntity<List<Conta>> buscarTodasContas() {
+        try {
+            // Busca todas as contas
+            List<Conta> contas = contaRepository.findAll();
+            // Retorna a lista de contas
+            return ResponseEntity.ok(contas);
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

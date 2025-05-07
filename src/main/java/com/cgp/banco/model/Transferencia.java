@@ -24,11 +24,12 @@ public class Transferencia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private LocalDateTime data;
+    @Column(name = "data_transferencia", nullable = false)
+    private LocalDateTime dataTransferencia;
 
     @Column(nullable = false)
     private Double valor;
+
     @Column(name = "id_conta_origem", nullable = false)
     private Long idContaOrigem;
 

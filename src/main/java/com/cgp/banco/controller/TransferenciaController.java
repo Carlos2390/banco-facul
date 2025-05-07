@@ -4,7 +4,6 @@ import com.cgp.banco.repository.ContaRepository;
 import com.cgp.banco.repository.TransferenciaRepository;
 import com.cgp.banco.model.Conta;
 import com.cgp.banco.model.Transferencia;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,12 +38,30 @@ public class TransferenciaController {
             transferencia.setIdContaDestino(contaDesitino.getId());
             // Define o valor da transferência
             transferencia.setValor(valor);
+            // Define a data da transferência
+            transferencia.setDataTransferencia(LocalDateTime.now());
 
-            transferencia.setData(LocalDateTime.now());
-            
+            // Verifica se a conta de origem e a conta de destino são diferentes
+            if (contaOrigem.getId().equals(contaDesitino.getId())) {
+                return ResponseEntity.badRequest().body("A conta de origem e a conta de destino não podem ser iguais.");
+            }
+            // Verifica se o valor da transferência é maior que 0
+            if (valor <= 0) {
+                return ResponseEntity.badRequest().body("O valor da transferência deve ser maior que 0.");
+            }
+            // Verifica se a conta de origem tem saldo suficiente
+            if (contaOrigem.getSaldo() < valor) {
+                return ResponseEntity.badRequest().body("Saldo insuficiente na conta de origem.");
+            }
+            // Atualiza o saldo da conta de origem
+            contaOrigem.setSaldo(contaOrigem.getSaldo() - valor);
+            // Atualiza o saldo da conta de destino
+            contaDesitino.setSaldo(contaDesitino.getSaldo() + valor);
+            // Salva as contas atualizadas no banco de dados
+            contaRepository.save(contaOrigem);
+            contaRepository.save(contaDesitino);
+            // Salva a transferência no banco de dados
             transferenciaRepository.save(transferencia);
-
-           
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Transferência realizada com sucesso.");
         } catch (Exception e) {
@@ -56,7 +73,7 @@ public class TransferenciaController {
     public ResponseEntity<?> criarTransferencia(@RequestBody Transferencia transferencia) {
         try {
             // Salva a transferência no banco de dados
-            transferencia.setData(LocalDateTime.now());
+            transferencia.setDataTransferencia(LocalDateTime.now());
             transferenciaRepository.save(transferencia);
          
             return ResponseEntity.ok("Transferência criada com sucesso.");
