@@ -1,0 +1,1 @@
+ALTER TABLE cliente ADD COLUMN id_usuario BIGINT REFERENCES usuario(id);
