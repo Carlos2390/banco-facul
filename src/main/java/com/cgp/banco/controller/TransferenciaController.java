@@ -27,7 +27,7 @@ public class TransferenciaController {
     }
 
     @PostMapping("/porNumeroContas")
-    public ResponseEntity<?> criarTransferenciaPorNumeroContas(@RequestParam Integer numeroContaOrigem, @RequestParam Integer numeroContaDestino, @RequestParam Double valor, HttpSession session) {
+    public ResponseEntity<?> criarTransferenciaPorNumeroContas(@RequestParam Integer numeroContaOrigem, @RequestParam Integer numeroContaDestino, @RequestParam Double valor) {
         try {
             // Cria uma nova transferência
             Transferencia transferencia = new Transferencia();
@@ -53,7 +53,7 @@ public class TransferenciaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarTransferencia(@RequestBody Transferencia transferencia, HttpSession session) {
+    public ResponseEntity<?> criarTransferencia(@RequestBody Transferencia transferencia) {
         try {
             // Salva a transferência no banco de dados
             transferencia.setData(LocalDateTime.now());
@@ -66,7 +66,7 @@ public class TransferenciaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarTransferencia(@PathVariable Long id, @RequestBody Transferencia transferencia, HttpSession session) {
+    public ResponseEntity<?> atualizarTransferencia(@PathVariable Long id, @RequestBody Transferencia transferencia) {
         try {
             // Verifica se a transferência existe
             if (transferencia == null) {
@@ -91,7 +91,7 @@ public class TransferenciaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarTransferenciaPorId(@PathVariable Long id, HttpSession session) {
+    public ResponseEntity<?> buscarTransferenciaPorId(@PathVariable Long id) {
         try {
             Transferencia transferencia = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
@@ -107,7 +107,7 @@ public class TransferenciaController {
     }
 
     @GetMapping("/buscarTransferenciasPorNumeroContaOrigem")
-    public ResponseEntity<?> buscarTransferenciasPorNumeroContaOrigem(@RequestParam Integer numeroContaOrigem, HttpSession session) {
+    public ResponseEntity<?> buscarTransferenciasPorNumeroContaOrigem(@RequestParam Integer numeroContaOrigem) {
         try {
             Conta conta = contaRepository.findByNumeroConta(numeroContaOrigem);
             List<Transferencia> transferencias = transferenciaRepository.findByIdContaOrigem(conta.getId());
@@ -120,7 +120,7 @@ public class TransferenciaController {
     }
 
     @GetMapping("/buscarTransferenciasPorNumeroContaDestino")
-    public ResponseEntity<?> buscarTransferenciasPorNumeroContaDestino(@RequestParam Integer numeroContaDestino, HttpSession session) {
+    public ResponseEntity<?> buscarTransferenciasPorNumeroContaDestino(@RequestParam Integer numeroContaDestino) {
         try {
             Conta conta = contaRepository.findByNumeroConta(numeroContaDestino);
 
@@ -133,7 +133,7 @@ public class TransferenciaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletarTransferencia(@PathVariable Long id, HttpSession session) {
+    public ResponseEntity<?> deletarTransferencia(@PathVariable Long id) {
         try {
             Transferencia transferencia = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
@@ -150,7 +150,7 @@ public class TransferenciaController {
     }
 
     @GetMapping
-    public ResponseEntity<?> buscarTodasTransferencias(HttpSession session) {
+    public ResponseEntity<?> buscarTodasTransferencias() {
         try {
             List<Transferencia> transferencias = transferenciaRepository.findAll();
             // Retorna a lista de transferências

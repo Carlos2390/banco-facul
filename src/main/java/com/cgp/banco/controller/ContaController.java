@@ -39,7 +39,6 @@ public class ContaController {
             log.setTipoOperacao("INSERIR");
             log.setTabela("Conta");
             log.setDescricao("Erro ao criar Conta: " + e.getMessage());
-            log.setUserId((Long) session.getAttribute("currentUserId"));
             logRepository.save(log);
             return ResponseEntity.badRequest().body("Erro ao criar Conta: " + e.getMessage());
         }
@@ -70,7 +69,6 @@ public class ContaController {
             log.setTabela("Conta");
             log.setIdTabela(id);
             log.setDescricao("Erro ao atualizar Conta: " + e.getMessage());
-            log.setUserId((Long) session.getAttribute("currentUserId"));
             logRepository.save(log);
             return ResponseEntity.badRequest().body("Erro ao atualizar Conta: " + e.getMessage());
         }
@@ -95,7 +93,6 @@ public class ContaController {
             log.setTabela("Conta");
             log.setIdTabela(id);
             log.setDescricao("Erro ao buscar Conta por ID: " + e.getMessage());
-            log.setUserId((Long) session.getAttribute("currentUserId"));
             logRepository.save(log);
             return ResponseEntity.badRequest().body(null);
         }
@@ -114,7 +111,6 @@ public class ContaController {
             log.setTipoOperacao("BUSCAR");
             log.setTabela("Conta");
             log.setDescricao("Erro ao buscar contas por CPF: " + e.getMessage());
-            log.setUserId((Long) session.getAttribute("currentUserId"));
             logRepository.save(log);
             return ResponseEntity.badRequest().body(null);
         }
@@ -138,7 +134,6 @@ public class ContaController {
             log.setTipoOperacao("BUSCAR");
             log.setTabela("Conta");
             log.setDescricao("Erro ao buscar contas por número: " + e.getMessage());
-            log.setUserId((Long) session.getAttribute("currentUserId"));
             logRepository.save(log);
             return ResponseEntity.badRequest().body(null);
         }
@@ -168,7 +163,6 @@ public class ContaController {
             log.setTipoOperacao("DELETAR");
             log.setTabela("Conta");
             log.setDescricao("Erro ao deletar contas por número: " + e.getMessage());
-            log.setUserId((Long) session.getAttribute("currentUserId"));
             logRepository.save(log);
             return ResponseEntity.badRequest().body("Erro ao deletar contas por número: " + e.getMessage());
         }

@@ -19,9 +19,6 @@ public class EnderecoController {
     @Autowired // Injeta o repositório de Endereço
     private EnderecoRepository enderecoRepository;
 
-    @Autowired
-    private HttpSession session;
-
     @PostMapping
     public ResponseEntity<String> criarEndereco(@RequestBody Endereco endereco) {
         try {

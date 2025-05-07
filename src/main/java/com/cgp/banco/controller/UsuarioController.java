@@ -24,8 +24,6 @@ public class UsuarioController {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private Long currentUserId = 1L;
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Usuario usuario) {
         if (usuario == null || usuario.getUsername() == null || usuario.getPassword() == null) {
@@ -36,8 +34,6 @@ public class UsuarioController {
 
         if (user != null && user.getPassword().equals(usuario.getPassword())) {
 
-            this.currentUserId = user.getId();
-
             return ResponseEntity.ok("Login feito com sucesso.");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
@@ -45,9 +41,7 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario, @RequestHeader(value = "currentUserId", required = false) Long currentUserId) {
-        try {
-            this.currentUserId = Optional.ofNullable(currentUserId).orElse(1L);
+    public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario) {        try {
 
             usuarioRepository.save(usuario);
             return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
@@ -60,7 +54,7 @@ public class UsuarioController {
     private void logError(String message, Object entity, Exception e) {
         try {
             Log log = new Log();
-            log.setUserId(this.currentUserId);
+            log.setUserId(null); // User ID is not available in this context after removing currentUserId
             log.setTipoOperacao("INSERIR");
             log.setTabela(entity != null ? entity.getClass().getSimpleName() : null);
             log.setDescricao(message + ": " + e.getMessage());

@@ -24,9 +24,8 @@ public class ClienteController {
     private LogRepository logRepository;
 
     @PostMapping
-    public ResponseEntity<String> criarCliente(@RequestBody Cliente cliente, HttpSession session) {
+    public ResponseEntity<String> criarCliente(@RequestBody Cliente cliente) {
         try {
-            // Obtenha o ID do usuário da sessão
             // Salva o cliente no banco de dados
             clienteRepository.save(cliente);
             // Retorna uma resposta de sucesso
@@ -51,7 +50,6 @@ public class ClienteController {
         }
 
         try {
-            // Obtenha o ID do usuário da sessão
             cliente.setId(id);
             // Atualiza o cliente no banco de dados
             clienteRepository.save(cliente);
