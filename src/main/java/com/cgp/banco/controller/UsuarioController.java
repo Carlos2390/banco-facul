@@ -34,8 +34,8 @@ public class UsuarioController {
         Usuario user = usuarioRepository.findByUsername(usuario.getUsername());
 
         if (user != null && user.getPassword().equals(usuario.getPassword())) {
-            usuario.setPassword("");
-            return ResponseEntity.ok(usuario);
+            user.setPassword("");
+            return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
         }
