@@ -34,7 +34,6 @@ public class Conta {
     @Column(name = "cliente_id", nullable = false)
     private Long clienteId;
 
-    @Transient
     @JoinColumn(name = "cliente_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne
     private Cliente cliente;
