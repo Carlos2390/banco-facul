@@ -40,6 +40,7 @@ public class Endereco {
     @Column(name = "id_cliente", nullable = false)
     private Long idCliente;
 
+    @Transient
     @JoinColumn(name = "id_cliente", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne
     private Cliente cliente;

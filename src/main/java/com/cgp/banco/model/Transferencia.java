@@ -33,6 +33,7 @@ public class Transferencia {
     @Column(name = "id_conta_origem", nullable = false)
     private Long idContaOrigem;
 
+    @Transient
     @JoinColumn(name = "id_conta_origem", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne
     private Conta contaOrigem;
@@ -40,6 +41,7 @@ public class Transferencia {
     @Column(name = "id_conta_destino", nullable = false)
     private Long idContaDestino;
 
+    @Transient
     @JoinColumn(name = "id_conta_destino", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne
     private Conta contaDestino;

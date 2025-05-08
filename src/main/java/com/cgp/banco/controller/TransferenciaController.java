@@ -104,7 +104,7 @@ public class TransferenciaController {
             contaDestino.setSaldo(contaDestino.getSaldo() + transferencia.getValor());
             contaRepository.save(contaDestino);
          
-            return ResponseEntity.ok("Transferência criada com sucesso.");
+            return ResponseEntity.ok(transferencia);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar transferencia: " + e.getMessage());
         }
@@ -129,7 +129,7 @@ public class TransferenciaController {
             // Atualiza a transferência no banco de dados
             transferenciaRepository.save(transferencia);
             // Retorna uma resposta de sucesso
-            return ResponseEntity.ok("Transferência atualizada com sucesso.");
+            return ResponseEntity.ok(transferencia);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar transferencia: " + e.getMessage());
         }

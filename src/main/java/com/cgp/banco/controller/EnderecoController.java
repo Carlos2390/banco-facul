@@ -20,21 +20,21 @@ public class EnderecoController {
     private EnderecoRepository enderecoRepository;
 
     @PostMapping
-    public ResponseEntity<String> criarEndereco(@RequestBody Endereco endereco) {
+    public ResponseEntity<?> criarEndereco(@RequestBody Endereco endereco) {
         try {
 
             // Usa o método save do EnderecoRepository para salvar o endereço
             enderecoRepository.save(endereco);
 
             // Retorna uma resposta de sucesso
-            return ResponseEntity.ok("Endereço criado com sucesso.");
+            return ResponseEntity.ok(endereco);
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar o endereço: " + e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarEndereco(@PathVariable Long id, @RequestBody Endereco endereco) {
+    public ResponseEntity<?> atualizarEndereco(@PathVariable Long id, @RequestBody Endereco endereco) {
         try {
             // Busca o endereço existente pelo ID utilizando o método findById
             Optional<Endereco> enderecoExistenteOptional = enderecoRepository.findById(id);
@@ -51,7 +51,7 @@ public class EnderecoController {
             enderecoRepository.save(endereco);
 
 
-            return ResponseEntity.ok("Endereço atualizado com sucesso.");
+            return ResponseEntity.ok(endereco);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar o endereço: " + e.getMessage());
         }

@@ -1,5 +1,6 @@
 package com.cgp.banco.controller;
 
+import com.cgp.banco.model.Usuario;
 import com.cgp.banco.repository.LogRepository;
 import com.cgp.banco.repository.ClienteRepository;
 import com.cgp.banco.model.Cliente;
@@ -24,12 +25,12 @@ public class ClienteController {
     private LogRepository logRepository;
 
     @PostMapping
-    public ResponseEntity<String> criarCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<?> criarCliente(@RequestBody Cliente cliente) {
         try {
             // Salva o cliente no banco de dados
             clienteRepository.save(cliente);
             // Retorna uma resposta de sucesso
-            return ResponseEntity.ok("Cliente criado com sucesso.");
+            return ResponseEntity.ok(cliente);
         } catch (Exception e) {
             // Retorna uma resposta de erro
             return ResponseEntity.badRequest().body("Erro ao criar cliente: " + e.getMessage());
@@ -38,7 +39,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
+    public ResponseEntity<?> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
         // Busca o cliente existente pelo ID
         Cliente clienteExistente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
@@ -52,7 +53,7 @@ public class ClienteController {
             // Atualiza o cliente no banco de dados
             clienteRepository.save(cliente);
             // Retorna uma resposta de sucesso
-            return ResponseEntity.ok("Cliente atualizado com sucesso.");
+            return ResponseEntity.ok(cliente);
         } catch (Exception e) {
             // Retorna uma resposta de erro
             return ResponseEntity.badRequest().body("Erro ao atualizar cliente: " + e.getMessage());

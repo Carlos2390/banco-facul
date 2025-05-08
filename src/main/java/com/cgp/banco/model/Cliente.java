@@ -37,6 +37,7 @@ public class Cliente {
     @Column(name = "id_usuario", nullable = false)
     private Long idUsuario;
 
+    @Transient
     @JoinColumn(name = "id_usuario", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne
     private Usuario usuario;

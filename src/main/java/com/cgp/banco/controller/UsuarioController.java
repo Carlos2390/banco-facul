@@ -46,6 +46,7 @@ public class UsuarioController {
         try {
 
             usuarioRepository.save(usuario);
+            usuario.setPassword("");
             return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
         } catch (Exception e) {
             logError("Erro ao criar o usuário", null, e);

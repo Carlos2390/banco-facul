@@ -26,12 +26,12 @@ public class ContaController {
     private LogRepository logRepository;
 
     @PostMapping
-    public ResponseEntity<String> criarConta(@RequestBody Conta conta) {
+    public ResponseEntity<?> criarConta(@RequestBody Conta conta) {
         try {
             // Salva a conta no banco de dados
             contaRepository.save(conta);
             // Retorna uma resposta de sucesso
-            return ResponseEntity.ok("Conta criada com sucesso.");
+            return ResponseEntity.ok(conta);
         } catch (Exception e) {
             Log log = new Log();
             log.setTipoOperacao("INSERIR");
@@ -43,7 +43,7 @@ public class ContaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarConta(@PathVariable Long id, @RequestBody Conta conta) {
+    public ResponseEntity<?> atualizarConta(@PathVariable Long id, @RequestBody Conta conta) {
         try {
             
             // Busca a conta existente pelo ID
@@ -60,7 +60,7 @@ public class ContaController {
             // Atualiza a conta no banco de dados
             contaRepository.save(conta);
             // Retorna uma resposta de sucesso
-            return ResponseEntity.ok("Conta atualizada com sucesso.");
+            return ResponseEntity.ok(conta);
         } catch (Exception e) {
             Log log = new Log();
             log.setTipoOperacao("ATUALIZAR");
