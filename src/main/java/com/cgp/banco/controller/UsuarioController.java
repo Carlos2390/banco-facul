@@ -93,4 +93,13 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar o usuário, " + e.getMessage());
         }
     }
+
+    @GetMapping
+    public ResponseEntity<?> listarUsuarios() {
+        try {
+            return ResponseEntity.ok(usuarioRepository.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar usuários: " + e.getMessage());
+        }
+    }
 }
