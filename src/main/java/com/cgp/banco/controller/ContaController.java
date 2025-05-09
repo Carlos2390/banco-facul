@@ -3,6 +3,7 @@ package com.cgp.banco.controller;
 
 import com.cgp.banco.model.Conta;
 import com.cgp.banco.model.Log;
+import com.cgp.banco.repository.ClienteRepository;
 import com.cgp.banco.repository.ContaRepository;
 import com.cgp.banco.repository.LogRepository;
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +26,9 @@ public class ContaController {
     @Autowired
     private LogRepository logRepository;
 
+    @Autowired
+    private ClienteRepository clienteRepository;
+
     @PostMapping
     public ResponseEntity<?> criarConta(@RequestBody Conta conta) {
         try {
@@ -32,7 +36,9 @@ public class ContaController {
             contaRepository.save(conta);
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(conta.getCliente().getIdUsuario());
+            clienteRepository.findById(conta.getClienteId()).ifPresent(cliente -> {
+                log.setUserId(cliente.getIdUsuario());
+            });
             log.setTipoOperacao("CREATE");
             log.setTabela("conta");
             log.setDescricao("SUCESSO: Conta criada com sucesso: " + conta.toString());
@@ -42,7 +48,9 @@ public class ContaController {
             return ResponseEntity.ok(conta);
         } catch (Exception e) {
             Log log = new Log();
-            log.setUserId(conta.getCliente().getIdUsuario());
+            clienteRepository.findById(conta.getClienteId()).ifPresent(cliente -> {
+                log.setUserId(cliente.getIdUsuario());
+            });
             log.setTipoOperacao("CREATE");
             log.setTabela("conta");
             log.setDescricao("ERRO: Erro ao criar Conta: " + e.getMessage());
@@ -60,7 +68,9 @@ public class ContaController {
             if (contaExistente == null) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId(conta.getCliente().getIdUsuario());
+                clienteRepository.findById(conta.getClienteId()).ifPresent(cliente -> {
+                    log.setUserId(cliente.getIdUsuario());
+                });
                 log.setTipoOperacao("ATUALIZAR");
                 log.setTabela("conta");
                 log.setIdTabela(id);
@@ -73,13 +83,14 @@ public class ContaController {
             }
             conta.setClienteId(contaExistente.getClienteId());
             // Define o ID da conta
-
             conta.setId(id);
             // Atualiza a conta no banco de dados
             contaRepository.save(conta);
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(conta.getCliente().getIdUsuario());
+            clienteRepository.findById(conta.getClienteId()).ifPresent(cliente -> {
+                log.setUserId(cliente.getIdUsuario());
+            });
             log.setTipoOperacao("ATUALIZAR");
             log.setTabela("conta");
             log.setIdTabela(id);
