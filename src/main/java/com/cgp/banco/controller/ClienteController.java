@@ -29,9 +29,27 @@ public class ClienteController {
         try {
             // Salva o cliente no banco de dados
             clienteRepository.save(cliente);
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("CREATE");
+            log.setTabela("cliente");
+            log.setIdTabela(cliente.getId());
+            log.setDescricao("SUCESSO: Cliente criado com sucesso.");
+            log.setDadosAntigos(null);
+            log.setDadosNovos(cliente.toString());
+            logRepository.save(log);
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok(cliente);
         } catch (Exception e) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("CREATE");
+            log.setTabela("cliente");
+            log.setIdTabela(cliente.getId());
+            log.setDescricao("ERRO: Erro ao criar cliente: " + e.getMessage());
+            log.setDadosAntigos(null);
+            log.setDadosNovos(cliente.toString());
+            logRepository.save(log);
             // Retorna uma resposta de erro
             return ResponseEntity.badRequest().body("Erro ao criar cliente: " + e.getMessage());
         }
@@ -44,6 +62,16 @@ public class ClienteController {
         Cliente clienteExistente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
         if (clienteExistente == null) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(cliente.getIdUsuario());
+            log.setTipoOperacao("UPDATE");
+            log.setTabela("cliente");
+            log.setIdTabela(id);
+            log.setDescricao("ERRO: Cliente não encontrado para atualização.");
+            log.setDadosAntigos(null);
+            log.setDadosNovos(cliente.toString());
+            logRepository.save(log);
             // Retorna uma resposta de não encontrado
             return ResponseEntity.notFound().build();
         }
@@ -52,9 +80,31 @@ public class ClienteController {
             cliente.setId(id);
             // Atualiza o cliente no banco de dados
             clienteRepository.save(cliente);
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(cliente.getIdUsuario());
+            log.setTipoOperacao("UPDATE");
+            log.setTabela("cliente");
+            log.setIdTabela(cliente.getId());
+            log.setDescricao("SUCESSO: Cliente atualizado com sucesso.");
+            log.setDadosAntigos(clienteExistente.toString());
+            log.setDadosNovos(cliente.toString());
+            logRepository.save(log);
+
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok(cliente);
         } catch (Exception e) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(cliente.getIdUsuario());
+            log.setTipoOperacao("UPDATE");
+            log.setTabela("cliente");
+            log.setIdTabela(cliente.getId());
+            log.setDescricao("ERRO: Erro ao atualizar cliente: " + e.getMessage());
+            log.setDadosAntigos(clienteExistente.toString());
+            log.setDadosNovos(cliente.toString());
+            logRepository.save(log);
+
             // Retorna uma resposta de erro
             return ResponseEntity.badRequest().body("Erro ao atualizar cliente: " + e.getMessage());
         }
@@ -67,9 +117,31 @@ public class ClienteController {
         Cliente cliente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
         if (cliente == null) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("READ");
+            log.setTabela("cliente");
+            log.setIdTabela(id);
+            log.setDescricao("ERRO: Cliente não encontrado.");
+            log.setDadosAntigos(null);
+            log.setDadosNovos(null);
+            logRepository.save(log);
+
             // Retorna uma resposta de não encontrado
             return ResponseEntity.notFound().build();
         }
+
+        // Cria um log de operação
+        Log log = new Log();
+        log.setUserId(cliente.getIdUsuario());
+        log.setTipoOperacao("READ");
+        log.setTabela("cliente");
+        log.setIdTabela(cliente.getId());
+        log.setDescricao("SUCESSO: Cliente encontrado.");
+        log.setDadosAntigos(null);
+        log.setDadosNovos(cliente.toString());
+        logRepository.save(log);
+
         // Retorna o cliente encontrado
         return ResponseEntity.ok(cliente);
     }
@@ -80,9 +152,30 @@ public class ClienteController {
         Cliente cliente = clienteRepository.findByCpf(cpf);
         // Verifica se o cliente existe
         if (cliente == null) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("READ");
+            log.setTabela("cliente");
+            log.setIdTabela(cliente.getId());
+            log.setDescricao("ERRO: Cliente não encontrado.");
+            log.setDadosAntigos(null);
+            log.setDadosNovos(null);
+            logRepository.save(log);
+
             // Retorna uma resposta de não encontrado
             return ResponseEntity.notFound().build();
         }
+        // Cria um log de operação
+        Log log = new Log();
+        log.setUserId(cliente.getIdUsuario());
+        log.setTipoOperacao("READ");
+        log.setTabela("cliente");
+        log.setIdTabela(cliente.getId());
+        log.setDescricao("SUCESSO: Cliente encontrado.");
+        log.setDadosAntigos(null);
+        log.setDadosNovos(cliente.toString());
+        logRepository.save(log);
+
         // Retorna o cliente encontrado
         return ResponseEntity.ok(cliente);
     }
@@ -93,9 +186,30 @@ public class ClienteController {
         Cliente cliente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
         if (cliente == null) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("DELETE");
+            log.setTabela("cliente");
+            log.setIdTabela(id);
+            log.setDescricao("ERRO: Cliente não encontrado para deleção.");
+            log.setDadosAntigos(null);
+            log.setDadosNovos(null);
+            logRepository.save(log);
+
             // Retorna uma resposta de não encontrado
             return ResponseEntity.notFound().build();
         }
+        // Cria um log de operação
+        Log log = new Log();
+        log.setUserId(cliente.getIdUsuario());
+        log.setTipoOperacao("DELETE");
+        log.setTabela("cliente");
+        log.setIdTabela(cliente.getId());
+        log.setDescricao("SUCESSO: Cliente deletado com sucesso.");
+        log.setDadosAntigos(cliente.toString());
+        log.setDadosNovos(null);
+        logRepository.save(log);
+
         // Deleta o cliente do banco de dados
         clienteRepository.deleteById(id);
         // Retorna uma resposta de sucesso
@@ -104,8 +218,35 @@ public class ClienteController {
 
     @DeleteMapping("/deletarClientePorCpf")
     public ResponseEntity<String> deletarClientePorCpf(@RequestParam String cpf) {
-        // Deleta o cliente pelo CPF
-        clienteRepository.deleteByCpf(cpf);
+        Cliente cliente = clienteRepository.findByCpf(cpf);
+        if (cliente != null) {
+            // Deleta o cliente pelo CPF
+            clienteRepository.deleteByCpf(cpf);
+
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(cliente.getIdUsuario());
+            log.setTipoOperacao("DELETE");
+            log.setTabela("cliente");
+            log.setIdTabela(clienteRepository.findByCpf(cpf).getId());
+            log.setDescricao("SUCESSO: Cliente deletado com sucesso.");
+            log.setDadosAntigos(clienteRepository.findByCpf(cpf).toString());
+            log.setDadosNovos(null);
+            logRepository.save(log);
+        } else {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("DELETE");
+            log.setTabela("cliente");
+            log.setIdTabela(clienteRepository.findByCpf(cpf).getId());
+            log.setDescricao("ERRO: Cliente não encontrado para deleção.");
+            log.setDadosAntigos(null);
+            log.setDadosNovos(null);
+            logRepository.save(log);
+
+            // Retorna uma resposta de não encontrado
+            return ResponseEntity.notFound().build();
+        }
         // Retorna uma resposta de sucesso
         return ResponseEntity.ok("Cliente deletado com sucesso.");
     }

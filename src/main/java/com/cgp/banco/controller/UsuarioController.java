@@ -23,11 +23,19 @@ public class UsuarioController {
     @Autowired
     private LogRepository logRepository;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Usuario usuario) {
         if (usuario == null || usuario.getUsername() == null || usuario.getPassword() == null) {
+            // Cria um log de operação
+            Log log = new Log();
+            if (usuario != null) {
+                log.setUserId(usuario.getId());
+            }
+            log.setTipoOperacao("LOGIN");
+            log.setTabela("usuario");
+            log.setDescricao("ERRO: Credenciais inválidas.");
+            logRepository.save(log);
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Credenciais inválidas");
         }
 
@@ -35,8 +43,25 @@ public class UsuarioController {
 
         if (user != null && user.getPassword().equals(usuario.getPassword())) {
             user.setPassword("");
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(user.getId());
+            log.setTipoOperacao("LOGIN");
+            log.setTabela("usuario");
+            log.setDescricao("SUCESSO: Login realizado com sucesso.");
+            logRepository.save(log);
+
             return ResponseEntity.ok(user);
         } else {
+            // Cria um log de operação
+            Log log = new Log();
+            if (user != null) {
+                log.setUserId(usuario.getId());
+            }
+            log.setTipoOperacao("LOGIN");
+            log.setTabela("usuario");
+            log.setDescricao("ERRO: Credenciais inválidas.");
+            logRepository.save(log);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
         }
     }
@@ -44,33 +69,28 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario) {
         try {
-
             usuarioRepository.save(usuario);
             usuario.setPassword("");
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(usuario.getId());
+            log.setTipoOperacao("CREATE");
+            log.setTabela("usuario");
+            log.setDescricao("SUCESSO: Usuário criado com sucesso.");
+            log.setDadosNovos(usuario.toString());
+            logRepository.save(log);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
         } catch (Exception e) {
-            logError("Erro ao criar o usuário", null, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar o usuário, " + e.getMessage());
-        }
-    }
-
-    private void logError(String message, Object entity, Exception e) {
-        try {
+            // Cria um log de operação
             Log log = new Log();
-            log.setUserId(null); // User ID is not available in this context after removing currentUserId
-            log.setTipoOperacao("INSERIR");
-            log.setTabela(entity != null ? entity.getClass().getSimpleName() : null);
-            log.setDescricao(message + ": " + e.getMessage());
-
-
-            if (entity != null) {
-                log.setDadosNovos(objectMapper.writeValueAsString(entity));
-            }
-
+            log.setUserId(usuario.getId());
+            log.setTipoOperacao("CREATE");
+            log.setTabela("usuario");
+            log.setDescricao("ERRO: Erro ao criar usuário: " + e.getMessage());
+            log.setDadosNovos(usuario.toString());
             logRepository.save(log);
-        } catch (Exception logException) {
-            System.err.println("Erro ao registrar log de erro: " + logException.getMessage());
-            logException.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar o usuário, " + e.getMessage());
         }
     }
 }

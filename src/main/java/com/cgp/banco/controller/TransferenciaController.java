@@ -1,29 +1,31 @@
 package com.cgp.banco.controller;
 
+import com.cgp.banco.model.Log;
 import com.cgp.banco.repository.ContaRepository;
+import com.cgp.banco.repository.LogRepository;
 import com.cgp.banco.repository.TransferenciaRepository;
 import com.cgp.banco.model.Conta;
 import com.cgp.banco.model.Transferencia;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/transferencias")
+@RequiredArgsConstructor
 public class TransferenciaController {
 
     private final TransferenciaRepository transferenciaRepository;
 
     private final ContaRepository contaRepository;
 
-    public TransferenciaController(TransferenciaRepository transferenciaRepository, ContaRepository contaRepository) {
-        this.transferenciaRepository = transferenciaRepository;
-        this.contaRepository = contaRepository;
-    }
+    private final LogRepository logRepository;
 
     @PostMapping("/porNumeroContas")
     public ResponseEntity<?> criarTransferenciaPorNumeroContas(@RequestParam String numeroContaOrigem, @RequestParam String numeroContaDestino, @RequestParam Double valor) {
@@ -43,14 +45,37 @@ public class TransferenciaController {
 
             // Verifica se a conta de origem e a conta de destino são diferentes
             if (contaOrigem.getId().equals(contaDesitino.getId())) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setUserId(contaOrigem.getCliente().getIdUsuario());
+                log.setTipoOperacao("CREATE");
+                log.setTabela("transferencia");
+                log.setDescricao("ERRO: A conta de origem e a conta de destino não podem ser iguais.");
+                logRepository.save(log);
+
                 return ResponseEntity.badRequest().body("A conta de origem e a conta de destino não podem ser iguais.");
             }
             // Verifica se o valor da transferência é maior que 0
             if (valor <= 0) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setUserId(contaOrigem.getCliente().getIdUsuario());
+                log.setTipoOperacao("CREATE");
+                log.setTabela("transferencia");
+                log.setDescricao("ERRO: O valor da transferência deve ser maior que 0.");
+                logRepository.save(log);
+
                 return ResponseEntity.badRequest().body("O valor da transferência deve ser maior que 0.");
             }
             // Verifica se a conta de origem tem saldo suficiente
             if (contaOrigem.getSaldo() < valor) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setUserId(contaOrigem.getCliente().getIdUsuario());
+                log.setTipoOperacao("CREATE");
+                log.setTabela("transferencia");
+                log.setDescricao("ERRO: Saldo insuficiente na conta de origem.");
+                logRepository.save(log);
                 return ResponseEntity.badRequest().body("Saldo insuficiente na conta de origem.");
             }
             // Atualiza o saldo da conta de origem
@@ -62,9 +87,30 @@ public class TransferenciaController {
             contaRepository.save(contaDesitino);
             // Salva a transferência no banco de dados
             transferenciaRepository.save(transferencia);
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(transferencia.getContaOrigem().getClienteId());
+            log.setTipoOperacao("CREATE");
+            log.setTabela("transferencia");
+            log.setIdTabela(transferencia.getId());
+            log.setDescricao("SUCESSO: Transferência criada com sucesso.");
+            log.setDadosAntigos(null);
+            log.setDadosNovos(transferencia.toString());
+             logRepository.save(log);
+
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Transferência realizada com sucesso.");
         } catch (Exception e) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("CREATE");
+            log.setTabela("transferencia");
+            log.setIdTabela(null);
+            log.setDescricao("ERRO: Erro ao criar transferência: " + e.getMessage());
+            log.setDadosAntigos(null);
+            log.setDadosNovos(null);
+            logRepository.save(log);
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar transferencia: " + e.getMessage());
         }
     }
@@ -77,22 +123,70 @@ public class TransferenciaController {
 
             Conta contaOrigem = contaRepository.findById(transferencia.getIdContaOrigem()).orElse(null);
             if (contaOrigem == null) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setUserId(transferencia.getContaOrigem().getClienteId());
+                log.setTipoOperacao("CREATE");
+                log.setTabela("transferencia");
+                log.setDescricao("ERRO: Conta de origem não encontrada.");
+                logRepository.save(log);
+
                 return ResponseEntity.badRequest().body("Conta de origem não encontrada.");
             }
             Conta contaDestino = contaRepository.findById(transferencia.getIdContaDestino()).orElse(null);
             if (contaDestino == null) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setUserId(transferencia.getContaOrigem().getClienteId());
+                log.setTipoOperacao("CREATE");
+                log.setTabela("transferencia");
+                log.setDescricao("ERRO: Conta de destino não encontrada.");
+                log.setDadosNovos(transferencia.toString());
+                log.setIdTabela(transferencia.getId());
+                logRepository.save(log);
+
                 return ResponseEntity.badRequest().body("Conta de destino não encontrada.");
             }
             // Verifica se a conta de origem e a conta de destino são diferentes
             if (contaOrigem.getId().equals(contaDestino.getId())) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setUserId(transferencia.getContaOrigem().getClienteId());
+                log.setTipoOperacao("CREATE");
+                log.setTabela("transferencia");
+                log.setDescricao("ERRO: A conta de origem e a conta de destino não podem ser iguais.");
+                log.setDadosNovos(transferencia.toString());
+                log.setIdTabela(transferencia.getId());
+                logRepository.save(log);
+
                 return ResponseEntity.badRequest().body("A conta de origem e a conta de destino não podem ser iguais.");
             }
             // Verifica se o valor da transferência é maior que 0
             if (transferencia.getValor() <= 0) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setUserId(transferencia.getContaOrigem().getClienteId());
+                log.setTipoOperacao("CREATE");
+                log.setTabela("transferencia");
+                log.setDescricao("ERRO: O valor da transferência deve ser maior que 0.");
+                log.setDadosNovos(transferencia.toString());
+                log.setIdTabela(transferencia.getId());
+                logRepository.save(log);
+
                 return ResponseEntity.badRequest().body("O valor da transferência deve ser maior que 0.");
             }
             // Verifica se a conta de origem tem saldo suficiente
             if (contaOrigem.getSaldo() < transferencia.getValor()) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setUserId(transferencia.getContaOrigem().getClienteId());
+                log.setTipoOperacao("CREATE");
+                log.setTabela("transferencia");
+                log.setDescricao("ERRO: Saldo insuficiente na conta de origem.");
+                log.setDadosNovos(transferencia.toString());
+                log.setIdTabela(transferencia.getId());
+                logRepository.save(log);
+
                 return ResponseEntity.badRequest().body("Saldo insuficiente na conta de origem.");
             }
 
@@ -103,9 +197,27 @@ public class TransferenciaController {
             //Atualizar o saldo da conta de destino
             contaDestino.setSaldo(contaDestino.getSaldo() + transferencia.getValor());
             contaRepository.save(contaDestino);
+
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(transferencia.getContaOrigem().getClienteId());
+            log.setTipoOperacao("CREATE");
+            log.setTabela("transferencia");
+            log.setIdTabela(transferencia.getId());
+            log.setDescricao("SUCESSO: Transferência criada com sucesso.");
+            log.setDadosNovos(transferencia.toString());
+            logRepository.save(log);
          
             return ResponseEntity.ok(transferencia);
         } catch (Exception e) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(transferencia.getContaOrigem().getClienteId());
+            log.setTipoOperacao("CREATE");
+            log.setTabela("transferencia");
+            log.setDescricao("ERRO: Erro ao criar transferência: " + e.getMessage());
+            logRepository.save(log);
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar transferencia: " + e.getMessage());
         }
     }
@@ -115,6 +227,14 @@ public class TransferenciaController {
         try {
             // Verifica se a transferência existe
             if (transferencia == null) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setTipoOperacao("UPDATE");
+                log.setTabela("transferencia");
+                log.setIdTabela(id);
+                log.setDescricao("ERRO: Transferência não pode ser nula.");
+                logRepository.save(log);
+
                 return ResponseEntity.badRequest().body("Transferência não pode ser nula.");
             }
             // Busca a transferência existente no banco de dados
@@ -122,12 +242,33 @@ public class TransferenciaController {
         Transferencia transferenciaExistente = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
             if (transferenciaExistente == null) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setTipoOperacao("UPDATE");
+                log.setTabela("transferencia");
+                log.setIdTabela(id);
+                log.setDescricao("ERRO: Transferência não encontrada.");
+                log.setDadosAntigos(null);
+                log.setDadosNovos(transferencia.toString());
+                logRepository.save(log);
+
                 return ResponseEntity.notFound().build();
             }
             
             transferencia.setId(id);
             // Atualiza a transferência no banco de dados
             transferenciaRepository.save(transferencia);
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(transferencia.getContaOrigem().getClienteId());
+            log.setTipoOperacao("UPDATE");
+            log.setTabela("transferencia");
+            log.setIdTabela(transferencia.getId());
+            log.setDescricao("SUCESSO: Transferência atualizada com sucesso.");
+            log.setDadosAntigos(transferenciaExistente.toString());
+            log.setDadosNovos(transferencia.toString());
+            logRepository.save(log);
+
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok(transferencia);
         } catch (Exception e) {
@@ -141,12 +282,36 @@ public class TransferenciaController {
             Transferencia transferencia = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
             if (transferencia == null) {
-               
+                // Cria um log de operação
+                Log log = new Log();
+                log.setTipoOperacao("GET");
+                log.setTabela("transferencia");
+                log.setIdTabela(id);
+                log.setDescricao("ERRO: Transferência não encontrada.");
+                logRepository.save(log);
+
                 return ResponseEntity.notFound().build();
             }
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("GET");
+            log.setTabela("transferencia");
+            log.setIdTabela(id);
+            log.setDescricao("SUCESSO: Transferência encontrada com sucesso.");
+            log.setDadosNovos(transferencia.toString());
+            logRepository.save(log);
+
             // Retorna a transferência encontrada
             return ResponseEntity.ok(transferencia);
         } catch (Exception e) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("GET");
+            log.setTabela("transferencia");
+            log.setIdTabela(id);
+            log.setDescricao("ERRO: Erro ao buscar transferência: " + e.getMessage());
+            logRepository.save(log);
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar transferencia: " + e.getMessage());
         }
     }
@@ -156,10 +321,37 @@ public class TransferenciaController {
         try {
             Conta conta = contaRepository.findByNumeroConta(numeroContaOrigem);
             List<Transferencia> transferencias = transferenciaRepository.findByIdContaOrigem(conta.getId());
+            // Verifica se a conta existe
+            if (conta == null) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setTipoOperacao("GET");
+                log.setTabela("transferencia");
+                log.setIdTabela(null);
+                log.setDescricao("ERRO: Conta não encontrada.");
+                logRepository.save(log);
+
+                return ResponseEntity.notFound().build();
+            }
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("GET");
+            log.setTabela("transferencia");
+            log.setIdTabela(conta.getId());
+            log.setDescricao("SUCESSO: Transferências encontradas com sucesso.");
+            log.setDadosNovos(transferencias.toString());
+            logRepository.save(log);
 
             // Retorna a lista de transferências encontradas
             return ResponseEntity.ok(transferencias);
         } catch (Exception e) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("GET");
+            log.setTabela("transferencia");
+            log.setDescricao("ERRO: Erro ao buscar transferências: " + e.getMessage());
+            logRepository.save(log);
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar transferencias: " + e.getMessage());
         }
     }
@@ -170,6 +362,14 @@ public class TransferenciaController {
             Conta conta = contaRepository.findByNumeroConta(numeroContaDestino);
 
             List<Transferencia> transferencias = transferenciaRepository.findByIdContaDestino(conta.getId());
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("GET");
+            log.setTabela("transferencia");
+            log.setIdTabela(conta.getId());
+            log.setDescricao("SUCESSO: Transferências encontradas com sucesso.");
+            logRepository.save(log);
+
             // Retorna a lista de transferências encontradas
             return ResponseEntity.ok(transferencias);
         } catch (Exception e) {
@@ -183,13 +383,37 @@ public class TransferenciaController {
             Transferencia transferencia = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
             if (transferencia == null) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setTipoOperacao("DELETE");
+                log.setTabela("transferencia");
+                log.setIdTabela(id);
+                log.setDescricao("ERRO: Transferência não encontrada.");
+                logRepository.save(log);
+
                 return ResponseEntity.notFound().build();
             }
-            
             transferenciaRepository.deleteById(id);
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("DELETE");
+            log.setTabela("transferencia");
+            log.setIdTabela(id);
+            log.setDescricao("SUCESSO: Transferência deletada com sucesso.");
+            log.setDadosAntigos(transferencia.toString());
+            logRepository.save(log);
+
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Transferência deletada com sucesso.");
         } catch (Exception e) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("DELETE");
+            log.setTabela("transferencia");
+            log.setIdTabela(id);
+            log.setDescricao("ERRO: Erro ao deletar transferência: " + e.getMessage());
+            logRepository.save(log);
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar transferencia: " + e.getMessage());
         }
     }
