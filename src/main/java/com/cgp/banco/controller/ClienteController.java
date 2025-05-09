@@ -1,15 +1,13 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.model.Usuario;
-import com.cgp.banco.repository.LogRepository;
-import com.cgp.banco.repository.ClienteRepository;
 import com.cgp.banco.model.Cliente;
 import com.cgp.banco.model.Log;
+import com.cgp.banco.repository.ClienteRepository;
+import com.cgp.banco.repository.LogRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -128,7 +126,7 @@ public class ClienteController {
             // Cria um log de operação
             Long userId = (Long) session.getAttribute("userId");
             Log log = new Log();
-            log.setUserId(userId)
+            log.setUserId(userId);
             log.setTipoOperacao("READ");
             log.setTabela("cliente");
             log.setIdTabela(id);

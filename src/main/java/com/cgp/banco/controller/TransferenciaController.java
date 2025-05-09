@@ -1,11 +1,12 @@
 package com.cgp.banco.controller;
 
+import com.cgp.banco.model.Conta;
 import com.cgp.banco.model.Log;
+import com.cgp.banco.model.Transferencia;
 import com.cgp.banco.repository.ContaRepository;
 import com.cgp.banco.repository.LogRepository;
 import com.cgp.banco.repository.TransferenciaRepository;
-import com.cgp.banco.model.Conta;
-import com.cgp.banco.model.Transferencia;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
