@@ -36,9 +36,6 @@ public class ContaController {
             contaRepository.save(conta);
             // Cria um log de operação
             Log log = new Log();
-            clienteRepository.findById(conta.getClienteId()).ifPresent(cliente -> {
-                log.setUserId(cliente.getIdUsuario());
-            });
             log.setTipoOperacao("CREATE");
             log.setTabela("conta");
             log.setDescricao("SUCESSO: Conta criada com sucesso: " + conta.toString());
@@ -48,9 +45,6 @@ public class ContaController {
             return ResponseEntity.ok(conta);
         } catch (Exception e) {
             Log log = new Log();
-            clienteRepository.findById(conta.getClienteId()).ifPresent(cliente -> {
-                log.setUserId(cliente.getIdUsuario());
-            });
             log.setTipoOperacao("CREATE");
             log.setTabela("conta");
             log.setDescricao("ERRO: Erro ao criar Conta: " + e.getMessage());
@@ -68,9 +62,6 @@ public class ContaController {
             if (contaExistente == null) {
                 // Cria um log de operação
                 Log log = new Log();
-                clienteRepository.findById(conta.getClienteId()).ifPresent(cliente -> {
-                    log.setUserId(cliente.getIdUsuario());
-                });
                 log.setTipoOperacao("ATUALIZAR");
                 log.setTabela("conta");
                 log.setIdTabela(id);
@@ -88,9 +79,6 @@ public class ContaController {
             contaRepository.save(conta);
             // Cria um log de operação
             Log log = new Log();
-            clienteRepository.findById(conta.getClienteId()).ifPresent(cliente -> {
-                log.setUserId(cliente.getIdUsuario());
-            });
             log.setTipoOperacao("ATUALIZAR");
             log.setTabela("conta");
             log.setIdTabela(id);
@@ -103,7 +91,6 @@ public class ContaController {
             return ResponseEntity.ok(conta);
         } catch (Exception e) {
             Log log = new Log();
-            log.setUserId(conta.getCliente().getIdUsuario());
             log.setTipoOperacao("ATUALIZAR");
             log.setTabela("conta");
             log.setIdTabela(id);
@@ -134,7 +121,6 @@ public class ContaController {
             }
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(contaOptional.get().getCliente().getIdUsuario());
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
             log.setIdTabela(id);
@@ -172,7 +158,6 @@ public class ContaController {
             }
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(contas.get(0).getCliente().getIdUsuario());
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
             log.setDescricao("SUCESSO: Contas encontradas por CPF: " + contas.toString());
@@ -209,7 +194,6 @@ public class ContaController {
             }
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(conta.getCliente().getIdUsuario());
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
             log.setDescricao("SUCESSO: Conta encontrada por número: " + conta.toString());
@@ -245,7 +229,6 @@ public class ContaController {
                 contaRepository.deleteById(id);
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId(byId.get().getCliente().getIdUsuario());
                 log.setTipoOperacao("DELETAR");
                 log.setTabela("conta");
                 log.setIdTabela(id);
@@ -295,7 +278,6 @@ public class ContaController {
             } else {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId(conta.getCliente().getIdUsuario());
                 log.setTipoOperacao("DELETAR");
                 log.setTabela("conta");
                 log.setDescricao("SUCESSO: Conta deletada com sucesso: " + conta.toString());

@@ -64,7 +64,6 @@ public class ClienteController {
         if (clienteExistente == null) {
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(cliente.getIdUsuario());
             log.setTipoOperacao("UPDATE");
             log.setTabela("cliente");
             log.setIdTabela(id);
@@ -82,7 +81,6 @@ public class ClienteController {
             clienteRepository.save(cliente);
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(cliente.getIdUsuario());
             log.setTipoOperacao("UPDATE");
             log.setTabela("cliente");
             log.setIdTabela(cliente.getId());
@@ -96,7 +94,6 @@ public class ClienteController {
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(cliente.getIdUsuario());
             log.setTipoOperacao("UPDATE");
             log.setTabela("cliente");
             log.setIdTabela(cliente.getId());
@@ -133,7 +130,6 @@ public class ClienteController {
 
         // Cria um log de operação
         Log log = new Log();
-        log.setUserId(cliente.getIdUsuario());
         log.setTipoOperacao("READ");
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
@@ -167,7 +163,6 @@ public class ClienteController {
         }
         // Cria um log de operação
         Log log = new Log();
-        log.setUserId(cliente.getIdUsuario());
         log.setTipoOperacao("READ");
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
@@ -201,7 +196,6 @@ public class ClienteController {
         }
         // Cria um log de operação
         Log log = new Log();
-        log.setUserId(cliente.getIdUsuario());
         log.setTipoOperacao("DELETE");
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
@@ -225,7 +219,6 @@ public class ClienteController {
 
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(cliente.getIdUsuario());
             log.setTipoOperacao("DELETE");
             log.setTabela("cliente");
             log.setIdTabela(clienteRepository.findByCpf(cpf).getId());

@@ -47,7 +47,6 @@ public class TransferenciaController {
             if (contaOrigem.getId().equals(contaDesitino.getId())) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId(contaOrigem.getCliente().getIdUsuario());
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: A conta de origem e a conta de destino não podem ser iguais.");
@@ -59,7 +58,6 @@ public class TransferenciaController {
             if (valor <= 0) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId(contaOrigem.getCliente().getIdUsuario());
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: O valor da transferência deve ser maior que 0.");
@@ -71,7 +69,6 @@ public class TransferenciaController {
             if (contaOrigem.getSaldo() < valor) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId(contaOrigem.getCliente().getIdUsuario());
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Saldo insuficiente na conta de origem.");
@@ -89,7 +86,6 @@ public class TransferenciaController {
             transferenciaRepository.save(transferencia);
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(transferencia.getContaOrigem().getClienteId());
             log.setTipoOperacao("CREATE");
             log.setTabela("transferencia");
             log.setIdTabela(transferencia.getId());
@@ -125,7 +121,6 @@ public class TransferenciaController {
             if (contaOrigem == null) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId(transferencia.getContaOrigem().getClienteId());
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Conta de origem não encontrada.");
@@ -137,7 +132,6 @@ public class TransferenciaController {
             if (contaDestino == null) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId(transferencia.getContaOrigem().getClienteId());
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Conta de destino não encontrada.");
@@ -151,7 +145,6 @@ public class TransferenciaController {
             if (contaOrigem.getId().equals(contaDestino.getId())) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId(transferencia.getContaOrigem().getClienteId());
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: A conta de origem e a conta de destino não podem ser iguais.");
@@ -165,7 +158,6 @@ public class TransferenciaController {
             if (transferencia.getValor() <= 0) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId(transferencia.getContaOrigem().getClienteId());
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: O valor da transferência deve ser maior que 0.");
@@ -179,7 +171,6 @@ public class TransferenciaController {
             if (contaOrigem.getSaldo() < transferencia.getValor()) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId(transferencia.getContaOrigem().getClienteId());
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Saldo insuficiente na conta de origem.");
@@ -200,7 +191,6 @@ public class TransferenciaController {
 
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(transferencia.getContaOrigem().getClienteId());
             log.setTipoOperacao("CREATE");
             log.setTabela("transferencia");
             log.setIdTabela(transferencia.getId());
@@ -212,7 +202,6 @@ public class TransferenciaController {
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(transferencia.getContaOrigem().getClienteId());
             log.setTipoOperacao("CREATE");
             log.setTabela("transferencia");
             log.setDescricao("ERRO: Erro ao criar transferência: " + e.getMessage());
@@ -260,7 +249,6 @@ public class TransferenciaController {
             transferenciaRepository.save(transferencia);
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(transferencia.getContaOrigem().getClienteId());
             log.setTipoOperacao("UPDATE");
             log.setTabela("transferencia");
             log.setIdTabela(transferencia.getId());
