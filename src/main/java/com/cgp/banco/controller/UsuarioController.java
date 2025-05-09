@@ -1,6 +1,5 @@
 package com.cgp.banco.controller;
 
-import com.cgp.banco.model.Log;
 import com.cgp.banco.model.Usuario;
 import com.cgp.banco.repository.LogRepository;
 import com.cgp.banco.repository.UsuarioRepository;
@@ -11,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import com.cgp.banco.model.Log;
+import jakarta.servlet.http.HttpSession;
+
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -24,12 +26,11 @@ public class UsuarioController {
     private LogRepository logRepository;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> login(@RequestBody Usuario usuario, HttpSession session) {
         if (usuario == null || usuario.getUsername() == null || usuario.getPassword() == null) {
             // Cria um log de operação
-            Log log = new Log();
-            if (usuario != null) {
-                log.setUserId(usuario.getId());
+            Log log = new Log();            if (session.getAttribute("userId") != null) {
+                log.setUserId((Long) session.getAttribute("userId"));
             }
             log.setTipoOperacao("LOGIN");
             log.setTabela("usuario");
@@ -44,19 +45,20 @@ public class UsuarioController {
         if (user != null && user.getPassword().equals(usuario.getPassword())) {
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId(user.getId());
+            log.setUserId((Long) session.getAttribute("userId"));
             log.setTipoOperacao("LOGIN");
             log.setTabela("usuario");
             log.setDescricao("SUCESSO: Login realizado com sucesso.");
             logRepository.save(log);
             user.setPassword(""); // Limpa a senha antes de retornar
+            session.setAttribute("userId", user.getId()); // Salva o ID do usuário na sessão
 
             return ResponseEntity.ok(user);
         } else {
             // Cria um log de operação
             Log log = new Log();
-            if (user != null) {
-                log.setUserId(usuario.getId());
+            if (session.getAttribute("userId") != null) {
+                log.setUserId((Long) session.getAttribute("userId"));
             }
             log.setTipoOperacao("LOGIN");
             log.setTabela("usuario");

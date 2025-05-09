@@ -16,6 +16,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/clientes")
+
 public class ClienteController {
 
     @Autowired
@@ -25,12 +26,14 @@ public class ClienteController {
     private LogRepository logRepository;
 
     @PostMapping
-    public ResponseEntity<?> criarCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<?> criarCliente(@RequestBody Cliente cliente, HttpSession session) {
         try {
             // Salva o cliente no banco de dados
             clienteRepository.save(cliente);
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            log.setUserId(userId);
             log.setTipoOperacao("CREATE");
             log.setTabela("cliente");
             log.setIdTabela(cliente.getId());
@@ -43,6 +46,8 @@ public class ClienteController {
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            log.setUserId(userId);
             log.setTipoOperacao("CREATE");
             log.setTabela("cliente");
             log.setIdTabela(cliente.getId());
@@ -57,7 +62,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
+    public ResponseEntity<?> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente, HttpSession session) {
         // Busca o cliente existente pelo ID
         Cliente clienteExistente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
@@ -65,6 +70,8 @@ public class ClienteController {
             // Cria um log de operação
             Log log = new Log();
             log.setTipoOperacao("UPDATE");
+            Long userId = (Long) session.getAttribute("userId");
+            log.setUserId(userId);
             log.setTabela("cliente");
             log.setIdTabela(id);
             log.setDescricao("ERRO: Cliente não encontrado para atualização.");
@@ -81,6 +88,8 @@ public class ClienteController {
             clienteRepository.save(cliente);
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            log.setUserId(userId);
             log.setTipoOperacao("UPDATE");
             log.setTabela("cliente");
             log.setIdTabela(cliente.getId());
@@ -94,6 +103,8 @@ public class ClienteController {
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            log.setUserId(userId);
             log.setTipoOperacao("UPDATE");
             log.setTabela("cliente");
             log.setIdTabela(cliente.getId());
@@ -109,13 +120,15 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
+    public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id, HttpSession session) {
         // Busca o cliente pelo ID
         Cliente cliente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
         if (cliente == null) {
             // Cria um log de operação
+            Long userId = (Long) session.getAttribute("userId");
             Log log = new Log();
+            log.setUserId(userId)
             log.setTipoOperacao("READ");
             log.setTabela("cliente");
             log.setIdTabela(id);
@@ -130,6 +143,8 @@ public class ClienteController {
 
         // Cria um log de operação
         Log log = new Log();
+        Long userId = (Long) session.getAttribute("userId");
+        log.setUserId(userId);
         log.setTipoOperacao("READ");
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
@@ -143,13 +158,15 @@ public class ClienteController {
     }
 
     @GetMapping("/buscarClientePorCpf")
-    public ResponseEntity<Cliente> buscarClientePorCpf(@RequestParam String cpf) {
+    public ResponseEntity<Cliente> buscarClientePorCpf(@RequestParam String cpf, HttpSession session) {
         // Busca o cliente pelo CPF
         Cliente cliente = clienteRepository.findByCpf(cpf);
         // Verifica se o cliente existe
         if (cliente == null) {
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            log.setUserId(userId);
             log.setTipoOperacao("READ");
             log.setTabela("cliente");
             log.setIdTabela(cliente.getId());
@@ -163,6 +180,8 @@ public class ClienteController {
         }
         // Cria um log de operação
         Log log = new Log();
+        Long userId = (Long) session.getAttribute("userId");
+        log.setUserId(userId);
         log.setTipoOperacao("READ");
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
@@ -176,13 +195,15 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarCliente(@PathVariable Long id) {
+    public ResponseEntity<String> deletarCliente(@PathVariable Long id, HttpSession session) {
         // Busca o cliente pelo ID
         Cliente cliente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
         if (cliente == null) {
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            log.setUserId(userId);
             log.setTipoOperacao("DELETE");
             log.setTabela("cliente");
             log.setIdTabela(id);
@@ -196,6 +217,8 @@ public class ClienteController {
         }
         // Cria um log de operação
         Log log = new Log();
+        Long userId = (Long) session.getAttribute("userId");
+        log.setUserId(userId);
         log.setTipoOperacao("DELETE");
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
@@ -211,7 +234,7 @@ public class ClienteController {
     }
 
     @DeleteMapping("/deletarClientePorCpf")
-    public ResponseEntity<String> deletarClientePorCpf(@RequestParam String cpf) {
+    public ResponseEntity<String> deletarClientePorCpf(@RequestParam String cpf, HttpSession session) {
         Cliente cliente = clienteRepository.findByCpf(cpf);
         if (cliente != null) {
             // Deleta o cliente pelo CPF
@@ -220,6 +243,8 @@ public class ClienteController {
             // Cria um log de operação
             Log log = new Log();
             log.setTipoOperacao("DELETE");
+            Long userId = (Long) session.getAttribute("userId");
+            log.setUserId(userId);
             log.setTabela("cliente");
             log.setIdTabela(clienteRepository.findByCpf(cpf).getId());
             log.setDescricao("SUCESSO: Cliente deletado com sucesso.");
@@ -229,6 +254,8 @@ public class ClienteController {
         } else {
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            log.setUserId(userId);
             log.setTipoOperacao("DELETE");
             log.setTabela("cliente");
             log.setIdTabela(clienteRepository.findByCpf(cpf).getId());

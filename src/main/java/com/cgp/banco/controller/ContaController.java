@@ -30,12 +30,16 @@ public class ContaController {
     private ClienteRepository clienteRepository;
 
     @PostMapping
-    public ResponseEntity<?> criarConta(@RequestBody Conta conta) {
+    public ResponseEntity<?> criarConta(@RequestBody Conta conta, HttpSession session) {
         try {
             // Salva a conta no banco de dados
             contaRepository.save(conta);
             // Cria um log de operação
+            Long userId = (Long) session.getAttribute("userId");
             Log log = new Log();
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("CREATE");
             log.setTabela("conta");
             log.setDescricao("SUCESSO: Conta criada com sucesso: " + conta.toString());
@@ -45,6 +49,10 @@ public class ContaController {
             return ResponseEntity.ok(conta);
         } catch (Exception e) {
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("CREATE");
             log.setTabela("conta");
             log.setDescricao("ERRO: Erro ao criar Conta: " + e.getMessage());
@@ -54,7 +62,7 @@ public class ContaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarConta(@PathVariable Long id, @RequestBody Conta conta) {
+    public ResponseEntity<?> atualizarConta(@PathVariable Long id, @RequestBody Conta conta, HttpSession session) {
         try {
             // Busca a conta existente pelo ID
             Conta contaExistente = contaRepository.findById(id).orElse(null);
@@ -62,6 +70,10 @@ public class ContaController {
             if (contaExistente == null) {
                 // Cria um log de operação
                 Log log = new Log();
+                Long userId = (Long) session.getAttribute("userId");
+                if (userId != null) {
+                    log.setUserId(userId);
+                }
                 log.setTipoOperacao("ATUALIZAR");
                 log.setTabela("conta");
                 log.setIdTabela(id);
@@ -79,6 +91,10 @@ public class ContaController {
             contaRepository.save(conta);
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("ATUALIZAR");
             log.setTabela("conta");
             log.setIdTabela(id);
@@ -91,6 +107,10 @@ public class ContaController {
             return ResponseEntity.ok(conta);
         } catch (Exception e) {
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("ATUALIZAR");
             log.setTabela("conta");
             log.setIdTabela(id);
@@ -103,7 +123,7 @@ public class ContaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Conta> buscarContaPorId(@PathVariable Long id) {
+    public ResponseEntity<Conta> buscarContaPorId(@PathVariable Long id, HttpSession session) {
         try {
             // Busca a conta pelo ID 
             Optional<Conta> contaOptional = contaRepository.findById(id);
@@ -111,6 +131,10 @@ public class ContaController {
             if (contaOptional.isEmpty()) {
                 // Cria um log de operação
                 Log log = new Log();
+                Long userId = (Long) session.getAttribute("userId");
+                if (userId != null) {
+                    log.setUserId(userId);
+                }
                 log.setTipoOperacao("BUSCAR");
                 log.setTabela("conta");
                 log.setIdTabela(id);
@@ -121,6 +145,10 @@ public class ContaController {
             }
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
             log.setIdTabela(id);
@@ -131,6 +159,10 @@ public class ContaController {
             return ResponseEntity.ok(contaOptional.get());
         } catch (Exception e) {
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
             log.setIdTabela(id);
@@ -149,6 +181,10 @@ public class ContaController {
             if (contas.isEmpty()) {
                 // Cria um log de operação
                 Log log = new Log();
+                Long userId = (Long) session.getAttribute("userId");
+                if (userId != null) {
+                    log.setUserId(userId);
+                }
                 log.setTipoOperacao("BUSCAR");
                 log.setTabela("conta");
                 log.setDescricao("ERRO: Erro ao buscar contas por CPF: Conta não encontrada");
@@ -158,6 +194,10 @@ public class ContaController {
             }
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
             log.setDescricao("SUCESSO: Contas encontradas por CPF: " + contas.toString());
@@ -167,6 +207,10 @@ public class ContaController {
             return ResponseEntity.ok(contas);
         } catch (Exception e) {
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
             log.setDescricao("Erro ao buscar contas por CPF: " + e.getMessage());
@@ -176,7 +220,7 @@ public class ContaController {
     }
 
     @GetMapping("/buscarContaPorNumero")
-    public ResponseEntity<Conta> buscarContaPorNumero(@RequestParam String numeroConta) {
+    public ResponseEntity<Conta> buscarContaPorNumero(@RequestParam String numeroConta, HttpSession session) {
         try {
             // Busca a conta pelo número da conta
             Conta conta = contaRepository.findByNumeroConta(numeroConta);
@@ -184,6 +228,10 @@ public class ContaController {
             if (conta == null) {
                 // Cria um log de operação
                 Log log = new Log();
+                Long userId = (Long) session.getAttribute("userId");
+                if (userId != null) {
+                    log.setUserId(userId);
+                }
                 log.setTipoOperacao("BUSCAR");
                 log.setTabela("conta");
                 log.setDescricao("ERRO: Erro ao buscar contas por número: Conta não encontrada");
@@ -194,6 +242,10 @@ public class ContaController {
             }
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
             log.setDescricao("SUCESSO: Conta encontrada por número: " + conta.toString());
@@ -203,6 +255,10 @@ public class ContaController {
             return ResponseEntity.ok(conta);
         } catch (Exception e) {
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
             log.setDescricao("Erro ao buscar contas por número: " + e.getMessage());
@@ -212,12 +268,16 @@ public class ContaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarConta(@PathVariable Long id) {
+    public ResponseEntity<String> deletarConta(@PathVariable Long id, HttpSession session) {
         try {
             Optional<Conta> byId = contaRepository.findById(id);
             if (byId.isEmpty()) {
                 // Cria um log de operação
                 Log log = new Log();
+                Long userId = (Long) session.getAttribute("userId");
+                if (userId != null) {
+                    log.setUserId(userId);
+                }
                 log.setTipoOperacao("DELETAR");
                 log.setTabela("conta");
                 log.setIdTabela(id);
@@ -229,6 +289,10 @@ public class ContaController {
                 contaRepository.deleteById(id);
                 // Cria um log de operação
                 Log log = new Log();
+                Long userId = (Long) session.getAttribute("userId");
+                if (userId != null) {
+                    log.setUserId(userId);
+                }
                 log.setTipoOperacao("DELETAR");
                 log.setTabela("conta");
                 log.setIdTabela(id);
@@ -240,6 +304,10 @@ public class ContaController {
         } catch (EmptyResultDataAccessException e) {
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("DELETAR");
             log.setTabela("conta");
             log.setIdTabela(id);
@@ -250,6 +318,10 @@ public class ContaController {
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("DELETAR");
             log.setTabela("conta");
             log.setIdTabela(id);
@@ -261,7 +333,7 @@ public class ContaController {
     }
 
     @DeleteMapping("/deletarContaPorNumero")
-    public ResponseEntity<String> deletarContaPorNumero(@RequestParam String numeroConta) {
+    public ResponseEntity<String> deletarContaPorNumero(@RequestParam String numeroConta, HttpSession session) {
         try {
             // Busca a conta pelo número da conta
             Conta conta = contaRepository.findByNumeroConta(numeroConta);
@@ -269,6 +341,10 @@ public class ContaController {
             if (conta == null) {
                 // Cria um log de operação
                 Log log = new Log();
+                Long userId = (Long) session.getAttribute("userId");
+                if (userId != null) {
+                    log.setUserId(userId);
+                }
                 log.setTipoOperacao("DELETAR");
                 log.setTabela("conta");
                 log.setDescricao("ERRO: Erro ao deletar contas por número: Conta não encontrada");
@@ -278,6 +354,10 @@ public class ContaController {
             } else {
                 // Cria um log de operação
                 Log log = new Log();
+                Long userId = (Long) session.getAttribute("userId");
+                if (userId != null) {
+                    log.setUserId(userId);
+                }
                 log.setTipoOperacao("DELETAR");
                 log.setTabela("conta");
                 log.setDescricao("SUCESSO: Conta deletada com sucesso: " + conta.toString());
@@ -290,6 +370,10 @@ public class ContaController {
             }
         } catch (Exception e) {
             Log log = new Log();
+            Long userId = (Long) session.getAttribute("userId");
+            if (userId != null) {
+                log.setUserId(userId);
+            }
             log.setTipoOperacao("DELETAR");
             log.setTabela("conta");
             log.setDescricao("ERRO: Erro ao deletar contas por número: " + e.getMessage());
