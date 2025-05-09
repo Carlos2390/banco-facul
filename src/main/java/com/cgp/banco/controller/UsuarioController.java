@@ -42,7 +42,6 @@ public class UsuarioController {
         Usuario user = usuarioRepository.findByUsername(usuario.getUsername());
 
         if (user != null && user.getPassword().equals(usuario.getPassword())) {
-            user.setPassword("");
             // Cria um log de operação
             Log log = new Log();
             log.setUserId(user.getId());
@@ -50,6 +49,7 @@ public class UsuarioController {
             log.setTabela("usuario");
             log.setDescricao("SUCESSO: Login realizado com sucesso.");
             logRepository.save(log);
+            user.setPassword(""); // Limpa a senha antes de retornar
 
             return ResponseEntity.ok(user);
         } else {
@@ -91,6 +91,32 @@ public class UsuarioController {
             log.setDadosNovos(usuario.toString());
             logRepository.save(log);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar o usuário, " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> alterarSenhaPorId(@PathVariable Long id, @RequestBody String senha) {
+        try {
+            Optional<Usuario> usuarioExistente = usuarioRepository.findById(id);
+            if (usuarioExistente.isPresent()) {
+                Usuario usuarioAtualizado = usuarioExistente.get();
+                usuarioAtualizado.setPassword(senha);
+                usuarioRepository.save(usuarioAtualizado);
+
+                // Cria um log de operação
+                Log log = new Log();
+                log.setUserId(usuarioAtualizado.getId());
+                log.setTipoOperacao("UPDATE");
+                log.setTabela("usuario");
+                log.setDescricao("SUCESSO: Senha alterada com sucesso.");
+                logRepository.save(log);
+
+                return ResponseEntity.ok(usuarioAtualizado);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao alterar a senha: " + e.getMessage());
         }
     }
 
