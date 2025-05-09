@@ -51,6 +51,8 @@ public class UsuarioController {
             logRepository.save(log);
             user.setPassword(""); // Limpa a senha antes de retornar
             session.setAttribute("userId", user.getId()); // Salva o ID do usuário na sessão
+            System.out.println("ID do usuário que será setado na sessão: " + user.getId());
+            System.out.println("ID do usuário na sessão: " + session.getAttribute("userId"));
 
             return ResponseEntity.ok(user);
         } else {
