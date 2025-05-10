@@ -127,7 +127,7 @@ public class ClienteController {
             Long userId = (Long) session.getAttribute("userId");
             Log log = new Log();
             log.setUserId(userId);
-            log.setTipoOperacao("READ");
+            log.setTipoOperacao("BUSCAR");
             log.setTabela("cliente");
             log.setIdTabela(id);
             log.setDescricao("ERRO: Cliente não encontrado.");
@@ -143,7 +143,7 @@ public class ClienteController {
         Log log = new Log();
         Long userId = (Long) session.getAttribute("userId");
         log.setUserId(userId);
-        log.setTipoOperacao("READ");
+        log.setTipoOperacao("BUSCAR");
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
         log.setDescricao("SUCESSO: Cliente encontrado.");
@@ -165,7 +165,7 @@ public class ClienteController {
             Log log = new Log();
             Long userId = (Long) session.getAttribute("userId");
             log.setUserId(userId);
-            log.setTipoOperacao("READ");
+            log.setTipoOperacao("BUSCAR");
             log.setTabela("cliente");
             log.setIdTabela(cliente.getId());
             log.setDescricao("ERRO: Cliente não encontrado.");
@@ -180,7 +180,7 @@ public class ClienteController {
         Log log = new Log();
         Long userId = (Long) session.getAttribute("userId");
         log.setUserId(userId);
-        log.setTipoOperacao("READ");
+        log.setTipoOperacao("BUSCAR");
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
         log.setDescricao("SUCESSO: Cliente encontrado.");
