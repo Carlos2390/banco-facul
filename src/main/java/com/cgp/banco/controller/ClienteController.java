@@ -139,8 +139,6 @@ public class ClienteController {
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
         log.setDescricao("SUCESSO: Cliente encontrado.");
-        log.setDadosAntigos(null);
-        log.setDadosNovos(cliente.toString());
         logRepository.save(log);
 
         // Retorna o cliente encontrado
@@ -158,7 +156,6 @@ public class ClienteController {
             log.setUserId(userId);
             log.setTipoOperacao("BUSCAR");
             log.setTabela("cliente");
-            log.setIdTabela(cliente.getId());
             log.setDescricao("ERRO: Cliente não encontrado.");
             log.setDadosAntigos(null);
             log.setDadosNovos(null);
@@ -174,8 +171,6 @@ public class ClienteController {
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
         log.setDescricao("SUCESSO: Cliente encontrado.");
-        log.setDadosAntigos(null);
-        log.setDadosNovos(cliente.toString());
         logRepository.save(log);
 
         // Retorna o cliente encontrado
@@ -191,7 +186,7 @@ public class ClienteController {
             // Cria um log de operação
             Log log = new Log();
             log.setUserId(userId);
-            log.setTipoOperacao("DELETE");
+            log.setTipoOperacao("DELETAR");
             log.setTabela("cliente");
             log.setIdTabela(id);
             log.setDescricao("ERRO: Cliente não encontrado para deleção.");
@@ -205,7 +200,7 @@ public class ClienteController {
         // Cria um log de operação
         Log log = new Log();
         log.setUserId(userId);
-        log.setTipoOperacao("DELETE");
+        log.setTipoOperacao("DELETAR");
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
         log.setDescricao("SUCESSO: Cliente deletado com sucesso.");
@@ -228,19 +223,19 @@ public class ClienteController {
 
             // Cria um log de operação
             Log log = new Log();
-            log.setTipoOperacao("DELETE");
+            log.setTipoOperacao("DELETAR");
             log.setUserId(userId);
             log.setTabela("cliente");
-            log.setIdTabela(clienteRepository.findByCpf(cpf).getId());
+            log.setIdTabela(cliente.getId());
             log.setDescricao("SUCESSO: Cliente deletado com sucesso.");
-            log.setDadosAntigos(clienteRepository.findByCpf(cpf).toString());
+            log.setDadosAntigos(cliente.toString());
             log.setDadosNovos(null);
             logRepository.save(log);
         } else {
             // Cria um log de operação
             Log log = new Log();
             log.setUserId(userId);
-            log.setTipoOperacao("DELETE");
+            log.setTipoOperacao("DELETAR");
             log.setTabela("cliente");
             log.setIdTabela(clienteRepository.findByCpf(cpf).getId());
             log.setDescricao("ERRO: Cliente não encontrado para deleção.");
@@ -282,8 +277,6 @@ public class ClienteController {
         log.setTabela("cliente");
         log.setIdTabela(cliente.getId());
         log.setDescricao("SUCESSO: Cliente encontrado.");
-        log.setDadosAntigos(null);
-        log.setDadosNovos(cliente.toString());
         logRepository.save(log);
 
         // Retorna o cliente encontrado

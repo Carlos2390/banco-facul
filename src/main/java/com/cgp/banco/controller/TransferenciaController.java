@@ -250,8 +250,6 @@ public class TransferenciaController {
                 log.setTabela("transferencia");
                 log.setIdTabela(id);
                 log.setDescricao("ERRO: Transferência não encontrada.");
-                log.setDadosAntigos(null);
-                log.setDadosNovos(transferencia.toString());
                 logRepository.save(log);
 
                 return ResponseEntity.notFound().build();
@@ -286,7 +284,7 @@ public class TransferenciaController {
             if (transferencia == null) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setTipoOperacao("GET");
+                log.setTipoOperacao("BUSCAR");
                 log.setUserId(userId);
                 log.setTabela("transferencia");
                 log.setIdTabela(id);
@@ -297,12 +295,11 @@ public class TransferenciaController {
             }
             // Cria um log de operação
             Log log = new Log();
-            log.setTipoOperacao("GET");
+            log.setTipoOperacao("BUSCAR");
             log.setUserId(userId);
             log.setTabela("transferencia");
             log.setIdTabela(id);
             log.setDescricao("SUCESSO: Transferência encontrada com sucesso.");
-            log.setDadosNovos(transferencia.toString());
             logRepository.save(log);
 
             // Retorna a transferência encontrada
@@ -311,7 +308,7 @@ public class TransferenciaController {
             // Cria um log de operação
             Log log = new Log();
             log.setUserId(userId);
-            log.setTipoOperacao("GET");
+            log.setTipoOperacao("BUSCAR");
             log.setTabela("transferencia");
             log.setIdTabela(id);
             log.setDescricao("ERRO: Erro ao buscar transferência: " + e.getMessage());
@@ -325,13 +322,12 @@ public class TransferenciaController {
     public ResponseEntity<?> buscarTransferenciasPorNumeroContaOrigem(@RequestParam String numeroContaOrigem, @RequestParam Long userId) {
         try {
             Conta conta = contaRepository.findByNumeroConta(numeroContaOrigem);
-            List<Transferencia> transferencias = transferenciaRepository.findByIdContaOrigem(conta.getId());
             // Verifica se a conta existe
             if (conta == null) {
                 // Cria um log de operação
                 Log log = new Log();
                 log.setUserId(userId);
-                log.setTipoOperacao("GET");
+                log.setTipoOperacao("BUSCAR");
                 log.setTabela("transferencia");
                 log.setIdTabela(null);
                 log.setDescricao("ERRO: Conta não encontrada.");
@@ -339,14 +335,14 @@ public class TransferenciaController {
 
                 return ResponseEntity.notFound().build();
             }
+            List<Transferencia> transferencias = transferenciaRepository.findByIdContaOrigem(conta.getId());
             // Cria um log de operação
             Log log = new Log();
-            log.setTipoOperacao("GET");
+            log.setTipoOperacao("BUSCAR");
             log.setUserId(userId);
             log.setTabela("transferencia");
             log.setIdTabela(conta.getId());
             log.setDescricao("SUCESSO: Transferências encontradas com sucesso.");
-            log.setDadosNovos(transferencias.toString());
             logRepository.save(log);
 
             // Retorna a lista de transferências encontradas
@@ -355,7 +351,7 @@ public class TransferenciaController {
             // Cria um log de operação
             Log log = new Log();
             log.setUserId(userId);
-            log.setTipoOperacao("GET");
+            log.setTipoOperacao("BUSCAR");
             log.setTabela("transferencia");
             log.setDescricao("ERRO: Erro ao buscar transferências: " + e.getMessage());
             logRepository.save(log);
@@ -373,7 +369,7 @@ public class TransferenciaController {
             // Cria um log de operação
             // Cria um log de operação
             Log log = new Log();
-            log.setTipoOperacao("GET");
+            log.setTipoOperacao("BUSCAR");
             log.setTabela("transferencia");
             log.setIdTabela(conta.getId());
             log.setDescricao("SUCESSO: Transferências encontradas com sucesso.");
@@ -386,7 +382,7 @@ public class TransferenciaController {
             // Cria um log de operação
             Log log = new Log();
             log.setUserId(userId);
-            log.setTipoOperacao("GET");
+            log.setTipoOperacao("BUSCAR");
             log.setTabela("transferencia");
             log.setDescricao("ERRO: Erro ao buscar transferências por conta de destino: " + e.getMessage());
             logRepository.save(log);
@@ -403,7 +399,7 @@ public class TransferenciaController {
             if (transferencia == null) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setTipoOperacao("DELETE");
+                log.setTipoOperacao("DELETAR");
                 log.setTabela("transferencia");
                 log.setIdTabela(id);
                 log.setDescricao("ERRO: Transferência não encontrada.");
@@ -414,7 +410,7 @@ public class TransferenciaController {
             transferenciaRepository.deleteById(id);
             // Cria um log de operação
             Log log = new Log();
-            log.setTipoOperacao("DELETE");
+            log.setTipoOperacao("DELETAR");
             log.setTabela("transferencia");
             log.setIdTabela(id);
             log.setDescricao("SUCESSO: Transferência deletada com sucesso.");
@@ -426,7 +422,7 @@ public class TransferenciaController {
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
-            log.setTipoOperacao("DELETE");
+            log.setTipoOperacao("DELETAR");
             log.setTabela("transferencia");
             log.setIdTabela(id);
             log.setDescricao("ERRO: Erro ao deletar transferência: " + e.getMessage());
@@ -446,11 +442,10 @@ public class TransferenciaController {
             }
             // Cria um log de operação
             Log log = new Log();
-            log.setTipoOperacao("GET");
+            log.setTipoOperacao("BUSCAR");
             log.setUserId(userId);
             log.setTabela("transferencia");
             log.setDescricao("SUCESSO: Transferências encontradas com sucesso.");
-            log.setDadosNovos(transferencias.toString());
             logRepository.save(log);
 
             // Retorna a lista de transferências encontradas
@@ -459,7 +454,7 @@ public class TransferenciaController {
             // Cria um log de operação
             Log log = new Log();
             log.setUserId(userId);
-            log.setTipoOperacao("GET");
+            log.setTipoOperacao("BUSCAR");
             log.setTabela("transferencia");
             log.setDescricao("ERRO: Erro ao buscar transferências por número de conta: " + e.getMessage());
             logRepository.save(log);

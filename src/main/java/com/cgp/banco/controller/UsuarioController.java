@@ -38,9 +38,9 @@ public class UsuarioController {
 
         Usuario user = usuarioRepository.findByUsername(usuario.getUsername());
 
+        Log log = new Log();
         if (user != null && user.getPassword().equals(usuario.getPassword())) {
             // Cria um log de operação
-            Log log = new Log();
             log.setUserId(user.getId());
             log.setTipoOperacao("LOGIN");
             log.setTabela("usuario");
@@ -53,7 +53,6 @@ public class UsuarioController {
             return ResponseEntity.ok(user);
         } else {
             // Cria um log de operação
-            Log log = new Log();
             log.setTipoOperacao("LOGIN");
             log.setTabela("usuario");
             log.setDescricao("ERRO: Credenciais inválidas.");

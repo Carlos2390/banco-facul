@@ -3,7 +3,6 @@ package com.cgp.banco.controller;
 
 import com.cgp.banco.model.Conta;
 import com.cgp.banco.model.Log;
-import com.cgp.banco.repository.ClienteRepository;
 import com.cgp.banco.repository.ContaRepository;
 import com.cgp.banco.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ public class ContaController {
     @Autowired
     private LogRepository logRepository;
 
-    @Autowired
-    private ClienteRepository clienteRepository;
-
     @PostMapping
     public ResponseEntity<?> criarConta(@RequestBody Conta conta, @RequestParam Long userId) {
         try {
@@ -38,7 +34,9 @@ public class ContaController {
             log.setUserId(userId);
             log.setTipoOperacao("CREATE");
             log.setTabela("conta");
-            log.setDescricao("SUCESSO: Conta criada com sucesso: " + conta.toString());
+            log.setDescricao("SUCESSO: Conta criada com sucesso");
+            log.setDadosAntigos(null);
+            log.setDadosNovos(conta.toString());
             logRepository.save(log);
 
             // Retorna uma resposta de sucesso
@@ -87,7 +85,7 @@ public class ContaController {
             log.setTipoOperacao("ATUALIZAR");
             log.setTabela("conta");
             log.setIdTabela(id);
-            log.setDescricao("SUCESSO: Conta atualizada com sucesso: " + conta.toString());
+            log.setDescricao("SUCESSO: Conta atualizada com sucesso");
             log.setDadosAntigos(contaExistente.toString());
             log.setDadosNovos(conta.toString());
             logRepository.save(log);
@@ -132,7 +130,7 @@ public class ContaController {
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
             log.setIdTabela(id);
-            log.setDescricao("SUCESSO: Conta encontrada por ID: " + contaOptional.get().toString());
+            log.setDescricao("SUCESSO: Conta encontrada por ID: " + contaOptional.get());
             logRepository.save(log);
 
             // Retorna a conta encontrada
@@ -171,7 +169,7 @@ public class ContaController {
             log.setUserId(userId);
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
-            log.setDescricao("SUCESSO: Contas encontradas por CPF: " + contas.toString());
+            log.setDescricao("SUCESSO: Contas encontradas por CPF");
             logRepository.save(log);
 
             // Retorna a lista de contas encontradas
@@ -210,7 +208,7 @@ public class ContaController {
             log.setUserId(userId);
             log.setTipoOperacao("BUSCAR");
             log.setTabela("conta");
-            log.setDescricao("SUCESSO: Conta encontrada por número: " + conta.toString());
+            log.setDescricao("SUCESSO: Conta encontrada por número: ");
             logRepository.save(log);
 
             // Retorna a conta encontrada
@@ -249,7 +247,9 @@ public class ContaController {
                 log.setTipoOperacao("DELETAR");
                 log.setTabela("conta");
                 log.setIdTabela(id);
-                log.setDescricao("SUCESSO: Conta deletada com sucesso: " + byId.get().toString());
+                log.setDescricao("SUCESSO: Conta deletada com sucesso");
+                log.setDadosAntigos(byId.get().toString());
+                log.setDadosNovos(null);
                 logRepository.save(log);
 
                 return ResponseEntity.ok("Conta deletada com sucesso.");
@@ -285,9 +285,9 @@ public class ContaController {
             // Busca a conta pelo número da conta
             Conta conta = contaRepository.findByNumeroConta(numeroConta);
             // Verifica se a conta existe
+            Log log = new Log();
             if (conta == null) {
                 // Cria um log de operação
-                Log log = new Log();
                 if (userId != null) {
                     log.setUserId(userId);
                 }
@@ -299,11 +299,12 @@ public class ContaController {
                 return ResponseEntity.notFound().build();
             } else {
                 // Cria um log de operação
-                Log log = new Log();
                 log.setUserId(userId);
                 log.setTipoOperacao("DELETAR");
                 log.setTabela("conta");
-                log.setDescricao("SUCESSO: Conta deletada com sucesso: " + conta.toString());
+                log.setDescricao("SUCESSO: Conta deletada com sucesso");
+                log.setDadosAntigos(conta.toString());
+                log.setDadosNovos(null);
                 logRepository.save(log);
 
                 // Deleta a conta pelo número da conta
