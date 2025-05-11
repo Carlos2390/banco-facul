@@ -4,7 +4,6 @@ import com.cgp.banco.model.Log;
 import com.cgp.banco.model.Usuario;
 import com.cgp.banco.repository.LogRepository;
 import com.cgp.banco.repository.UsuarioRepository;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +24,10 @@ public class UsuarioController {
     private LogRepository logRepository;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Usuario usuario, HttpSession session) {
+    public ResponseEntity<?> login(@RequestBody Usuario usuario) {
         if (usuario == null || usuario.getUsername() == null || usuario.getPassword() == null) {
             // Cria um log de operação
-            Log log = new Log();            if (session.getAttribute("userId") != null) {
-                log.setUserId((Long) session.getAttribute("userId"));
-            }
+            Log log = new Log();
             log.setTipoOperacao("LOGIN");
             log.setTabela("usuario");
             log.setDescricao("ERRO: Credenciais inválidas.");
@@ -44,23 +41,19 @@ public class UsuarioController {
         if (user != null && user.getPassword().equals(usuario.getPassword())) {
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId((Long) session.getAttribute("userId"));
+            log.setUserId(user.getId());
             log.setTipoOperacao("LOGIN");
             log.setTabela("usuario");
             log.setDescricao("SUCESSO: Login realizado com sucesso.");
             logRepository.save(log);
             user.setPassword(""); // Limpa a senha antes de retornar
-            session.setAttribute("userId", user.getId()); // Salva o ID do usuário na sessão
             System.out.println("ID do usuário que será setado na sessão: " + user.getId());
-            System.out.println("ID do usuário na sessão: " + session.getAttribute("userId"));
+            System.out.println("ID do usuário na sessão: " + user.getId());
 
             return ResponseEntity.ok(user);
         } else {
             // Cria um log de operação
             Log log = new Log();
-            if (session.getAttribute("userId") != null) {
-                log.setUserId((Long) session.getAttribute("userId"));
-            }
             log.setTipoOperacao("LOGIN");
             log.setTabela("usuario");
             log.setDescricao("ERRO: Credenciais inválidas.");

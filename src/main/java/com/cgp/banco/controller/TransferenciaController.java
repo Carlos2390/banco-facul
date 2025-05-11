@@ -6,13 +6,13 @@ import com.cgp.banco.model.Transferencia;
 import com.cgp.banco.repository.ContaRepository;
 import com.cgp.banco.repository.LogRepository;
 import com.cgp.banco.repository.TransferenciaRepository;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -28,7 +28,7 @@ public class TransferenciaController {
     private final LogRepository logRepository;
 
     @PostMapping("/porNumeroContas")
-    public ResponseEntity<?> criarTransferenciaPorNumeroContas(@RequestParam String numeroContaOrigem, @RequestParam String numeroContaDestino, @RequestParam Double valor, HttpSession session) {
+    public ResponseEntity<?> criarTransferenciaPorNumeroContas(@RequestParam String numeroContaOrigem, @RequestParam String numeroContaDestino, @RequestParam Double valor, @RequestParam Long userId) {
         try {
             // Cria uma nova transferência
             Transferencia transferencia = new Transferencia();
@@ -47,7 +47,7 @@ public class TransferenciaController {
             if (contaOrigem.getId().equals(contaDesitino.getId())) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId((Long) session.getAttribute("userId"));
+                log.setUserId(userId);
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: A conta de origem e a conta de destino não podem ser iguais.");
@@ -59,7 +59,7 @@ public class TransferenciaController {
             if (valor <= 0) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId((Long) session.getAttribute("userId"));
+                log.setUserId(userId);
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: O valor da transferência deve ser maior que 0.");
@@ -71,7 +71,7 @@ public class TransferenciaController {
             if (contaOrigem.getSaldo() < valor) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId((Long) session.getAttribute("userId"));
+                log.setUserId(userId);
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Saldo insuficiente na conta de origem.");
@@ -89,21 +89,21 @@ public class TransferenciaController {
             transferenciaRepository.save(transferencia);
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId((Long) session.getAttribute("userId"));
+            log.setUserId(userId);
             log.setTipoOperacao("CREATE");
             log.setTabela("transferencia");
             log.setIdTabela(transferencia.getId());
             log.setDescricao("SUCESSO: Transferência criada com sucesso.");
             log.setDadosAntigos(null);
             log.setDadosNovos(transferencia.toString());
-             logRepository.save(log);
+            logRepository.save(log);
 
             // Retorna uma resposta de sucesso
             return ResponseEntity.ok("Transferência realizada com sucesso.");
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId((Long) session.getAttribute("userId"));
+            log.setUserId(userId);
             log.setTipoOperacao("CREATE");
             log.setTabela("transferencia");
             log.setIdTabela(null);
@@ -117,7 +117,7 @@ public class TransferenciaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarTransferencia(@RequestBody Transferencia transferencia, HttpSession session) {
+    public ResponseEntity<?> criarTransferencia(@RequestBody Transferencia transferencia, @RequestParam Long userId) {
         try {
             // Salva a transferência no banco de dados
             transferencia.setDataTransferencia(LocalDateTime.now());
@@ -126,7 +126,7 @@ public class TransferenciaController {
             if (contaOrigem == null) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId((Long) session.getAttribute("userId"));
+                log.setUserId(userId);
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Conta de origem não encontrada.");
@@ -138,7 +138,7 @@ public class TransferenciaController {
             if (contaDestino == null) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId((Long) session.getAttribute("userId"));
+                log.setUserId(userId);
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Conta de destino não encontrada.");
@@ -152,7 +152,7 @@ public class TransferenciaController {
             if (contaOrigem.getId().equals(contaDestino.getId())) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId((Long) session.getAttribute("userId"));
+                log.setUserId(userId);
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: A conta de origem e a conta de destino não podem ser iguais.");
@@ -166,7 +166,7 @@ public class TransferenciaController {
             if (transferencia.getValor() <= 0) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId((Long) session.getAttribute("userId"));
+                log.setUserId(userId);
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: O valor da transferência deve ser maior que 0.");
@@ -180,7 +180,7 @@ public class TransferenciaController {
             if (contaOrigem.getSaldo() < transferencia.getValor()) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId((Long) session.getAttribute("userId"));
+                log.setUserId(userId);
                 log.setTipoOperacao("CREATE");
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Saldo insuficiente na conta de origem.");
@@ -201,19 +201,19 @@ public class TransferenciaController {
 
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId((Long) session.getAttribute("userId"));
+            log.setUserId(userId);
             log.setTipoOperacao("CREATE");
             log.setTabela("transferencia");
             log.setIdTabela(transferencia.getId());
             log.setDescricao("SUCESSO: Transferência criada com sucesso.");
             log.setDadosNovos(transferencia.toString());
             logRepository.save(log);
-         
+
             return ResponseEntity.ok(transferencia);
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId((Long) session.getAttribute("userId"));
+            log.setUserId(userId);
             log.setTipoOperacao("CREATE");
             log.setTabela("transferencia");
             log.setDescricao("ERRO: Erro ao criar transferência: " + e.getMessage());
@@ -224,7 +224,7 @@ public class TransferenciaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarTransferencia(@PathVariable Long id, @RequestBody Transferencia transferencia, HttpSession session) {
+    public ResponseEntity<?> atualizarTransferencia(@PathVariable Long id, @RequestBody Transferencia transferencia, @RequestParam Long userId) {
         try {
             // Verifica se a transferência existe
             if (transferencia == null) {
@@ -239,13 +239,13 @@ public class TransferenciaController {
                 return ResponseEntity.badRequest().body("Transferência não pode ser nula.");
             }
             // Busca a transferência existente no banco de dados
-        
-        Transferencia transferenciaExistente = transferenciaRepository.findById(id).orElse(null);
+
+            Transferencia transferenciaExistente = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
             if (transferenciaExistente == null) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId((Long) session.getAttribute("userId"));
+                log.setUserId(userId);
                 log.setTipoOperacao("UPDATE");
                 log.setTabela("transferencia");
                 log.setIdTabela(id);
@@ -256,13 +256,13 @@ public class TransferenciaController {
 
                 return ResponseEntity.notFound().build();
             }
-            
+
             transferencia.setId(id);
             // Atualiza a transferência no banco de dados
             transferenciaRepository.save(transferencia);
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId((Long) session.getAttribute("userId"));
+            log.setUserId(userId);
             log.setTipoOperacao("UPDATE");
             log.setTabela("transferencia");
             log.setIdTabela(transferencia.getId());
@@ -279,7 +279,7 @@ public class TransferenciaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarTransferenciaPorId(@PathVariable Long id, HttpSession session) {
+    public ResponseEntity<?> buscarTransferenciaPorId(@PathVariable Long id, @RequestParam Long userId) {
         try {
             Transferencia transferencia = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
@@ -287,7 +287,7 @@ public class TransferenciaController {
                 // Cria um log de operação
                 Log log = new Log();
                 log.setTipoOperacao("GET");
-                log.setUserId((Long) session.getAttribute("userId"));
+                log.setUserId(userId);
                 log.setTabela("transferencia");
                 log.setIdTabela(id);
                 log.setDescricao("ERRO: Transferência não encontrada.");
@@ -298,7 +298,7 @@ public class TransferenciaController {
             // Cria um log de operação
             Log log = new Log();
             log.setTipoOperacao("GET");
-            log.setUserId((Long) session.getAttribute("userId"));
+            log.setUserId(userId);
             log.setTabela("transferencia");
             log.setIdTabela(id);
             log.setDescricao("SUCESSO: Transferência encontrada com sucesso.");
@@ -310,7 +310,7 @@ public class TransferenciaController {
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId((Long) session.getAttribute("userId"));
+            log.setUserId(userId);
             log.setTipoOperacao("GET");
             log.setTabela("transferencia");
             log.setIdTabela(id);
@@ -322,7 +322,7 @@ public class TransferenciaController {
     }
 
     @GetMapping("/buscarTransferenciasPorNumeroContaOrigem")
-    public ResponseEntity<?> buscarTransferenciasPorNumeroContaOrigem(@RequestParam String numeroContaOrigem, HttpSession session) {
+    public ResponseEntity<?> buscarTransferenciasPorNumeroContaOrigem(@RequestParam String numeroContaOrigem, @RequestParam Long userId) {
         try {
             Conta conta = contaRepository.findByNumeroConta(numeroContaOrigem);
             List<Transferencia> transferencias = transferenciaRepository.findByIdContaOrigem(conta.getId());
@@ -330,7 +330,7 @@ public class TransferenciaController {
             if (conta == null) {
                 // Cria um log de operação
                 Log log = new Log();
-                log.setUserId((Long) session.getAttribute("userId"));
+                log.setUserId(userId);
                 log.setTipoOperacao("GET");
                 log.setTabela("transferencia");
                 log.setIdTabela(null);
@@ -342,7 +342,7 @@ public class TransferenciaController {
             // Cria um log de operação
             Log log = new Log();
             log.setTipoOperacao("GET");
-            log.setUserId((Long) session.getAttribute("userId"));
+            log.setUserId(userId);
             log.setTabela("transferencia");
             log.setIdTabela(conta.getId());
             log.setDescricao("SUCESSO: Transferências encontradas com sucesso.");
@@ -354,7 +354,7 @@ public class TransferenciaController {
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId((Long) session.getAttribute("userId"));
+            log.setUserId(userId);
             log.setTipoOperacao("GET");
             log.setTabela("transferencia");
             log.setDescricao("ERRO: Erro ao buscar transferências: " + e.getMessage());
@@ -365,7 +365,7 @@ public class TransferenciaController {
     }
 
     @GetMapping("/buscarTransferenciasPorNumeroContaDestino")
-    public ResponseEntity<?> buscarTransferenciasPorNumeroContaDestino(@RequestParam String numeroContaDestino, HttpSession session) {
+    public ResponseEntity<?> buscarTransferenciasPorNumeroContaDestino(@RequestParam String numeroContaDestino, @RequestParam Long userId) {
         try {
             Conta conta = contaRepository.findByNumeroConta(numeroContaDestino);
 
@@ -385,7 +385,7 @@ public class TransferenciaController {
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
-            log.setUserId((Long) session.getAttribute("userId"));
+            log.setUserId(userId);
             log.setTipoOperacao("GET");
             log.setTabela("transferencia");
             log.setDescricao("ERRO: Erro ao buscar transferências por conta de destino: " + e.getMessage());
@@ -395,7 +395,7 @@ public class TransferenciaController {
         }
     }
 
-   @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarTransferencia(@PathVariable Long id) {
         try {
             Transferencia transferencia = transferenciaRepository.findById(id).orElse(null);
@@ -433,6 +433,38 @@ public class TransferenciaController {
             logRepository.save(log);
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar transferencia: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/buscarTransferenciasPorNumerosContas")
+    public ResponseEntity<?> buscarTransferenciasPorNumeroConta(@RequestBody List<String> numerosContas, @RequestParam Long userId) {
+        try {
+            List<Transferencia> transferencias = new ArrayList<>();
+            for (String numeroConta : numerosContas) {
+                List<Transferencia> byNumeroContaDestinoOrNumeroContaOrigem = transferenciaRepository.findByNumeroContaDestinoOrNumeroContaOrigem(numeroConta, numeroConta);
+                transferencias.addAll(byNumeroContaDestinoOrNumeroContaOrigem);
+            }
+            // Cria um log de operação
+            Log log = new Log();
+            log.setTipoOperacao("GET");
+            log.setUserId(userId);
+            log.setTabela("transferencia");
+            log.setDescricao("SUCESSO: Transferências encontradas com sucesso.");
+            log.setDadosNovos(transferencias.toString());
+            logRepository.save(log);
+
+            // Retorna a lista de transferências encontradas
+            return ResponseEntity.ok(transferencias);
+        } catch (Exception e) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(userId);
+            log.setTipoOperacao("GET");
+            log.setTabela("transferencia");
+            log.setDescricao("ERRO: Erro ao buscar transferências por número de conta: " + e.getMessage());
+            logRepository.save(log);
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar transferencias por numero de conta: " + e.getMessage());
         }
     }
 

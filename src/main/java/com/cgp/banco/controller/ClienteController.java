@@ -4,7 +4,6 @@ import com.cgp.banco.model.Cliente;
 import com.cgp.banco.model.Log;
 import com.cgp.banco.repository.ClienteRepository;
 import com.cgp.banco.repository.LogRepository;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +23,12 @@ public class ClienteController {
     private LogRepository logRepository;
 
     @PostMapping
-    public ResponseEntity<?> criarCliente(@RequestBody Cliente cliente, HttpSession session) {
+    public ResponseEntity<?> criarCliente(@RequestBody Cliente cliente, @RequestParam Long userId) {
         try {
             // Salva o cliente no banco de dados
             clienteRepository.save(cliente);
             // Cria um log de operação
             Log log = new Log();
-            Long userId = (Long) session.getAttribute("userId");
             log.setUserId(userId);
             log.setTipoOperacao("CREATE");
             log.setTabela("cliente");
@@ -44,7 +42,6 @@ public class ClienteController {
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
-            Long userId = (Long) session.getAttribute("userId");
             log.setUserId(userId);
             log.setTipoOperacao("CREATE");
             log.setTabela("cliente");
@@ -60,7 +57,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente, HttpSession session) {
+    public ResponseEntity<?> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente, @RequestParam Long userId) {
         // Busca o cliente existente pelo ID
         Cliente clienteExistente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
@@ -68,7 +65,6 @@ public class ClienteController {
             // Cria um log de operação
             Log log = new Log();
             log.setTipoOperacao("UPDATE");
-            Long userId = (Long) session.getAttribute("userId");
             log.setUserId(userId);
             log.setTabela("cliente");
             log.setIdTabela(id);
@@ -86,7 +82,6 @@ public class ClienteController {
             clienteRepository.save(cliente);
             // Cria um log de operação
             Log log = new Log();
-            Long userId = (Long) session.getAttribute("userId");
             log.setUserId(userId);
             log.setTipoOperacao("UPDATE");
             log.setTabela("cliente");
@@ -101,7 +96,6 @@ public class ClienteController {
         } catch (Exception e) {
             // Cria um log de operação
             Log log = new Log();
-            Long userId = (Long) session.getAttribute("userId");
             log.setUserId(userId);
             log.setTipoOperacao("UPDATE");
             log.setTabela("cliente");
@@ -118,13 +112,12 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id, HttpSession session) {
+    public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id, @RequestParam Long userId) {
         // Busca o cliente pelo ID
         Cliente cliente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
         if (cliente == null) {
             // Cria um log de operação
-            Long userId = (Long) session.getAttribute("userId");
             Log log = new Log();
             log.setUserId(userId);
             log.setTipoOperacao("BUSCAR");
@@ -141,7 +134,6 @@ public class ClienteController {
 
         // Cria um log de operação
         Log log = new Log();
-        Long userId = (Long) session.getAttribute("userId");
         log.setUserId(userId);
         log.setTipoOperacao("BUSCAR");
         log.setTabela("cliente");
@@ -156,14 +148,13 @@ public class ClienteController {
     }
 
     @GetMapping("/buscarClientePorCpf")
-    public ResponseEntity<Cliente> buscarClientePorCpf(@RequestParam String cpf, HttpSession session) {
+    public ResponseEntity<Cliente> buscarClientePorCpf(@RequestParam String cpf, @RequestParam Long userId) {
         // Busca o cliente pelo CPF
         Cliente cliente = clienteRepository.findByCpf(cpf);
         // Verifica se o cliente existe
         if (cliente == null) {
             // Cria um log de operação
             Log log = new Log();
-            Long userId = (Long) session.getAttribute("userId");
             log.setUserId(userId);
             log.setTipoOperacao("BUSCAR");
             log.setTabela("cliente");
@@ -178,7 +169,6 @@ public class ClienteController {
         }
         // Cria um log de operação
         Log log = new Log();
-        Long userId = (Long) session.getAttribute("userId");
         log.setUserId(userId);
         log.setTipoOperacao("BUSCAR");
         log.setTabela("cliente");
@@ -193,14 +183,13 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarCliente(@PathVariable Long id, HttpSession session) {
+    public ResponseEntity<String> deletarCliente(@PathVariable Long id, @RequestParam Long userId) {
         // Busca o cliente pelo ID
         Cliente cliente = clienteRepository.findById(id).orElse(null);
         // Verifica se o cliente existe
         if (cliente == null) {
             // Cria um log de operação
             Log log = new Log();
-            Long userId = (Long) session.getAttribute("userId");
             log.setUserId(userId);
             log.setTipoOperacao("DELETE");
             log.setTabela("cliente");
@@ -215,7 +204,6 @@ public class ClienteController {
         }
         // Cria um log de operação
         Log log = new Log();
-        Long userId = (Long) session.getAttribute("userId");
         log.setUserId(userId);
         log.setTipoOperacao("DELETE");
         log.setTabela("cliente");
@@ -232,7 +220,7 @@ public class ClienteController {
     }
 
     @DeleteMapping("/deletarClientePorCpf")
-    public ResponseEntity<String> deletarClientePorCpf(@RequestParam String cpf, HttpSession session) {
+    public ResponseEntity<String> deletarClientePorCpf(@RequestParam String cpf, @RequestParam Long userId) {
         Cliente cliente = clienteRepository.findByCpf(cpf);
         if (cliente != null) {
             // Deleta o cliente pelo CPF
@@ -241,7 +229,6 @@ public class ClienteController {
             // Cria um log de operação
             Log log = new Log();
             log.setTipoOperacao("DELETE");
-            Long userId = (Long) session.getAttribute("userId");
             log.setUserId(userId);
             log.setTabela("cliente");
             log.setIdTabela(clienteRepository.findByCpf(cpf).getId());
@@ -252,7 +239,6 @@ public class ClienteController {
         } else {
             // Cria um log de operação
             Log log = new Log();
-            Long userId = (Long) session.getAttribute("userId");
             log.setUserId(userId);
             log.setTipoOperacao("DELETE");
             log.setTabela("cliente");
@@ -267,6 +253,41 @@ public class ClienteController {
         }
         // Retorna uma resposta de sucesso
         return ResponseEntity.ok("Cliente deletado com sucesso.");
+    }
+
+    @GetMapping("/buscarClientePorIdUsuario")
+    public ResponseEntity<Cliente> buscarClientePorIdUsuario(@RequestParam Long idUsuario) {
+        // Busca o cliente pelo ID do usuário
+        Cliente cliente = clienteRepository.findByIdUsuario(idUsuario);
+        // Verifica se o cliente existe
+        if (cliente == null) {
+            // Cria um log de operação
+            Log log = new Log();
+            log.setUserId(idUsuario);
+            log.setTipoOperacao("BUSCAR");
+            log.setTabela("cliente");
+            log.setIdTabela(idUsuario);
+            log.setDescricao("ERRO: Cliente não encontrado.");
+            log.setDadosAntigos(null);
+            log.setDadosNovos(null);
+            logRepository.save(log);
+
+            // Retorna uma resposta de não encontrado
+            return ResponseEntity.notFound().build();
+        }
+        // Cria um log de operação
+        Log log = new Log();
+        log.setUserId(idUsuario);
+        log.setTipoOperacao("BUSCAR");
+        log.setTabela("cliente");
+        log.setIdTabela(cliente.getId());
+        log.setDescricao("SUCESSO: Cliente encontrado.");
+        log.setDadosAntigos(null);
+        log.setDadosNovos(cliente.toString());
+        logRepository.save(log);
+
+        // Retorna o cliente encontrado
+        return ResponseEntity.ok(cliente);
     }
 
     @GetMapping
