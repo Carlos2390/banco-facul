@@ -268,7 +268,7 @@ public class ClienteController {
             logRepository.save(log);
 
             // Retorna uma resposta de não encontrado
-            return ResponseEntity.ok(null);
+            return ResponseEntity.notFound().build();
         }
         // Cria um log de operação
         Log log = new Log();
