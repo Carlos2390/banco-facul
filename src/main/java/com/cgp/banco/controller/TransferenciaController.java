@@ -441,7 +441,7 @@ public class TransferenciaController {
         try {
             List<Transferencia> transferencias = new ArrayList<>();
             for (String numeroConta : numerosContas) {
-                List<Transferencia> byNumeroContaDestinoOrNumeroContaOrigem = transferenciaRepository.findByNumeroContaDestinoOrNumeroContaOrigem(numeroConta, numeroConta);
+                List<Transferencia> byNumeroContaDestinoOrNumeroContaOrigem = transferenciaRepository.findByContaDestinoNumeroContaOrContaOrigemNumeroConta(numeroConta, numeroConta);
                 transferencias.addAll(byNumeroContaDestinoOrNumeroContaOrigem);
             }
             // Cria um log de operação
