@@ -65,7 +65,7 @@ public class UsuarioController {
     public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario) {
         try {
             usuarioRepository.save(usuario);
-            usuario.setPassword("");
+//            usuario.setPassword("");
             // Cria um log de operação
             Log log = new Log();
             log.setUserId(usuario.getId());
