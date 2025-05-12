@@ -32,16 +32,31 @@ public class TransferenciaController {
         try {
             // Cria uma nova transferência
             Transferencia transferencia = new Transferencia();
-            // Define o id da conta de origem
             Conta contaOrigem = contaRepository.findByNumeroConta(numeroContaOrigem);
-            transferencia.setIdContaOrigem(contaOrigem.getId());
-            // Define o id da conta de destino
             Conta contaDesitino = contaRepository.findByNumeroConta(numeroContaDestino);
-            transferencia.setIdContaDestino(contaDesitino.getId());
-            // Define o valor da transferência
-            transferencia.setValor(valor);
-            // Define a data da transferência
-            transferencia.setDataTransferencia(LocalDateTime.now());
+
+            if (contaOrigem == null) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setUserId(userId);
+                log.setTipoOperacao("CREATE");
+                log.setTabela("transferencia");
+                log.setDescricao("ERRO: Conta de origem não encontrada.");
+                logRepository.save(log);
+
+                return ResponseEntity.badRequest().body("Conta de origem não encontrada.");
+            }
+            if (contaDesitino == null) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setUserId(userId);
+                log.setTipoOperacao("CREATE");
+                log.setTabela("transferencia");
+                log.setDescricao("ERRO: Conta de destino não encontrada.");
+                logRepository.save(log);
+
+                return ResponseEntity.badRequest().body("Conta de destino não encontrada.");
+            }
 
             // Verifica se a conta de origem e a conta de destino são diferentes
             if (contaOrigem.getId().equals(contaDesitino.getId())) {
@@ -78,6 +93,15 @@ public class TransferenciaController {
                 logRepository.save(log);
                 return ResponseEntity.badRequest().body("Saldo insuficiente na conta de origem.");
             }
+            // Define o id da conta de origem
+            transferencia.setIdContaOrigem(contaOrigem.getId());
+            // Define o id da conta de destino
+            transferencia.setIdContaDestino(contaDesitino.getId());
+            // Define o valor da transferência
+            transferencia.setValor(valor);
+            // Define a data da transferência
+            transferencia.setDataTransferencia(LocalDateTime.now());
+
             // Atualiza o saldo da conta de origem
             contaOrigem.setSaldo(contaOrigem.getSaldo() - valor);
             // Atualiza o saldo da conta de destino

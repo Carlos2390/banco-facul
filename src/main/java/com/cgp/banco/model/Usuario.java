@@ -13,7 +13,6 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode(of = "id")
 @Table(name = "usuario")
 public class Usuario {
@@ -24,4 +23,11 @@ public class Usuario {
     private String username;
     @Column(nullable = false)
     private String password;
+
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                '}';
+    }
 }
