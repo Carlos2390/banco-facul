@@ -20,4 +20,10 @@ public class LogController {
     public List<Log> getAllLogs() {
         return logRepository.findAllByOrderByIdDesc();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAllLogs() {
+        logRepository.deleteAll(); // ou logRepository.deleteAllLogs() se tiver um método customizado
+        return ResponseEntity.noContent().build(); // HTTP 204 No Content
+    }
 }
