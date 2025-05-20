@@ -46,7 +46,7 @@ public class TransferenciaController {
                 log.setDescricao("ERRO: Conta de origem não encontrada.");
                 log.setDadosNovos(String.format(
                         "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
-                        transferencia.getValor().toPlainString(),
+                        valor.toPlainString(),
                         numeroContaOrigem,
                         numeroContaDestino,
                         0.00
@@ -63,7 +63,7 @@ public class TransferenciaController {
                 log.setDescricao("ERRO: Conta de destino não encontrada.");
                 log.setDadosNovos(String.format(
                         "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
-                        transferencia.getValor().toPlainString(),
+                        valor.toPlainString(),
                         numeroContaOrigem,
                         numeroContaDestino,
                         contaOrigem.getSaldo().toPlainString()
@@ -82,7 +82,7 @@ public class TransferenciaController {
                 log.setDescricao("ERRO: A conta de origem e a conta de destino não podem ser iguais.");
                 log.setDadosNovos(String.format(
                         "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
-                        transferencia.getValor().toPlainString(),
+                        valor.toPlainString(),
                         numeroContaOrigem,
                         numeroContaDestino,
                         contaOrigem.getSaldo().toPlainString()
@@ -100,7 +100,7 @@ public class TransferenciaController {
                 log.setDescricao("ERRO: O valor da transferência deve ser maior que 0.");
                 log.setDadosNovos(String.format(
                         "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
-                        transferencia.getValor().toPlainString(),
+                        valor.toPlainString(),
                         numeroContaOrigem,
                         numeroContaDestino,
                         contaOrigem.getSaldo().toPlainString()
@@ -118,7 +118,7 @@ public class TransferenciaController {
                 log.setDescricao("ERRO: Saldo insuficiente na conta de origem.");
                 log.setDadosNovos(String.format(
                         "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
-                        transferencia.getValor().toPlainString(),
+                        valor.toPlainString(),
                         numeroContaOrigem,
                         numeroContaDestino,
                         contaOrigem.getSaldo().toPlainString()
@@ -154,7 +154,7 @@ public class TransferenciaController {
             log.setDadosAntigos(null);
             log.setDadosNovos(String.format(
                     "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
-                    transferencia.getValor().toPlainString(),
+                    valor.toPlainString(),
                     numeroContaOrigem,
                     numeroContaDestino,
                     contaOrigem.getSaldo().toPlainString()
