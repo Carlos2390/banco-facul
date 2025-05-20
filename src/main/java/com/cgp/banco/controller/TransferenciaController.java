@@ -46,9 +46,9 @@ public class TransferenciaController {
                 log.setDadosNovos(String.format(
                         "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
                         transferencia.getValor(),
-                        transferencia.getContaOrigem().getNumeroConta(),
-                        transferencia.getContaDestino().getNumeroConta(),
-                        transferencia.getContaOrigem().getSaldo()
+                        numeroContaOrigem,
+                        numeroContaDestino,
+                        0.00
                 ));
                 logRepository.save(log);
                 return new Response("Conta de origem não encontrada.", HttpStatus.BAD_REQUEST.value(), null);
@@ -63,8 +63,8 @@ public class TransferenciaController {
                 log.setDadosNovos(String.format(
                         "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
                         transferencia.getValor(),
-                        transferencia.getContaOrigem().getNumeroConta(),
-                        transferencia.getContaDestino().getNumeroConta(),
+                        numeroContaOrigem,
+                        numeroContaDestino,
                         transferencia.getContaOrigem().getSaldo()
                 ));
                 logRepository.save(log);
@@ -82,8 +82,8 @@ public class TransferenciaController {
                 log.setDadosNovos(String.format(
                         "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
                         transferencia.getValor(),
-                        transferencia.getContaOrigem().getNumeroConta(),
-                        transferencia.getContaDestino().getNumeroConta(),
+                        numeroContaOrigem,
+                        numeroContaDestino,
                         transferencia.getContaOrigem().getSaldo()
                 ));
                 logRepository.save(log);
@@ -100,8 +100,8 @@ public class TransferenciaController {
                 log.setDadosNovos(String.format(
                         "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
                         transferencia.getValor(),
-                        transferencia.getContaOrigem().getNumeroConta(),
-                        transferencia.getContaDestino().getNumeroConta(),
+                        numeroContaOrigem,
+                        numeroContaDestino,
                         transferencia.getContaOrigem().getSaldo()
                 ));
                 logRepository.save(log);
@@ -118,8 +118,8 @@ public class TransferenciaController {
                 log.setDadosNovos(String.format(
                         "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
                         transferencia.getValor(),
-                        transferencia.getContaOrigem().getNumeroConta(),
-                        transferencia.getContaDestino().getNumeroConta(),
+                        numeroContaOrigem,
+                        numeroContaDestino,
                         transferencia.getContaOrigem().getSaldo()
                 ));
                 logRepository.save(log);
@@ -154,8 +154,8 @@ public class TransferenciaController {
             log.setDadosNovos(String.format(
                     "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
                     transferencia.getValor(),
-                    transferencia.getContaOrigem().getNumeroConta(),
-                    transferencia.getContaDestino().getNumeroConta(),
+                    numeroContaOrigem,
+                    numeroContaDestino,
                     transferencia.getContaOrigem().getSaldo()
             ));
             logRepository.save(log);
