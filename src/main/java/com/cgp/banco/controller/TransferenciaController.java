@@ -45,8 +45,8 @@ public class TransferenciaController {
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Conta de origem não encontrada.");
                 log.setDadosNovos(String.format(
-                        "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                        transferencia.getValor(),
+                        "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                        transferencia.getValor().toPlainString(),
                         numeroContaOrigem,
                         numeroContaDestino,
                         0.00
@@ -62,11 +62,11 @@ public class TransferenciaController {
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Conta de destino não encontrada.");
                 log.setDadosNovos(String.format(
-                        "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                        transferencia.getValor(),
+                        "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                        transferencia.getValor().toPlainString(),
                         numeroContaOrigem,
                         numeroContaDestino,
-                        contaOrigem.getSaldo()
+                        contaOrigem.getSaldo().toPlainString()
                 ));
                 logRepository.save(log);
                 return new Response("Conta de destino não encontrada.", HttpStatus.BAD_REQUEST.value(), null);
@@ -81,11 +81,11 @@ public class TransferenciaController {
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: A conta de origem e a conta de destino não podem ser iguais.");
                 log.setDadosNovos(String.format(
-                        "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                        transferencia.getValor(),
+                        "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                        transferencia.getValor().toPlainString(),
                         numeroContaOrigem,
                         numeroContaDestino,
-                        contaOrigem.getSaldo()
+                        contaOrigem.getSaldo().toPlainString()
                 ));
                 logRepository.save(log);
                 return new Response("A conta de origem e a conta de destino não podem ser iguais.", HttpStatus.BAD_REQUEST.value(), null);
@@ -99,11 +99,11 @@ public class TransferenciaController {
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: O valor da transferência deve ser maior que 0.");
                 log.setDadosNovos(String.format(
-                        "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                        transferencia.getValor(),
+                        "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                        transferencia.getValor().toPlainString(),
                         numeroContaOrigem,
                         numeroContaDestino,
-                        contaOrigem.getSaldo()
+                        contaOrigem.getSaldo().toPlainString()
                 ));
                 logRepository.save(log);
                 return new Response("O valor da transferência deve ser maior que 0.", HttpStatus.BAD_REQUEST.value(), null);
@@ -117,11 +117,11 @@ public class TransferenciaController {
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Saldo insuficiente na conta de origem.");
                 log.setDadosNovos(String.format(
-                        "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                        transferencia.getValor(),
+                        "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                        transferencia.getValor().toPlainString(),
                         numeroContaOrigem,
                         numeroContaDestino,
-                        contaOrigem.getSaldo()
+                        contaOrigem.getSaldo().toPlainString()
                 ));
                 logRepository.save(log);
                 return new Response("Saldo insuficiente na conta de origem.", HttpStatus.BAD_REQUEST.value(), null);
@@ -153,11 +153,11 @@ public class TransferenciaController {
             log.setDescricao("SUCESSO: Transferência criada com sucesso.");
             log.setDadosAntigos(null);
             log.setDadosNovos(String.format(
-                    "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                    transferencia.getValor(),
+                    "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                    transferencia.getValor().toPlainString(),
                     numeroContaOrigem,
                     numeroContaDestino,
-                    contaOrigem.getSaldo()
+                    contaOrigem.getSaldo().toPlainString()
             ));
             logRepository.save(log);
 
@@ -193,11 +193,11 @@ public class TransferenciaController {
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Conta de origem não encontrada.");
                 log.setDadosNovos(String.format(
-                        "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                        transferencia.getValor(),
+                        "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                        transferencia.getValor().toPlainString(),
                         transferencia.getContaOrigem().getNumeroConta(),
                         transferencia.getContaDestino().getNumeroConta(),
-                        transferencia.getContaOrigem().getSaldo()
+                        transferencia.getContaOrigem().getSaldo().toPlainString()
                 ));
                 logRepository.save(log);
                 return new Response("Conta de origem não encontrada.", HttpStatus.BAD_REQUEST.value(), null);
@@ -211,11 +211,11 @@ public class TransferenciaController {
                 log.setTabela("transferencia");
                 log.setDescricao("ERRO: Conta de destino não encontrada.");
                 log.setDadosNovos(String.format(
-                        "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                        transferencia.getValor(),
+                        "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                        transferencia.getValor().toPlainString(),
                         transferencia.getContaOrigem().getNumeroConta(),
                         transferencia.getContaDestino().getNumeroConta(),
-                        transferencia.getContaOrigem().getSaldo()
+                        transferencia.getContaOrigem().getSaldo().toPlainString()
                 ));
                 log.setIdTabela(transferencia.getId());
                 logRepository.save(log);
@@ -231,11 +231,11 @@ public class TransferenciaController {
                 log.setDescricao("ERRO: A conta de origem e a conta de destino não podem ser iguais.");
                 log.setIdTabela(transferencia.getId());
                 log.setDadosNovos(String.format(
-                        "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                        transferencia.getValor(),
+                        "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                        transferencia.getValor().toPlainString(),
                         transferencia.getContaOrigem().getNumeroConta(),
                         transferencia.getContaDestino().getNumeroConta(),
-                        transferencia.getContaOrigem().getSaldo()
+                        transferencia.getContaOrigem().getSaldo().toPlainString()
                 ));
                 logRepository.save(log);
                 return new Response("A conta de origem e a conta de destino não podem ser iguais.", HttpStatus.BAD_REQUEST.value(), null);
@@ -250,11 +250,11 @@ public class TransferenciaController {
                 log.setDescricao("ERRO: O valor da transferência deve ser maior que 0.");
                 log.setIdTabela(transferencia.getId());
                 log.setDadosNovos(String.format(
-                        "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                        transferencia.getValor(),
+                        "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                        transferencia.getValor().toPlainString(),
                         transferencia.getContaOrigem().getNumeroConta(),
                         transferencia.getContaDestino().getNumeroConta(),
-                        transferencia.getContaOrigem().getSaldo()
+                        transferencia.getContaOrigem().getSaldo().toPlainString()
                 ));
                 logRepository.save(log);
                 return new Response("O valor da transferência deve ser maior que 0.", HttpStatus.BAD_REQUEST.value(), null);
@@ -269,11 +269,11 @@ public class TransferenciaController {
                 log.setDescricao("ERRO: Saldo insuficiente na conta de origem.");
                 log.setIdTabela(transferencia.getId());
                 log.setDadosNovos(String.format(
-                        "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                        transferencia.getValor(),
+                        "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                        transferencia.getValor().toPlainString(),
                         transferencia.getContaOrigem().getNumeroConta(),
                         transferencia.getContaDestino().getNumeroConta(),
-                        transferencia.getContaOrigem().getSaldo()
+                        transferencia.getContaOrigem().getSaldo().toPlainString()
                 ));
                 logRepository.save(log);
                 return new Response("Saldo insuficiente na conta de origem.", HttpStatus.BAD_REQUEST.value(), null);
@@ -295,11 +295,11 @@ public class TransferenciaController {
             log.setIdTabela(transferencia.getId());
             log.setDescricao("SUCESSO: Transferência criada com sucesso.");
             log.setDadosNovos(String.format(
-                    "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                    transferencia.getValor(),
+                    "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                    transferencia.getValor().toPlainString(),
                     transferencia.getContaOrigem().getNumeroConta(),
                     transferencia.getContaDestino().getNumeroConta(),
-                    transferencia.getContaOrigem().getSaldo()
+                    transferencia.getContaOrigem().getSaldo().toPlainString()
             ));
             logRepository.save(log);
             return new Response("Transferência criada com sucesso.", HttpStatus.OK.value(), transferencia);
@@ -311,11 +311,11 @@ public class TransferenciaController {
             log.setTabela("transferencia");
             log.setDescricao("ERRO: Erro ao criar transferência: " + e.getMessage());
             log.setDadosNovos(String.format(
-                    "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                    transferencia.getValor(),
+                    "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                    transferencia.getValor().toPlainString(),
                     transferencia.getContaOrigem().getNumeroConta(),
                     transferencia.getContaDestino().getNumeroConta(),
-                    transferencia.getContaOrigem().getSaldo()
+                    transferencia.getContaOrigem().getSaldo().toPlainString()
             ));
             logRepository.save(log);
             return new Response("Erro ao criar transferência: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
@@ -349,11 +349,11 @@ public class TransferenciaController {
                 log.setIdTabela(id);
                 log.setDescricao("ERRO: Transferência não encontrada.");
                 log.setDadosNovos(String.format(
-                        "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                        transferencia.getValor(),
+                        "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                        transferencia.getValor().toPlainString(),
                         transferencia.getContaOrigem().getNumeroConta(),
                         transferencia.getContaDestino().getNumeroConta(),
-                        transferencia.getContaOrigem().getSaldo()
+                        transferencia.getContaOrigem().getSaldo().toPlainString()
                 ));
                 logRepository.save(log);
                 return new Response("Transferência não encontrada.", HttpStatus.NOT_FOUND.value(), null);
@@ -371,11 +371,11 @@ public class TransferenciaController {
             log.setDescricao("SUCESSO: Transferência atualizada com sucesso.");
             log.setDadosAntigos(transferenciaExistente.toString());
             log.setDadosNovos(String.format(
-                    "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                    transferencia.getValor(),
+                    "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                    transferencia.getValor().toPlainString(),
                     transferencia.getContaOrigem().getNumeroConta(),
                     transferencia.getContaDestino().getNumeroConta(),
-                    transferencia.getContaOrigem().getSaldo()
+                    transferencia.getContaOrigem().getSaldo().toPlainString()
             ));
             logRepository.save(log);
 
@@ -391,11 +391,11 @@ public class TransferenciaController {
             log.setDescricao("ERRO: Erro ao atualizar transferência: " + e.getMessage());
             assert transferencia != null;
             log.setDadosNovos(String.format(
-                    "valor=%.2f|origem=%s|destino=%s|novo_saldo_origem=%.2f",
-                    transferencia.getValor(),
+                    "valor=%s|origem=%s|destino=%s|novo_saldo_origem=%s",
+                    transferencia.getValor().toPlainString(),
                     transferencia.getContaOrigem().getNumeroConta(),
                     transferencia.getContaDestino().getNumeroConta(),
-                    transferencia.getContaOrigem().getSaldo()
+                    transferencia.getContaOrigem().getSaldo().toPlainString()
             ));
             logRepository.save(log);
 
