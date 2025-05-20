@@ -23,8 +23,8 @@ public class LogController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteAllLogs() {
-        logRepository.deleteAll(); // ou logRepository.deleteAllLogs() se tiver um método customizado
-        return ResponseEntity.noContent().build(); // HTTP 204 No Content
+    public String deleteAllLogs() {
+        logRepository.deleteAll();
+        return "Logs deletados com sucesso";
     }
 }
