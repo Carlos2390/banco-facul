@@ -65,7 +65,7 @@ public class TransferenciaController {
                         transferencia.getValor(),
                         numeroContaOrigem,
                         numeroContaDestino,
-                        transferencia.getContaOrigem().getSaldo()
+                        contaOrigem.getSaldo()
                 ));
                 logRepository.save(log);
                 return new Response("Conta de destino não encontrada.", HttpStatus.BAD_REQUEST.value(), null);
@@ -84,7 +84,7 @@ public class TransferenciaController {
                         transferencia.getValor(),
                         numeroContaOrigem,
                         numeroContaDestino,
-                        transferencia.getContaOrigem().getSaldo()
+                        contaOrigem.getSaldo()
                 ));
                 logRepository.save(log);
                 return new Response("A conta de origem e a conta de destino não podem ser iguais.", HttpStatus.BAD_REQUEST.value(), null);
@@ -102,7 +102,7 @@ public class TransferenciaController {
                         transferencia.getValor(),
                         numeroContaOrigem,
                         numeroContaDestino,
-                        transferencia.getContaOrigem().getSaldo()
+                        contaOrigem.getSaldo()
                 ));
                 logRepository.save(log);
                 return new Response("O valor da transferência deve ser maior que 0.", HttpStatus.BAD_REQUEST.value(), null);
@@ -120,7 +120,7 @@ public class TransferenciaController {
                         transferencia.getValor(),
                         numeroContaOrigem,
                         numeroContaDestino,
-                        transferencia.getContaOrigem().getSaldo()
+                        contaOrigem.getSaldo()
                 ));
                 logRepository.save(log);
                 return new Response("Saldo insuficiente na conta de origem.", HttpStatus.BAD_REQUEST.value(), null);
@@ -156,7 +156,7 @@ public class TransferenciaController {
                     transferencia.getValor(),
                     numeroContaOrigem,
                     numeroContaDestino,
-                    transferencia.getContaOrigem().getSaldo()
+                    contaOrigem.getSaldo()
             ));
             logRepository.save(log);
 
