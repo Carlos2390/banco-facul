@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 
 @Getter
 @Setter
@@ -26,7 +28,7 @@ public class Conta {
     private String numeroConta;
 
     @Column(nullable = false)
-    private Double saldo;
+    private BigDecimal saldo;
 
     @Column(nullable = false, length = 20)
     private String tipo;

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class TransferenciaController {
     private final LogRepository logRepository;
 
     @PostMapping("/porNumeroContas")
-    public Response criarTransferenciaPorNumeroContas(@RequestParam String numeroContaOrigem, @RequestParam String numeroContaDestino, @RequestParam Double valor, @RequestParam Long userId) {
+    public Response criarTransferenciaPorNumeroContas(@RequestParam String numeroContaOrigem, @RequestParam String numeroContaDestino, @RequestParam BigDecimal valor, @RequestParam Long userId) {
         try {
             // Cria uma nova transferência
             Transferencia transferencia = new Transferencia();
@@ -90,7 +91,7 @@ public class TransferenciaController {
                 return new Response("A conta de origem e a conta de destino não podem ser iguais.", HttpStatus.BAD_REQUEST.value(), null);
             }
             // Verifica se o valor da transferência é maior que 0
-            if (valor <= 0) {
+            if (valor.compareTo(BigDecimal.ZERO) <= 0) {
                 // Cria um log de operação
                 Log log = new Log();
                 log.setUserId(userId);
@@ -108,7 +109,7 @@ public class TransferenciaController {
                 return new Response("O valor da transferência deve ser maior que 0.", HttpStatus.BAD_REQUEST.value(), null);
             }
             // Verifica se a conta de origem tem saldo suficiente
-            if (contaOrigem.getSaldo() < valor) {
+            if (contaOrigem.getSaldo().compareTo(valor) < 0) {
                 // Cria um log de operação
                 Log log = new Log();
                 log.setUserId(userId);
@@ -135,9 +136,9 @@ public class TransferenciaController {
             transferencia.setDataTransferencia(LocalDateTime.now());
 
             // Atualiza o saldo da conta de origem
-            contaOrigem.setSaldo(contaOrigem.getSaldo() - valor);
+            contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(valor));
             // Atualiza o saldo da conta de destino
-            contaDestino.setSaldo(contaDestino.getSaldo() + valor);
+            contaDestino.setSaldo(contaDestino.getSaldo().add(valor));
             // Salva as contas atualizadas no banco de dados
             contaRepository.save(contaOrigem);
             contaRepository.save(contaDestino);
@@ -240,7 +241,7 @@ public class TransferenciaController {
                 return new Response("A conta de origem e a conta de destino não podem ser iguais.", HttpStatus.BAD_REQUEST.value(), null);
             }
             // Verifica se o valor da transferência é maior que 0
-            if (transferencia.getValor() <= 0) {
+            if (transferencia.getValor().compareTo(BigDecimal.ZERO) <= 0) {
                 // Cria um log de operação
                 Log log = new Log();
                 log.setUserId(userId);
@@ -259,7 +260,7 @@ public class TransferenciaController {
                 return new Response("O valor da transferência deve ser maior que 0.", HttpStatus.BAD_REQUEST.value(), null);
             }
             // Verifica se a conta de origem tem saldo suficiente
-            if (contaOrigem.getSaldo() < transferencia.getValor()) {
+            if (contaOrigem.getSaldo().compareTo(transferencia.getValor()) < 0) {
                 // Cria um log de operação
                 Log log = new Log();
                 log.setUserId(userId);
@@ -280,10 +281,10 @@ public class TransferenciaController {
 
             transferenciaRepository.save(transferencia);
             //Atualizar o saldo da conta de origem
-            contaOrigem.setSaldo(contaOrigem.getSaldo() - transferencia.getValor());
+            contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(transferencia.getValor()));
             contaRepository.save(contaOrigem);
             //Atualizar o saldo da conta de destino
-            contaDestino.setSaldo(contaDestino.getSaldo() + transferencia.getValor());
+            contaDestino.setSaldo(contaDestino.getSaldo().add(transferencia.getValor()));
             contaRepository.save(contaDestino);
 
             // Cria um log de operação
