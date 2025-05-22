@@ -63,6 +63,17 @@ public class UsuarioController {
     @PostMapping
     public Response criarUsuario(@RequestBody Usuario usuario) {
         try {
+            Usuario existente = usuarioRepository.findByUsername(usuario.getUsername());
+            if (existente != null) {
+                // Cria um log de operação
+                Log log = new Log();
+                log.setTipoOperacao("CREATE");
+                log.setTabela("usuario");
+                log.setDescricao("ERRO: Usuário já existe.");
+                logRepository.save(log);
+                return new Response("Usuário já existe", HttpStatus.BAD_REQUEST.value(), null);
+            }
+
             usuarioRepository.save(usuario);
 //            usuario.setPassword("");
             // Cria um log de operação
