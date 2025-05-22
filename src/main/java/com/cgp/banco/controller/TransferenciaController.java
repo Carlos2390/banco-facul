@@ -409,36 +409,11 @@ public class TransferenciaController {
             Transferencia transferencia = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
             if (transferencia == null) {
-                // Cria um log de operação
-                Log log = new Log();
-                log.setTipoOperacao("BUSCAR");
-                log.setUserId(userId);
-                log.setTabela("transferencia");
-                log.setIdTabela(id);
-                log.setDescricao("ERRO: Transferência não encontrada.");
-                logRepository.save(log);
                 return new Response("Transferência não encontrada.", HttpStatus.NOT_FOUND.value(), null);
             }
-            // Cria um log de operação
-            Log log = new Log();
-            log.setTipoOperacao("BUSCAR");
-            log.setUserId(userId);
-            log.setTabela("transferencia");
-            log.setIdTabela(id);
-            log.setDescricao("SUCESSO: Transferência encontrada com sucesso.");
-            logRepository.save(log);
-
             // Retorna a transferência encontrada
             return new Response("Transferência encontrada com sucesso.", HttpStatus.OK.value(), transferencia);
         } catch (Exception e) {
-            // Cria um log de operação
-            Log log = new Log();
-            log.setUserId(userId);
-            log.setTipoOperacao("BUSCAR");
-            log.setTabela("transferencia");
-            log.setIdTabela(id);
-            log.setDescricao("ERRO: Erro ao buscar transferência: " + e.getMessage());
-            logRepository.save(log);
             return new Response("Erro ao buscar transferência: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
         }
     }
@@ -449,36 +424,12 @@ public class TransferenciaController {
             Conta conta = contaRepository.findByNumeroConta(numeroContaOrigem);
             // Verifica se a conta existe
             if (conta == null) {
-                // Cria um log de operação
-                Log log = new Log();
-                log.setUserId(userId);
-                log.setTipoOperacao("BUSCAR");
-                log.setTabela("transferencia");
-                log.setIdTabela(null);
-                log.setDescricao("ERRO: Conta não encontrada.");
-                logRepository.save(log);
                 return new Response("Conta não encontrada.", HttpStatus.NOT_FOUND.value(), null);
             }
             List<Transferencia> transferencias = transferenciaRepository.findByIdContaOrigem(conta.getId());
-            // Cria um log de operação
-            Log log = new Log();
-            log.setTipoOperacao("BUSCAR");
-            log.setUserId(userId);
-            log.setTabela("transferencia");
-            log.setIdTabela(conta.getId());
-            log.setDescricao("SUCESSO: Transferências encontradas com sucesso.");
-            logRepository.save(log);
-
             // Retorna a lista de transferências encontradas
             return new Response("Transferências encontradas com sucesso.", HttpStatus.OK.value(), transferencias);
         } catch (Exception e) {
-            // Cria um log de operação
-            Log log = new Log();
-            log.setUserId(userId);
-            log.setTipoOperacao("BUSCAR");
-            log.setTabela("transferencia");
-            log.setDescricao("ERRO: Erro ao buscar transferências: " + e.getMessage());
-            logRepository.save(log);
             return new Response("Erro ao buscar transferências: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
         }
     }
@@ -489,26 +440,9 @@ public class TransferenciaController {
             Conta conta = contaRepository.findByNumeroConta(numeroContaDestino);
 
             List<Transferencia> transferencias = transferenciaRepository.findByIdContaDestino(conta.getId());
-            // Cria um log de operação
-            // Cria um log de operação
-            Log log = new Log();
-            log.setTipoOperacao("BUSCAR");
-            log.setTabela("transferencia");
-            log.setIdTabela(conta.getId());
-            log.setDescricao("SUCESSO: Transferências encontradas com sucesso.");
-            logRepository.save(log);
-
             // Retorna a lista de transferências encontradas
             return new Response("Transferências encontradas com sucesso.", HttpStatus.OK.value(), transferencias);
-
         } catch (Exception e) {
-            // Cria um log de operação
-            Log log = new Log();
-            log.setUserId(userId);
-            log.setTipoOperacao("BUSCAR");
-            log.setTabela("transferencia");
-            log.setDescricao("ERRO: Erro ao buscar transferências por conta de destino: " + e.getMessage());
-            logRepository.save(log);
             return new Response("Erro ao buscar transferências por conta de destino: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
         }
     }
@@ -519,35 +453,12 @@ public class TransferenciaController {
             Transferencia transferencia = transferenciaRepository.findById(id).orElse(null);
             // Verifica se a transferência existe
             if (transferencia == null) {
-                // Cria um log de operação
-                Log log = new Log();
-                log.setTipoOperacao("DELETAR");
-                log.setTabela("transferencia");
-                log.setIdTabela(id);
-                log.setDescricao("ERRO: Transferência não encontrada.");
-                logRepository.save(log);
                 return new Response("Transferência não encontrada.", HttpStatus.NOT_FOUND.value(), null);
             }
             transferenciaRepository.deleteById(id);
-            // Cria um log de operação
-            Log log = new Log();
-            log.setTipoOperacao("DELETAR");
-            log.setTabela("transferencia");
-            log.setIdTabela(id);
-            log.setDescricao("SUCESSO: Transferência deletada com sucesso.");
-            log.setDadosAntigos(transferencia.toString());
-            logRepository.save(log);
-
             // Retorna uma resposta de sucesso
             return new Response("Transferência deletada com sucesso.", HttpStatus.OK.value(), null);
         } catch (Exception e) {
-            // Cria um log de operação
-            Log log = new Log();
-            log.setTipoOperacao("DELETAR");
-            log.setTabela("transferencia");
-            log.setIdTabela(id);
-            log.setDescricao("ERRO: Erro ao deletar transferência: " + e.getMessage());
-            logRepository.save(log);
             return new Response("Erro ao deletar transferência: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
         }
     }
@@ -560,24 +471,9 @@ public class TransferenciaController {
                 List<Transferencia> byNumeroContaDestinoOrNumeroContaOrigem = transferenciaRepository.findByContaDestinoNumeroContaOrContaOrigemNumeroConta(numeroConta, numeroConta);
                 transferencias.addAll(byNumeroContaDestinoOrNumeroContaOrigem);
             }
-            // Cria um log de operação
-            Log log = new Log();
-            log.setTipoOperacao("BUSCAR");
-            log.setUserId(userId);
-            log.setTabela("transferencia");
-            log.setDescricao("SUCESSO: Transferências encontradas com sucesso.");
-            logRepository.save(log);
-
             // Retorna a lista de transferências encontradas
             return new Response("Transferências encontradas com sucesso.", HttpStatus.OK.value(), transferencias);
         } catch (Exception e) {
-            // Cria um log de operação
-            Log log = new Log();
-            log.setUserId(userId);
-            log.setTipoOperacao("BUSCAR");
-            log.setTabela("transferencia");
-            log.setDescricao("ERRO: Erro ao buscar transferências por número de conta: " + e.getMessage());
-            logRepository.save(log);
             return new Response("Erro ao buscar transferências por número de conta: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
         }
     }
