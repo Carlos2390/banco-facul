@@ -54,6 +54,11 @@ public class UsuarioController {
             // Cria um log de operação
             log.setTipoOperacao("LOGIN");
             log.setTabela("usuario");
+            if (user != null) {
+                log.setUserId(user.getId());
+            } else {
+                log.setUserId(null);
+            }
             log.setDescricao("ERRO: Credenciais inválidas.");
             logRepository.save(log);
             return new Response("Credenciais inválidas", HttpStatus.UNAUTHORIZED.value(), null);
