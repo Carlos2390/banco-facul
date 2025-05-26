@@ -33,5 +33,5 @@ public class Log {
     @Column(name = "dados_novos")
     private String dadosNovos;
     @Column(name = "data")
-    private java.time.LocalDateTime data = java.time.LocalDateTime.now();
+    private java.time.LocalDateTime data = java.time.ZonedDateTime.now(java.time.ZoneId.of("America/Sao_Paulo")).toLocalDateTime();
 }
