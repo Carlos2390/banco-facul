@@ -1,4 +1,6 @@
-FROM openjdk:17-jdk-slim AS build
+FROM eclipse-temurin:17-jdk-jammy AS build
+
+WORKDIR /app
 COPY pom.xml mvnw ./
 COPY .mvn .mvn
 
@@ -9,8 +11,12 @@ RUN ./mvnw dependency:resolve
 COPY src src
 
 RUN ./mvnw package -DskipTests
-FROM openjdk:17-jdk-slim
+
+FROM eclipse-temurin:17-jre-jammy
+
 EXPOSE 8080
-WORKDIR demo
-COPY --from=build target/*.jar demo.jar
+WORKDIR /demo
+
+COPY --from=build /app/target/*.jar demo.jar
+
 ENTRYPOINT ["java", "-jar", "demo.jar"]
